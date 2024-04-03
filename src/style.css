@@ -51,6 +51,9 @@ body {
 input {
   font-size: 1.2em;
 }
+input[type=submit], button {
+  font-size: 1.0em;
+}
 h1 {
   font-size: 2em;
 }
