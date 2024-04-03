@@ -1,6 +1,17 @@
 import { changeDialogue, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
 import { capitalize, commaSeparateComponents, matchTag } from "../utils"
+// @ts-ignore
+import * as entityMarkdownFiles from '../markdown/entities/*.md'
+
+const EntityDescriptionView = () => {
+  const { state } = useGame()
+  const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
+  const description = entityMarkdownFiles[entity.name] ? entityMarkdownFiles[entity.name].default : null
+  return (
+    description ? <span dangerouslySetInnerHTML={{ __html: description }} /> : null
+  )
+}
 
 export const ConversibleView = () => {
   const { state, dispatch } = useGame()
@@ -94,10 +105,8 @@ export const EntityView = () => {
   const tags = matchTag(entity.tags, /dialogue:([^:]+):(\d+)$/)
   return (
     <>
-      <h2>{capitalize(entity.title)}</h2>
+      <EntityDescriptionView />
       <ConversibleView />
-      {/* <SkillCheckPreView /> */}
-      {/* <SkillCheckPostView /> */}
       <SkillCheckChoiceView />
       <p>
         <a onClick={handleLeave}>Go Back</a>.

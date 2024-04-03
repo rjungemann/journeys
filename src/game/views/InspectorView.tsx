@@ -1,4 +1,4 @@
-import { showInspector } from "../actions"
+import { resetState, showInspector } from "../actions"
 import { useGame } from "../context"
 
 export const InspectorView = () => {
@@ -6,15 +6,23 @@ export const InspectorView = () => {
   const toggleInspector = (event) => {
     dispatch(showInspector(!state.showInspector))
   }
+  const handleReset = (event) => {
+    dispatch(resetState())
+  }
   return (
     <>
-      <a onClick={toggleInspector}>{state.showInspector ? 'Hide Inspector' : 'Show Inspector'}</a>
+      <p className="inspector-toggle">
+        <button onClick={toggleInspector}>{state.showInspector ? 'Hide Inspector' : 'Show Inspector'}</button>
+      </p>
       {
         state.showInspector
         ? (
-          <pre className="code">
-            {JSON.stringify(state, null, 2)}
-          </pre>
+          <>
+            <a onClick={handleReset}>Reset State</a>
+            <pre className="code">
+              {JSON.stringify(state, null, 2)}
+            </pre>
+          </>
         )
         : null
       }

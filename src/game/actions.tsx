@@ -1,3 +1,4 @@
+export const RESET_STATE = 'RESET_STATE'
 export const SHOW_INSPECTOR = 'SHOW_INSPECTOR'
 export const CHANGE_SCENE = 'CHANGE_SCENE'
 export const CHANGE_ROOM = 'CHANGE_ROOM'
@@ -10,6 +11,10 @@ export const MOVE_PARTY_ROOM = 'MOVE_PARTY_ROOM'
 export const ADD_TAG = 'ADD_TAG'
 export const REMOVE_TAG = 'REMOVE_TAG'
 export const SKILL_CHECK = 'SKILL_CHECK'
+
+export type ResetStateAction = {
+  type: 'RESET_STATE'
+}
 
 export type ShowInspectorAction = {
   type: 'SHOW_INSPECTOR'
@@ -85,6 +90,7 @@ export type AddTagAction = {
 
 export type SkillCheckAction = {
   type: 'SKILL_CHECK'
+  name: string
   subjectName: string
   objectName: string | null
   skillCheckName: string
@@ -95,7 +101,8 @@ export type SkillCheckAction = {
 }
 
 export type Action =
-  ShowInspectorAction
+  ResetStateAction
+  | ShowInspectorAction
   | ChangeSceneAction
   | ChangeRoomAction
   | ChangeEntityAction
@@ -109,6 +116,10 @@ export type Action =
   | RemoveTagAction
   | AddTagAction
   | SkillCheckAction
+
+export const resetState = (): ResetStateAction => ({
+  type: RESET_STATE,
+})
 
 export const showInspector = (state: boolean): ShowInspectorAction => ({
   type: SHOW_INSPECTOR,
@@ -169,8 +180,9 @@ export const removeTag = (entityName: string, tag: string): RemoveTagAction => (
   tag,
 })
 
-export const skillCheck = (subjectName: string, objectName: string, skillCheckName: string, characteristicName: string, skillName: string, dice: string, tn: number): SkillCheckAction => ({
+export const skillCheck = (name: string, subjectName: string, objectName: string, skillCheckName: string, characteristicName: string, skillName: string, dice: string, tn: number): SkillCheckAction => ({
   type: SKILL_CHECK,
+  name,
   subjectName,
   objectName,
   skillCheckName,

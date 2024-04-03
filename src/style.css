@@ -1,3 +1,23 @@
+body {
+  --color-far-background: #57534e; /* stone-600 */
+  --color-near-background: #f5f5f4; /* stone-100 */
+  --color-pre-background: #d6d3d1; /* stone-300 */
+  --color-link: #65a30d; /* lime-600 */
+  --color-input-border: #57534e; /* stone-600 */
+  --color-text: #1c1917; /* stone-900 */
+  --color-button-text: #f5f5f4; /* stone-100 */
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    --color-far-background: #1c1917; /* stone-900 */
+    --color-near-background: #292524; /* stone-800 */
+    --color-pre-background: #44403c; /* stone-700 */
+    --color-link: #a3e635; /* lime-400 */
+    --color-input-border: #a8a29e; /* stone-400 */
+    --color-text: #f5f5f4; /* stone-100 */
+    --color-button-text: #1c1917; /* stone-900 */
+  }
+}
 
 /* Reset */
 * {
@@ -14,6 +34,7 @@ body {
   font-family: "IBM Plex Serif";
   font-weight: 300;
   letter-spacing: -0.02rem;
+  line-height: 1.5;
 }
 h1, h2, h3, h4, h5, h6, input, button {
   font-family: "IBM Plex Sans";
@@ -27,7 +48,7 @@ pre, code {
 body {
   font-size: 1.2em;
 }
-input, button {
+input {
   font-size: 1.2em;
 }
 h1 {
@@ -40,10 +61,6 @@ h3, h4, h5, h6 {
   font-size: 1.2em;
 }
 
-main {
-  margin: 2em;
-}
-
 a {
   cursor: pointer;
 }
@@ -51,7 +68,7 @@ a {
 input[type=text], textarea {
   width: 100%;
   padding: 0.5em;
-  border: 1px solid #828282;
+  border: 1px solid var(--color-input-border);
 }
 
 input[type=text], textarea {
@@ -65,7 +82,7 @@ input[type=text]:active, textarea:active {
 }
 
 a {
-  color: #1a6aff;
+  color: var(--color-link);
 }
 a {
   opacity: 0.6;
@@ -78,8 +95,8 @@ a:active {
 }
 
 button {
-  background: #1a6aff;
-  color: white;
+  background: var(--color-link);
+  color: var(--color-button-text);
   border: none;
   border-radius: 4px;
   padding: 0.5em;
@@ -96,6 +113,30 @@ button:active {
 }
 
 pre {
-  background-color: #cccccc;
+  background-color: var(--color-pre-background);
   padding: 1em;
+}
+
+body {
+  background-color: var(--color-far-background);
+  color: var(--color-text);
+}
+
+main {
+  background-color: var(--color-near-background);
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+main {
+  min-height: 100%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.inspector-toggle {
+  margin-top: 1.6em;
+  margin-bottom: 0.8em;
 }

@@ -15,7 +15,7 @@ export const defaultGame: Game = {
           to: 'hallway',
         },
       ],
-      entities: ['alard-tyney', 'terminal'],
+      entities: ['alard-tyney', 'terminal-1'],
     },
     {
       name: 'hallway',
@@ -91,7 +91,7 @@ export const defaultGame: Game = {
         vehicle: 0,
         groundVehicle: 0,
       },
-      inventory: ['revolver:1'],
+      inventory: ['revolver-1'],
     },
     {
       name: 'kynon-morgan',
@@ -115,10 +115,10 @@ export const defaultGame: Game = {
         vehicle: 0,
         groundVehicle: 0,
       },
-      inventory: ['knife:1'],
+      inventory: ['knife-1'],
     },
     {
-      name: 'terminal',
+      name: 'terminal-1',
       title: 'terminal',
       characteristics: {
         strength: 7,
@@ -138,7 +138,7 @@ export const defaultGame: Game = {
   ],
   items: [
     {
-      name: 'revolver:1',
+      name: 'revolver-1',
       title: 'revolver',
       rounds: 6,
       tags: ['ranged'],
@@ -146,7 +146,7 @@ export const defaultGame: Game = {
       isEquipped: true,
     },
     {
-      name: 'knife:1',
+      name: 'knife-1',
       title: 'knife',
       rounds: null,
       tags: ['melee'],
@@ -162,7 +162,6 @@ export const defaultGame: Game = {
     },
   ],
   log: [],
-  lastSkillCheckEvent: null,
   skillCheckName: null,
   skillChecks: [
     {
@@ -171,13 +170,15 @@ export const defaultGame: Game = {
       characteristic: 'intelligence',
       skill: 'mechanics',
       tn: 8,
+      result: null,
     },
     {
       name: 'alard-1',
-      title: 'Help me with my problem?',
-      characteristic: 'intelligence',
+      title: 'Do you think you could give me some guidance?',
+      characteristic: 'education',
       skill: 'mechanics',
       tn: 8,
+      result: null,
     },
   ],
 }

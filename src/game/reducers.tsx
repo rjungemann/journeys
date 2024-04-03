@@ -1,6 +1,11 @@
-import { ADD_TAG, Action, AddTagAction, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, ChangeDialogueAction, ChangeEntityAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RemoveLastSkillCheckEventAction, RemoveTagAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction, moveEntityRoom } from "./actions"
+import { ADD_TAG, Action, AddTagAction, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, ChangeDialogueAction, ChangeEntityAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveLastSkillCheckEventAction, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction, moveEntityRoom } from "./actions"
 import { Game } from "./data"
+import { defaultGame } from "./defaultGame"
 import { dice } from "./utils"
+
+export const resetStateReducer = (state: Game, action: ResetStateAction) => {
+  return { ...defaultGame }
+}
 
 export const showInspectorReducer = (state: Game, action: ShowInspectorAction) => {
   const { state: showInspector } = action
@@ -38,13 +43,20 @@ export const removeLastSkillCheckEventReducer = (state: Game, action: RemoveLast
 
 export const moveEntityRoomReducer = (state: Game, action: MoveEntityRoomAction) => {
   const { from, to, entityName } = action
+
   const fromRoom = state.rooms.filter((s) => s.name === from)[0]!
-  const updatedFromEntityNames = fromRoom.entities.filter((en) => en !== entityName)
-  const updatedFrom = { ...fromRoom, entityNames: updatedFromEntityNames }
+  const updatedFrom = {
+    ...fromRoom,
+    entities: fromRoom.entities.filter((en) => en !== entityName)
+  }
   const toRoom = state.rooms.filter((s) => s.name === to)[0]!
-  const updatedToEntityNames = [...toRoom.entities, entityName]
-  const updatedTo = { ...toRoom, entityNames: updatedToEntityNames }
+  const updatedTo = {
+    ...toRoom,
+    entities: [...toRoom.entities, entityName]
+  }
+
   const rooms = state.rooms.filter((s) => s.name !== from && s.name !== to)
+
   return { ...state, rooms: [...rooms, updatedFrom, updatedTo] }
 }
 
@@ -74,7 +86,7 @@ export const removeTagReducer = (state: Game, action: RemoveTagAction) => {
 }
 
 export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
-  const { subjectName, objectName, skillCheckName, skillName, characteristicName, dice: d, tn } = action
+  const { name, subjectName, objectName, skillCheckName, skillName, characteristicName, dice: d, tn } = action
   const subject = state.entities.filter((s) => s.name === subjectName)[0]!
   const object = state.entities.filter((s) => s.name === objectName)[0]
   const roll = dice(d)
@@ -82,27 +94,33 @@ export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
   const skillValue = subject.skills[skillName] || -3.0
   const total = Math.max(characteristicValue - 7.0, -2.0) + skillValue + roll.sum
   const isSuccess = total >= tn
+  const result = {
+    subjectName,
+    objectName,
+    skillCheckName,
+    characteristicName,
+    characteristicValue,
+    skillName,
+    skillValue,
+    dice: d,
+    roll,
+    total,
+    tn,
+    isSuccess,
+  }
+  const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
+  const otherSkillChecks = state.skillChecks.filter((sc) => sc.name !== name)
   return {
     ...state,
-    lastSkillCheckEvent: {
-      subjectName,
-      objectName,
-      skillCheckName,
-      characteristicName,
-      characteristicValue,
-      skillName,
-      skillValue,
-      dice: d,
-      roll,
-      total,
-      tn,
-      isSuccess,
-    },
+    skillChecks: [...otherSkillChecks, { ...skillCheck, result }],
   }
 }
 
 export const gameReducer = (state: Game, action: Action) => {
   const { type } = action
+  if (type === RESET_STATE) {
+    return resetStateReducer(state, action)
+  }
   if (type === SHOW_INSPECTOR) {
     return showInspectorReducer(state, action)
   }

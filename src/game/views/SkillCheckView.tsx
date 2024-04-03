@@ -4,7 +4,8 @@ import { commaSeparateStrings } from "../utils"
 
 export const SkillCheckPreView = () => {
   const { state, dispatch } = useGame()
-  if (state.lastSkillCheckEvent) {
+  const sc = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]!
+  if (sc.result) {
     return null
   }
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
@@ -27,7 +28,7 @@ export const SkillCheckPreView = () => {
   const characteristicValue = subject.characteristics[characteristic]
   const skillValue = subject.skills[skill]
   const handleTry = () => {
-    dispatch(skillCheck(subject.name, object.name, name, characteristic, skill, '2d6', tn))
+    dispatch(skillCheck(name, subject.name, object.name, name, characteristic, skill, '2d6', tn))
     dispatch(removeTag(object.name, tag))
   }
   return (
@@ -40,11 +41,12 @@ export const SkillCheckPreView = () => {
 
 export const SkillCheckPostView = () => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
-  if (!state.lastSkillCheckEvent) {
+  const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]!
+  if (!skillCheck.result) {
     return null
   }
-  const { objectName, skillCheckName, characteristicValue, skillValue, roll, total, tn, isSuccess } = state.lastSkillCheckEvent
+  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const { objectName, skillCheckName, characteristicValue, skillValue, roll, total, tn, isSuccess } = skillCheck.result
   if (object.tags.some((t) => t === `skill-check:${skillCheckName}:success` || t === `skill-check:${skillCheckName}:failure`)) {
     return null
   }

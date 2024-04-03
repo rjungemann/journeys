@@ -1,13 +1,24 @@
-import { Dispatch, ReactNode, createContext, useContext, useReducer } from "react"
+import { Dispatch, ReactNode, createContext, useContext, useEffect, useReducer } from "react"
 import { Game } from "./data"
 import { Action } from "./actions"
 import { gameReducer } from "./reducers"
 import { defaultGame } from "./defaultGame"
 
-export const GameContext = createContext<{ state: Game, dispatch: Dispatch<Action> } | null>(null)
+type GameContext = {
+  state: Game
+  dispatch: Dispatch<Action>
+}
+
+export const GameContext = createContext<GameContext | null>(null)
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(gameReducer, defaultGame)
+  const key = 'journeys'
+  const storedState = localStorage.getItem(key)
+  const startingState = storedState ? JSON.parse(storedState) : defaultGame
+  const [state, dispatch] = useReducer(gameReducer, startingState)
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state))
+  }, [state])
   return (
     <GameContext.Provider value={{ state, dispatch }}>
       {children}

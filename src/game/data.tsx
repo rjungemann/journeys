@@ -9,7 +9,6 @@ export type Game = {
   items: Item[]
   dialogues: Dialogue[]
   log: LogItem[]
-  lastSkillCheckEvent: SkillCheckEvent | null
   skillCheckName: string | null
   skillChecks: SkillCheck[]
 }
@@ -67,7 +66,16 @@ export type LogItem = {
   message: string
 }
 
-export type SkillCheckEvent = {
+export type SkillCheck = {
+  name: string
+  title: string
+  characteristic: string
+  skill: string
+  tn: number
+  result: SkillCheckResult | null
+}
+
+export type SkillCheckResult = {
   subjectName: string
   objectName: string | null
   skillCheckName: string
@@ -84,12 +92,4 @@ export type SkillCheckEvent = {
   total: number
   tn: number
   isSuccess: boolean
-}
-
-export type SkillCheck = {
-  name: string
-  title: string
-  characteristic: string
-  skill: string
-  tn: number
 }
