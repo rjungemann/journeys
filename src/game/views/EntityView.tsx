@@ -5,22 +5,27 @@ import { capitalize, commaSeparateComponents, hasMatchingTag, matchTags } from "
 export const EntityTidbitsView = () => {
   const { state, dispatch } = useGame()
   const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
-  if (!entity.tidbits) {
-    return null
-  }
-  const tidbits = entity.tidbits.map((tn) => state.tidbits.filter((tidbit) => tidbit.name === tn)[0]!)
+  const descriptions = entity.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^description:(.*)$/) || []
+    if (!name) {
+      return sum
+    }
+    return [...sum, ...state.descriptions.filter((d) => d.name === name)]
+  }, [])
   return (
     <>
       {
-        tidbits.map((tidbit) => {
-          const hasTag = hasMatchingTag(state, tidbit.conditionTag)
-          return (
-            hasTag
-            ? (
-              <p key={tidbit.name}>{tidbit.attachment.message}</p>
-            )
-            : null
-          )
+        descriptions.map((description) => {
+          if (description.conditionTag) {
+            const hasTag = hasMatchingTag(state, description.conditionTag)
+            if (hasTag) {
+              return <p key={description.name}>{description.message}</p>
+            } else {
+              return null
+            }
+          } else {
+            return <p key={description.name}>{description.message}</p>
+          }
         })
       }
     </>
@@ -78,8 +83,17 @@ export const SkillCheckChoiceView = () => {
       if (!name) {
         return sum
       }
-      const { title } = state.skillChecks.filter((sc) => sc.name === name)[0]!
-      return [...sum, { name, title }]
+      const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
+      if (skillCheck.conditionTag) {
+        const hasTag = hasMatchingTag(state, skillCheck.conditionTag)
+        if (hasTag) {
+          return [...sum, { name, title: skillCheck.title }]
+        } else {
+          return sum
+        }
+      } else {
+        return [...sum, { name, title: skillCheck.title }]
+      }
     },
     []
   )

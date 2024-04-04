@@ -14,30 +14,34 @@ export type Game = {
   log: LogItem[]
   skillCheckName: string | null
   skillChecks: SkillCheck[]
-  tidbits: Tidbit[]
+  choices: Choice[]
+  descriptions: Description[]
 }
 
+type Choice = {
+  name: string
+  message: string
+  options: Option[]
+}
+
+type Option = {
+  name: string
+  message: string
+}
+
+// TODO: Replace tidbits with descriptions
 // TODO: Entities
 // TODO: Items
-export type Tidbit = {
+export type Description = {
   name: string
   conditionTag: string | null
-  // TODO: Other attachment types?
-  attachment: Attachment
-}
-
-// EJS + Markdown
-// TODO: `locals`
-export type DescriptionAttachment = {
-  type: 'DESCRIPTION_ATTACHMENT'
   message: string
-  // locals: Record<string, any>
 }
 
-export type Attachment = DescriptionAttachment
-
+// TODO: Optional conditionTag
 export type Dialogue = {
   name: string
+  conditionTag: string | null
   topic: string
   messages: string[]
 }
@@ -48,7 +52,6 @@ export type Room = {
   title: string
   exits: Exit[]
   entities: string[]
-  tidbits: string[]
 }
 
 export type Exit = {
@@ -64,7 +67,6 @@ export type Entity = {
   skills: Record<string, number>
   tags: string[]
   inventory: string[]
-  tidbits: string[]
 }
 
 export type Characteristics = {
@@ -94,6 +96,7 @@ export type LogItem = {
 
 export type SkillCheck = {
   name: string
+  conditionTag: string | null,
   title: string
   characteristic: string
   skill: string

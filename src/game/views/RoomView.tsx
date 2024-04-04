@@ -4,33 +4,6 @@ import { DESCRIPTION_ATTACHMENT, SKILL_CHECK_ATTACHMENT } from "../data"
 import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
 import { SkillCheckPartial } from "./SkillCheckView"
 
-export const RoomTidbits = () => {
-  const { state, dispatch } = useGame()
-  const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
-  if (!room.tidbits) {
-    return
-  }
-  const tidbits = room.tidbits.map((tn) => state.tidbits.filter((tidbit) => tidbit.name === tn)[0]!)
-  console.log(tidbits)
-  return (
-    <>
-      {
-        tidbits.map((tidbit) => {
-          const hasTag = hasMatchingTag(state, tidbit.conditionTag)
-          const attachment = tidbit.attachment
-          return (
-            hasTag
-            ? (
-              <p key={tidbit.name}>{attachment.message}</p>
-            )
-            : null
-          )
-        })
-      }
-    </>
-  )
-}
-
 export const RoomExits = () => {
   const { state, dispatch } = useGame()
   const handleExitFn = (exitName) => (event) => {
@@ -125,7 +98,6 @@ export const RoomView = () => {
   return (
     <>
       <h2>{capitalize(room.title)}</h2>
-      <RoomTidbits />
       <RoomEntities />
       <RoomExits />
     </>

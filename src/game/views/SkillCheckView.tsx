@@ -72,20 +72,6 @@ export const SkillCheckPostView = () => {
     // TODO: Hard-coded to first character
     dispatch(addTag(objectName, `skill-check:${skillCheckName}:${isSuccess ? 'success' : 'failure'}`))
 
-    // // Transform any post-skill-check tags. For example, `skill-check:fix-1:success:tag:foo` would become `foo`
-    // const regExp = new RegExp(`skill-check:${skillCheckName}:([^:])+:tag:(.*)$`)
-    // const skillCheckTags = object.tags.filter((t) => t.match(regExp))
-    // const transformedTags = skillCheckTags.reduce((sum, t) => {
-    //   const [_, isS, t2] = t.match(regExp) || []
-    //   return ( isSuccess === (isS === 'success') ) ? [...sum, t2] : sum
-    // }, [])
-    // for (let t of skillCheckTags) {
-    //   dispatch(removeTag(objectName, t))
-    // }
-    // for (let t of transformedTags) {
-    //   dispatch(addTag(objectName, t))
-    // }
-
     dispatch(changeScene('entity'))
     dispatch(removeLastSkillCheckEvent())
   }

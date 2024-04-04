@@ -11,8 +11,7 @@ export const defaultGame: Game = {
       exits: [
         { name: 'north', title: 'north', to: 'hallway' }
       ],
-      entities: ['alard-tyney', 'terminal-1'],
-      tidbits: ['alard-1:success', 'alard-1:failure']
+      entities: ['alard-tyney', 'terminal-1']
     },
     {
       name: 'hallway',
@@ -22,8 +21,7 @@ export const defaultGame: Game = {
         { name: 'east', title: 'east', to: 'bridge' },
         { name: 'west', title: 'west', to: 'galley' }
       ],
-      entities: [],
-      tidbits: []
+      entities: []
     },
     {
       name: 'bridge',
@@ -31,8 +29,7 @@ export const defaultGame: Game = {
       exits: [
         { name: 'west', title: 'west', to: 'hallway' }
       ],
-      entities: [],
-      tidbits: []
+      entities: []
     },
     {
       name: 'galley',
@@ -40,8 +37,7 @@ export const defaultGame: Game = {
       exits: [
         { name: 'east', title: 'east', to: 'hallway' }
       ],
-      entities: ['kynon-morgan'],
-      tidbits: []
+      entities: ['kynon-morgan']
     }
   ],
   party: ['alard-tyney'],
@@ -53,7 +49,11 @@ export const defaultGame: Game = {
       tags: [
         'character',
         'dialogue:alard-1:0',
-        'dialogue:alard-1:tag:skill-check:alard-1'
+        'dialogue:alard-1:tag:skill-check:alard-1',
+        'dialogue:alard-1:tag:skill-check:alard-1:success:tag:alard-1:success',
+        'dialogue:alard-1:tag:skill-check:alard-1:failure:tag:alard-1:failure',
+        'description:alard-1:success',
+        'description:alard-1:failure'
       ],
       characteristics: {
         strength: 6,
@@ -71,8 +71,7 @@ export const defaultGame: Game = {
         vehicle: 0,
         groundVehicle: 0
       },
-      inventory: ['revolver-1'],
-      tidbits: ['fix-1:success', 'fix-1:failure']
+      inventory: ['revolver-1']
     },
     {
       name: 'kynon-morgan',
@@ -96,8 +95,7 @@ export const defaultGame: Game = {
         vehicle: 0,
         groundVehicle: 0
       },
-      inventory: ['knife-1'],
-      tidbits: []
+      inventory: ['knife-1']
     },
     {
       name: 'terminal-1',
@@ -113,8 +111,11 @@ export const defaultGame: Game = {
       },
       skills: {},
       inventory: [],
-      tags: ['skill-check:fix-1', 'skill-check:fix-1:success:tag:test-1', 'skill-check:fix-1:success:tag:test-2'],
-      tidbits: []
+      tags: [
+        'skill-check:fix-1',
+        'description:fix-1:success',
+        'description:fix-1:failure'
+      ]
     }
   ],
   items: [
@@ -138,6 +139,7 @@ export const defaultGame: Game = {
   dialogues: [
     {
       name: 'alard-1',
+      conditionTag: null,
       topic: `what's on my mind`,
       messages: ['One...', 'Two...', 'Three...']
     }
@@ -147,6 +149,7 @@ export const defaultGame: Game = {
   skillChecks: [
     {
       name: 'fix-1',
+      conditionTag: null,
       title: 'Repair the broken terminal?',
       characteristic: 'intelligence',
       skill: 'mechanics',
@@ -155,6 +158,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'alard-1',
+      conditionTag: null,
       title: 'Do you think you could give me some guidance?',
       characteristic: 'education',
       skill: 'mechanics',
@@ -163,6 +167,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'alard-2',
+      conditionTag: null,
       title: 'Do you want to try again?',
       characteristic: 'education',
       skill: 'mechanics',
@@ -170,38 +175,27 @@ export const defaultGame: Game = {
       result: null
     }
   ],
-  tidbits: [
+  choices: [],
+  descriptions: [
     {
       name: 'alard-1:success',
       conditionTag: 'skill-check:alard-1:success',
-      attachment: {
-        type: DESCRIPTION_ATTACHMENT,
-        message: 'Alard seems grateful for the help.'
-      }
+      message: 'Alard seems grateful for the help.'
     },
     {
       name: 'alard-1:failure',
       conditionTag: 'skill-check:alard-1:failure',
-      attachment: {
-        type: DESCRIPTION_ATTACHMENT,
-        message: 'Alard still seems upset about earlier.'
-      }
+      message: 'Alard still seems upset about earlier.'
     },
     {
       name: 'fix-1:success',
       conditionTag: 'skill-check:fix-1:success',
-      attachment: {
-        type: DESCRIPTION_ATTACHMENT,
-        message: 'Everyone appreciates the terminal being fixed.'
-      }
+      message: 'Everyone appreciates the terminal being fixed.'
     },
     {
       name: 'fix-1:failure',
       conditionTag: 'skill-check:fix-1:failure',
-      attachment: {
-        type: DESCRIPTION_ATTACHMENT,
-        message: 'Nobody expected you to be able to fix the terminal.'
-      }
+      message: 'Nobody expected you to be able to fix the terminal.'
     }
   ]
 }

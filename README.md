@@ -17,18 +17,16 @@
 dialogue:<name>
 dialogue:<name>:<index>
 dialogue:<name>:done
-dialogue:<name>:tag:<...tag>
 
 skill-check:<name>
 skill-check:<name>:success
 skill-check:<name>:failure
-skill-check:<name>:success:tag:<...tag>
-skill-check:<name>:failure:tag:<...tag>
+
+description:<name>
 
 # TODO
 choice:<name>
 choice:<name>:<value>
-skill-check:<name>:<value>:tag:<...tag>
 ```
 
 ```typescript
