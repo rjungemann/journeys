@@ -1,8 +1,30 @@
 import { changeEntity, changeRoom, changeScene, movePartyRoom } from "../actions"
 import { useGame } from "../context"
-import { capitalize, commaSeparateComponents } from "../utils"
+import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
 
-const RoomExits = () => {
+export const RoomTidbits = () => {
+  const { state, dispatch } = useGame()
+  const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
+  const tidbits = room.tidbits.map((tn) => state.tidbits.filter((tidbit) => tidbit.name === tn)[0]!)
+  return (
+    <>
+      {
+        tidbits.map((tidbit) => {
+          const hasTag = hasMatchingTag(state, tidbit.conditionTag)
+          return (
+            hasTag
+            ? (
+              <p key={tidbit.name}>{tidbit.attachment.message}</p>
+            )
+            : null
+          )
+        })
+      }
+    </>
+  )
+}
+
+export const RoomExits = () => {
   const { state, dispatch } = useGame()
   const handleExitFn = (exitName) => (event) => {
     const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
@@ -35,7 +57,7 @@ const RoomExits = () => {
   )
 }
 
-const RoomEntities = () => {
+export const RoomEntities = () => {
   const { state, dispatch } = useGame()
   const handleEntityFn = (entity) => (event) => {
     dispatch(changeEntity(entity.name))
@@ -96,6 +118,7 @@ export const RoomView = () => {
   return (
     <>
       <h2>{capitalize(room.title)}</h2>
+      <RoomTidbits />
       <RoomEntities />
       <RoomExits />
     </>

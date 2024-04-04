@@ -1,24 +1,29 @@
+## TODO
+
+* Combine entities and items?
+
 ```
 dialogue:<name>
 dialogue:<name>:<index>
 dialogue:<name>:done
-
-# TODO
 dialogue:<name>:tag:<...tag>
 
 skill-check:<name>
 skill-check:<name>:success
 skill-check:<name>:failure
 
-# TODO: Figure these out
-skill-check:<name>:success:next:<scene>
-skill-check:<name>:failure:next:<scene>
-
 # TODO
 skill-check:<name>:success:tag:<...tag>
 skill-check:<name>:failure:tag:<...tag>
 
+# TODO
 choice:<name>
+
+# TODO
+choice:<name>:<value>
+
+# TODO
+skill-check:<name>:<value>:tag:<...tag>
 ```
 
 ```typescript
@@ -48,8 +53,6 @@ const dialogue = {
 }
 ```
 
-Global tags
-
 A room has tidbits
 An entity has tidbits
 An item has tidbits
@@ -57,6 +60,3 @@ An item has tidbits
 A tidbit has an optional condition tag
 A tidbit may have a:
   Description (markdown)
-  Dialogue
-  Choice
-  Skill Check

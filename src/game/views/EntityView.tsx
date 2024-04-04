@@ -1,6 +1,28 @@
 import { changeDialogue, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
-import { capitalize, commaSeparateComponents, matchTag } from "../utils"
+import { capitalize, commaSeparateComponents, hasMatchingTag, matchTags } from "../utils"
+
+export const EntityTidbitsView = () => {
+  const { state, dispatch } = useGame()
+  const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
+  const tidbits = entity.tidbits.map((tn) => state.tidbits.filter((tidbit) => tidbit.name === tn)[0]!)
+  return (
+    <>
+      {
+        tidbits.map((tidbit) => {
+          const hasTag = hasMatchingTag(state, tidbit.conditionTag)
+          return (
+            hasTag
+            ? (
+              <p key={tidbit.name}>{tidbit.attachment.message}</p>
+            )
+            : null
+          )
+        })
+      }
+    </>
+  )
+}
 
 export const ConversibleView = () => {
   const { state, dispatch } = useGame()
@@ -91,10 +113,10 @@ export const EntityView = () => {
     return null
   }
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const tags = matchTag(entity.tags, /dialogue:([^:]+):(\d+)$/)
   return (
     <>
       <h2>{capitalize(entity.title)}</h2>
+      <EntityTidbitsView />
       <ConversibleView />
       <SkillCheckChoiceView />
       <p>

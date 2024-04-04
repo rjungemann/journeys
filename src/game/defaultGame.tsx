@@ -9,60 +9,40 @@ export const defaultGame: Game = {
       name: 'quarters',
       title: 'quarters',
       exits: [
-        {
-          name: 'north',
-          title: 'north',
-          to: 'hallway',
-        },
+        { name: 'north', title: 'north', to: 'hallway' }
       ],
       entities: ['alard-tyney', 'terminal-1'],
+      tidbits: ['alard-1:success', 'alard-1:failure']
     },
     {
       name: 'hallway',
       title: 'hallway',
       exits: [
-        {
-          name: 'south',
-          title: 'south',
-          to: 'quarters',
-        },
-        {
-          name: 'east',
-          title: 'east',
-          to: 'bridge',
-        },
-        {
-          name: 'west',
-          title: 'west',
-          to: 'galley',
-        },
+        { name: 'south', title: 'south', to: 'quarters' },
+        { name: 'east', title: 'east', to: 'bridge' },
+        { name: 'west', title: 'west', to: 'galley' }
       ],
       entities: [],
+      tidbits: []
     },
     {
       name: 'bridge',
       title: 'bridge',
       exits: [
-        {
-          name: 'west',
-          title: 'west',
-          to: 'hallway',
-        },
+        { name: 'west', title: 'west', to: 'hallway' }
       ],
       entities: [],
+      tidbits: []
     },
     {
       name: 'galley',
       title: 'galley',
       exits: [
-        {
-          name: 'east',
-          title: 'east',
-          to: 'hallway',
-        },
+        { name: 'east', title: 'east', to: 'hallway' }
       ],
       entities: ['kynon-morgan'],
-    },
+      tidbits: []
+    }
   ],
   party: ['alard-tyney'],
   entityName: null,
@@ -73,7 +53,7 @@ export const defaultGame: Game = {
       tags: [
         'character',
         'dialogue:alard-1:0',
-        'dialogue:alard-1:tag:skill-check:alard-1',
+        'dialogue:alard-1:tag:skill-check:alard-1'
       ],
       characteristics: {
         strength: 6,
@@ -82,22 +62,23 @@ export const defaultGame: Game = {
         intelligence: 8,
         education: 5,
         socialStanding: 7,
-        psionicStrength: 0,
+        psionicStrength: 0
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0,
+        groundVehicle: 0
       },
       inventory: ['revolver-1'],
+      tidbits: ['fix-1:success', 'fix-1:failure']
     },
     {
       name: 'kynon-morgan',
       title: 'Kynon Morgan',
       tags: [
-        'character',
+        'character'
       ],
       characteristics: {
         strength: 10,
@@ -106,16 +87,17 @@ export const defaultGame: Game = {
         intelligence: 7,
         education: 9,
         socialStanding: 8,
-        psionicStrength: 0,
+        psionicStrength: 0
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0,
+        groundVehicle: 0
       },
       inventory: ['knife-1'],
+      tidbits: []
     },
     {
       name: 'terminal-1',
@@ -127,14 +109,13 @@ export const defaultGame: Game = {
         intelligence: 7,
         education: 7,
         socialStanding: 7,
-        psionicStrength: 0,
+        psionicStrength: 0
       },
       skills: {},
       inventory: [],
-      tags: [
-        'skill-check:fix-1',
-      ],
-    },
+      tags: ['skill-check:fix-1'],
+      tidbits: []
+    }
   ],
   items: [
     {
@@ -151,15 +132,15 @@ export const defaultGame: Game = {
       rounds: null,
       tags: ['melee'],
       damage: '1d6',
-      isEquipped: true,
-    },
+      isEquipped: true
+    }
   ],
   dialogues: [
     {
       name: 'alard-1',
       topic: `what's on my mind`,
-      messages: ['One...', 'Two...', 'Three...'],
-    },
+      messages: ['One...', 'Two...', 'Three...']
+    }
   ],
   log: [],
   skillCheckName: null,
@@ -170,7 +151,7 @@ export const defaultGame: Game = {
       characteristic: 'intelligence',
       skill: 'mechanics',
       tn: 8,
-      result: null,
+      result: null
     },
     {
       name: 'alard-1',
@@ -178,7 +159,37 @@ export const defaultGame: Game = {
       characteristic: 'education',
       skill: 'mechanics',
       tn: 8,
-      result: null,
-    },
+      result: null
+    }
   ],
+  tidbits: [
+    {
+      name: 'alard-1:success',
+      conditionTag: 'skill-check:alard-1:success',
+      attachment: {
+        message: 'Alard seems grateful for the help.'
+      }
+    },
+    {
+      name: 'alard-1:failure',
+      conditionTag: 'skill-check:alard-1:failure',
+      attachment: {
+        message: 'It got awkward after you failed to help Alard.'
+      }
+    },
+    {
+      name: 'fix-1:success',
+      conditionTag: 'skill-check:fix-1:success',
+      attachment: {
+        message: 'Everyone appreciates the terminal being fixed.'
+      }
+    },
+    {
+      name: 'fix-1:failure',
+      conditionTag: 'skill-check:fix-1:failure',
+      attachment: {
+        message: 'Nobody expected you to be able to fix the terminal.'
+      }
+    }
+  ]
 }

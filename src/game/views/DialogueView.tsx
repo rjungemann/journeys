@@ -1,6 +1,6 @@
 import { addTag, changeScene, removeTag } from "../actions"
 import { useGame } from "../context"
-import { matchTag } from "../utils"
+import { matchTags } from "../utils"
 
 export const DialogueView = () => {
   const { state, dispatch } = useGame()
@@ -8,7 +8,7 @@ export const DialogueView = () => {
     return null
   }
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const tag = matchTag(entity.tags, /dialogue:([^:]+):(\d+)$/)[0]
+  const tag = matchTags(entity.tags, /dialogue:([^:]+):(\d+)$/)[0]
   if (!tag) {
     const handleLeave = () => {
       dispatch(changeScene('entity'))
