@@ -1,7 +1,6 @@
 import { addTag, changeScene, removeLastSkillCheckEvent, removeTag, skillCheck } from "../actions"
 import { useGame } from "../context"
 import { SkillCheck } from "../data"
-import { commaSeparateStrings } from "../utils"
 
 export const SkillCheckPreView = () => {
   const { state, dispatch } = useGame()
@@ -86,7 +85,7 @@ export const SkillCheckPostView = () => {
           <ruby>{Math.abs(skillValue)}<rp>(</rp><rt>{skillName}</rt><rp>)</rp></ruby>
           {' + '}
           <ruby><span className="placeholder">{roll.rolls.map((n) => n.toString()).join(' + ')}</span><rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
-          {' = '}
+          {' ≔ '}
           <ruby>{total}<rp>(</rp><rt>total</rt><rp>)</rp></ruby>
           {isSuccess ? ' ≥ ' : ' ≱ '}
           <ruby>{tn}<rp>(</rp><rt>target number</rt><rp>)</rp></ruby>

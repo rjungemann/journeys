@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react"
 import { DialogueView } from "./DialogueView"
 import { EntityView } from "./EntityView"
 import { InspectorView } from "./InspectorView"
 import { RoomView } from "./RoomView"
 import { SkillCheckView } from "./SkillCheckView"
 import { useGame, useTheme } from "../context"
-import { moveEntityRoom } from "../actions"
-import { dice } from "../utils"
 import { ChoiceView } from "./ChoiceView"
 import { ItemCheckView } from "./ItemCheckView"
+// @ts-ignore
+import logoLight from './logo-light-2x.png'
+// @ts-ignore
+import logoDark from './logo-dark-2x.png'
 
 export const GameView = () => {
   const { state, dispatch } = useGame()
@@ -30,6 +31,9 @@ export const GameView = () => {
   // })
   return (
     <div className={`theme-${theme}`}>
+      <div>
+        <img src={theme === 'dark' ? logoDark : logoLight} width={515/3} height={80/3} />
+      </div>
       <RoomView />
       <EntityView />
       <DialogueView />

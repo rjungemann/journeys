@@ -14,10 +14,11 @@ export const InspectorView = () => {
     dispatch(resetState())
   }
   return (
-    <>
-      <p className="inspector-toggle">
+    <div className="inspector-toggle">
+      <p>
         <button onClick={toggleInspector}>{state.showInspector ? 'Hide Inspector' : 'Show Inspector'}</button>
       </p>
+
       {
         state.showInspector
         ? (
@@ -34,6 +35,6 @@ export const InspectorView = () => {
         )
         : null
       }
-    </>
+    </div>
   )
 }

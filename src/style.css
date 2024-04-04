@@ -138,8 +138,9 @@ main {
 }
 
 .inspector-toggle {
-  margin-top: 1.6em;
+  margin-top: 2.4em;
   margin-bottom: 0.8em;
+  font-size: 0.8em;
 }
 
 .skill-formula {

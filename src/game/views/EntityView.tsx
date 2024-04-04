@@ -1,6 +1,6 @@
 import { changeChoice, changeDialogue, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
-import { capitalize, commaSeparateComponents, hasMatchingTag, matchTags } from "../utils"
+import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
 
 export const EntityDescriptionView = () => {
   const { state, dispatch } = useGame()

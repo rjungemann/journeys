@@ -1,4 +1,4 @@
-import { DESCRIPTION_ATTACHMENT, Game, ITEM_CHECK_VARIANT_VERIFY, SKILL_CHECK_ATTACHMENT } from "./data";
+import { Game, ITEM_CHECK_VARIANT_VERIFY } from "./data";
 
 export const defaultGame: Game = {
   showInspector: false,

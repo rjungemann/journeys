@@ -1,6 +1,3 @@
-export const DESCRIPTION_ATTACHMENT = 'DESCRIPTION_ATTACHMENT'
-export const SKILL_CHECK_ATTACHMENT = 'SKILL_CHECK_ATTACHMENT'
-
 export type Game = {
   showInspector: boolean
   sceneName: string

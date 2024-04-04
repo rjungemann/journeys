@@ -1,8 +1,6 @@
-import { changeEntity, changeRoom, changeScene, movePartyRoom, skillCheck } from "../actions"
+import { changeEntity, changeRoom, changeScene, movePartyRoom } from "../actions"
 import { useGame } from "../context"
-import { DESCRIPTION_ATTACHMENT, SKILL_CHECK_ATTACHMENT } from "../data"
 import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
-import { SkillCheckPartial } from "./SkillCheckView"
 
 export const RoomDescriptionsView = () => {
   const { state, dispatch } = useGame()
