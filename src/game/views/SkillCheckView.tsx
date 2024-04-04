@@ -1,10 +1,14 @@
 import { addTag, changeScene, removeLastSkillCheckEvent, removeTag, skillCheck } from "../actions"
 import { useGame } from "../context"
+import { SkillCheck } from "../data"
 import { commaSeparateStrings } from "../utils"
 
 export const SkillCheckPreView = () => {
   const { state, dispatch } = useGame()
-  const sc = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]!
+  const sc = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]
+  if (!sc) {
+    return null
+  }
   if (sc.result) {
     return null
   }
@@ -41,7 +45,7 @@ export const SkillCheckPreView = () => {
           {' + '}
           <ruby>{skillValue}<rp>(</rp><rt>{skill}</rt><rp>)</rp></ruby>
           {' + '}
-          <ruby>?<rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
+          <ruby><span className="placeholder">?</span><rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
           {' '}&ge;{' '}
           <ruby>{tn}<rp>(</rp><rt>target number</rt><rp>)</rp></ruby>
         </em>
@@ -55,7 +59,7 @@ export const SkillCheckPreView = () => {
 export const SkillCheckPostView = () => {
   const { state, dispatch } = useGame()
   const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]!
-  if (!skillCheck.result) {
+  if (!skillCheck || !skillCheck.result) {
     return null
   }
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
@@ -64,8 +68,24 @@ export const SkillCheckPostView = () => {
     return null
   }
   const handleNext = () => {
+    // Add the success or failure tag to the object, such ass `skill-check:fix-1:success`
     // TODO: Hard-coded to first character
     dispatch(addTag(objectName, `skill-check:${skillCheckName}:${isSuccess ? 'success' : 'failure'}`))
+
+    // // Transform any post-skill-check tags. For example, `skill-check:fix-1:success:tag:foo` would become `foo`
+    // const regExp = new RegExp(`skill-check:${skillCheckName}:([^:])+:tag:(.*)$`)
+    // const skillCheckTags = object.tags.filter((t) => t.match(regExp))
+    // const transformedTags = skillCheckTags.reduce((sum, t) => {
+    //   const [_, isS, t2] = t.match(regExp) || []
+    //   return ( isSuccess === (isS === 'success') ) ? [...sum, t2] : sum
+    // }, [])
+    // for (let t of skillCheckTags) {
+    //   dispatch(removeTag(objectName, t))
+    // }
+    // for (let t of transformedTags) {
+    //   dispatch(addTag(objectName, t))
+    // }
+
     dispatch(changeScene('entity'))
     dispatch(removeLastSkillCheckEvent())
   }
@@ -80,11 +100,11 @@ export const SkillCheckPostView = () => {
           {skillValue < 0 ? ' - ' : ' + '}
           <ruby>{Math.abs(skillValue)}<rp>(</rp><rt>{skillName}</rt><rp>)</rp></ruby>
           {' + '}
-          <ruby>({roll.rolls.map((n) => n.toString()).join(' + ')})<rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
+          <ruby><span className="placeholder">{roll.rolls.map((n) => n.toString()).join(' + ')}</span><rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
           {' = '}
-          {total}
+          <ruby>{total}<rp>(</rp><rt>total</rt><rp>)</rp></ruby>
           {isSuccess ? ' ≥ ' : ' ≱ '}
-          {tn}
+          <ruby>{tn}<rp>(</rp><rt>target number</rt><rp>)</rp></ruby>
         </em>
       </p>
       <p>
@@ -101,16 +121,10 @@ export const SkillCheckPostView = () => {
   )
 }
 
-export const SkillCheckView = () => {
+export const SkillCheckPartial = ({ skillCheck }: { skillCheck: SkillCheck }) => {
   const { state, dispatch } = useGame()
-  if (state.sceneName !== 'skill-check') {
-    return
-  }
-  const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]
-  if (!skillCheck) {
-    return null
-  }
   const handleLeave = (event) => {
+    // TODO: Should go back to previous scene, not hard-code to entity
     dispatch(changeScene('entity'))
   }
   return (
@@ -122,5 +136,19 @@ export const SkillCheckView = () => {
         <a onClick={handleLeave}>Leave</a>.
       </p>
     </>
+  )
+}
+
+export const SkillCheckView = () => {
+  const { state, dispatch } = useGame()
+  if (state.sceneName !== 'skill-check') {
+    return null
+  }
+  const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]
+  if (!skillCheck) {
+    return null
+  }
+  return (
+    <SkillCheckPartial skillCheck={skillCheck} />
   )
 }

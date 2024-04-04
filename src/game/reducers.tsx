@@ -117,6 +117,7 @@ export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
 }
 
 export const gameReducer = (state: Game, action: Action) => {
+  // console.log('action', action)
   const { type } = action
   if (type === RESET_STATE) {
     return resetStateReducer(state, action)

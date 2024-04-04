@@ -1,3 +1,6 @@
+export const DESCRIPTION_ATTACHMENT = 'DESCRIPTION_ATTACHMENT'
+export const SKILL_CHECK_ATTACHMENT = 'SKILL_CHECK_ATTACHMENT'
+
 export type Game = {
   showInspector: boolean
   sceneName: string
@@ -26,7 +29,8 @@ export type Tidbit = {
 // EJS + Markdown
 // TODO: `locals`
 export type DescriptionAttachment = {
-  message: string,
+  type: 'DESCRIPTION_ATTACHMENT'
+  message: string
   // locals: Record<string, any>
 }
 

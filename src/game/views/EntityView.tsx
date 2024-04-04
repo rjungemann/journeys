@@ -5,6 +5,9 @@ import { capitalize, commaSeparateComponents, hasMatchingTag, matchTags } from "
 export const EntityTidbitsView = () => {
   const { state, dispatch } = useGame()
   const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
+  if (!entity.tidbits) {
+    return null
+  }
   const tidbits = entity.tidbits.map((tn) => state.tidbits.filter((tidbit) => tidbit.name === tn)[0]!)
   return (
     <>

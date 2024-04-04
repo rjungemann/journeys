@@ -1,4 +1,4 @@
-import { Game } from "./data";
+import { DESCRIPTION_ATTACHMENT, Game, SKILL_CHECK_ATTACHMENT } from "./data";
 
 export const defaultGame: Game = {
   showInspector: false,
@@ -113,7 +113,7 @@ export const defaultGame: Game = {
       },
       skills: {},
       inventory: [],
-      tags: ['skill-check:fix-1'],
+      tags: ['skill-check:fix-1', 'skill-check:fix-1:success:tag:test-1', 'skill-check:fix-1:success:tag:test-2'],
       tidbits: []
     }
   ],
@@ -160,6 +160,14 @@ export const defaultGame: Game = {
       skill: 'mechanics',
       tn: 8,
       result: null
+    },
+    {
+      name: 'alard-2',
+      title: 'Do you want to try again?',
+      characteristic: 'education',
+      skill: 'mechanics',
+      tn: 6,
+      result: null
     }
   ],
   tidbits: [
@@ -167,6 +175,7 @@ export const defaultGame: Game = {
       name: 'alard-1:success',
       conditionTag: 'skill-check:alard-1:success',
       attachment: {
+        type: DESCRIPTION_ATTACHMENT,
         message: 'Alard seems grateful for the help.'
       }
     },
@@ -174,13 +183,15 @@ export const defaultGame: Game = {
       name: 'alard-1:failure',
       conditionTag: 'skill-check:alard-1:failure',
       attachment: {
-        message: 'It got awkward after you failed to help Alard.'
+        type: DESCRIPTION_ATTACHMENT,
+        message: 'Alard still seems upset about earlier.'
       }
     },
     {
       name: 'fix-1:success',
       conditionTag: 'skill-check:fix-1:success',
       attachment: {
+        type: DESCRIPTION_ATTACHMENT,
         message: 'Everyone appreciates the terminal being fixed.'
       }
     },
@@ -188,6 +199,7 @@ export const defaultGame: Game = {
       name: 'fix-1:failure',
       conditionTag: 'skill-check:fix-1:failure',
       attachment: {
+        type: DESCRIPTION_ATTACHMENT,
         message: 'Nobody expected you to be able to fix the terminal.'
       }
     }

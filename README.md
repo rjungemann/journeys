@@ -1,6 +1,17 @@
 ## TODO
 
-* Combine entities and items?
+* Items can have tidbits
+* Choices
+* Tidbits can have dialogue
+* Tidbits can have skill checks
+* Tidbits can have choices
+* Tidbit condition: verify item in inventory
+* Tidbit condition: consume item in inventory
+* Combat
+* Tidbit condition: verify character in party
+
+* Tag behaviors, movement
+* Other tag behaviors
 
 ```
 dialogue:<name>
@@ -11,18 +22,12 @@ dialogue:<name>:tag:<...tag>
 skill-check:<name>
 skill-check:<name>:success
 skill-check:<name>:failure
-
-# TODO
 skill-check:<name>:success:tag:<...tag>
 skill-check:<name>:failure:tag:<...tag>
 
 # TODO
 choice:<name>
-
-# TODO
 choice:<name>:<value>
-
-# TODO
 skill-check:<name>:<value>:tag:<...tag>
 ```
 

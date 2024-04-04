@@ -148,4 +148,14 @@ main {
   font-size: 1.4em;
   background-color: var(--color-pre-background);
   padding: 1em;
+  text-align: center;
+}
+
+.skill-formula ruby {
+  margin: 0 0.5em;
+}
+
+.skill-formula .placeholder {
+  border: 1px solid var(--color-input-border);
+  padding: 0 0.5em;
 }
