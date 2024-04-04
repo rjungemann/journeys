@@ -11,7 +11,8 @@ export const defaultGame: Game = {
       exits: [
         { name: 'north', title: 'north', to: 'hallway' }
       ],
-      entities: ['alard-tyney', 'terminal-1']
+      entities: ['alard-tyney', 'terminal-1'],
+      tags: ['description:fix-1:success']
     },
     {
       name: 'hallway',
@@ -21,7 +22,8 @@ export const defaultGame: Game = {
         { name: 'east', title: 'east', to: 'bridge' },
         { name: 'west', title: 'west', to: 'galley' }
       ],
-      entities: []
+      entities: [],
+      tags: []
     },
     {
       name: 'bridge',
@@ -29,7 +31,8 @@ export const defaultGame: Game = {
       exits: [
         { name: 'west', title: 'west', to: 'hallway' }
       ],
-      entities: []
+      entities: [],
+      tags: []
     },
     {
       name: 'galley',
@@ -37,7 +40,8 @@ export const defaultGame: Game = {
       exits: [
         { name: 'east', title: 'east', to: 'hallway' }
       ],
-      entities: ['kynon-morgan']
+      entities: ['kynon-morgan'],
+      tags: []
     }
   ],
   partyRepresentativeName: 'alard-tyney',

@@ -55,6 +55,7 @@ export type Room = {
   title: string
   exits: Exit[]
   entities: string[]
+  tags: string[]
 }
 
 export type Exit = {

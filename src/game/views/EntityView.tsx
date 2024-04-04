@@ -2,7 +2,7 @@ import { changeChoice, changeDialogue, changeItemCheck, changeScene, changeSkill
 import { useGame } from "../context"
 import { capitalize, commaSeparateComponents, hasMatchingTag, matchTags } from "../utils"
 
-export const DescriptionView = () => {
+export const EntityDescriptionView = () => {
   const { state, dispatch } = useGame()
   const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
   const descriptions = entity.tags.reduce((sum, tag) => {
@@ -32,7 +32,7 @@ export const DescriptionView = () => {
   )
 }
 
-export const ConversibleView = () => {
+export const EntityConversibleView = () => {
   const { state, dispatch } = useGame()
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
   const dialogueNames = entity.tags.reduce(
@@ -74,7 +74,7 @@ export const ConversibleView = () => {
   )
 }
 
-export const ChoiceListView = () => {
+export const EntityChoiceListView = () => {
   const { state, dispatch } = useGame()
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
   const choices = object.tags.reduce(
@@ -117,7 +117,7 @@ export const ChoiceListView = () => {
   )
 }
 
-export const ItemCheckListView = () => {
+export const EntityItemCheckListView = () => {
   const { state, dispatch } = useGame()
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
   const itemChecks = object.tags.reduce(
@@ -160,7 +160,7 @@ export const ItemCheckListView = () => {
   )
 }
 
-export const SkillCheckListView = () => {
+export const EntitySkillCheckListView = () => {
   const { state, dispatch } = useGame()
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
   const data = object.tags.reduce(
@@ -215,11 +215,11 @@ export const EntityView = () => {
   return (
     <>
       <h2>{capitalize(entity.title)}</h2>
-      <DescriptionView />
-      <ChoiceListView />
-      <ConversibleView />
-      <ItemCheckListView />
-      <SkillCheckListView />
+      <EntityDescriptionView />
+      <EntityChoiceListView />
+      <EntityConversibleView />
+      <EntityItemCheckListView />
+      <EntitySkillCheckListView />
       <p>
         <a onClick={handleLeave}>Go Back</a>.
       </p>

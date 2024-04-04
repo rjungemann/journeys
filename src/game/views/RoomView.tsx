@@ -4,7 +4,37 @@ import { DESCRIPTION_ATTACHMENT, SKILL_CHECK_ATTACHMENT } from "../data"
 import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
 import { SkillCheckPartial } from "./SkillCheckView"
 
-export const RoomExits = () => {
+export const RoomDescriptionsView = () => {
+  const { state, dispatch } = useGame()
+  const room = state.rooms.filter((entity) => entity.name === state.roomName)[0]!
+  const descriptions = room.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^description:(.*)$/) || []
+    if (!name) {
+      return sum
+    }
+    return [...sum, ...state.descriptions.filter((d) => d.name === name)]
+  }, [])
+  return (
+    <>
+      {
+        descriptions.map((description) => {
+          if (description.conditionTag) {
+            const hasTag = hasMatchingTag(state, description.conditionTag)
+            if (hasTag) {
+              return <p key={description.name}>{description.message}</p>
+            } else {
+              return null
+            }
+          } else {
+            return <p key={description.name}>{description.message}</p>
+          }
+        })
+      }
+    </>
+  )
+}
+
+export const RoomExitsView = () => {
   const { state, dispatch } = useGame()
   const handleExitFn = (exitName) => (event) => {
     const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
@@ -37,7 +67,7 @@ export const RoomExits = () => {
   )
 }
 
-export const RoomEntities = () => {
+export const RoomEntitiesView = () => {
   const { state, dispatch } = useGame()
   const handleEntityFn = (entity) => (event) => {
     dispatch(changeEntity(entity.name))
@@ -98,8 +128,9 @@ export const RoomView = () => {
   return (
     <>
       <h2>{capitalize(room.title)}</h2>
-      <RoomEntities />
-      <RoomExits />
+      <RoomDescriptionsView />
+      <RoomEntitiesView />
+      <RoomExitsView />
     </>
   )
 }

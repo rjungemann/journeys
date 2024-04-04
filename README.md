@@ -1,10 +1,9 @@
 ## TODO
 
-* Move entity views into room view
-* Combat
-* Expand `conditionTag` into `Condition` type
+* Multiple `conditionTags`, with an optional `!` prefix for negation
 * Tag behaviors, movement
 * Other tag behaviors
+* Combat
 
 ### Rooms
 
@@ -25,6 +24,12 @@ There are the following kinds of attachments: Descriptions, Dialogues, Choices, 
 Add these tags to your entities to map them to attachments. Sophisticated behavior can be created by the careful placement of tags.
 
 ```
+# Room tags
+
+description:<name>
+
+# Entity Tags
+
 description:<name>
 
 dialogue:<name>:0
