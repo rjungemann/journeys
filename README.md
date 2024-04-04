@@ -47,3 +47,16 @@ const dialogue = {
   ]
 }
 ```
+
+Global tags
+
+A room has tidbits
+An entity has tidbits
+An item has tidbits
+
+A tidbit has an optional condition tag
+A tidbit may have a:
+  Description (markdown)
+  Dialogue
+  Choice
+  Skill Check

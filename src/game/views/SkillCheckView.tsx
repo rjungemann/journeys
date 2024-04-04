@@ -24,16 +24,29 @@ export const SkillCheckPreView = () => {
   if (!data) {
     return null
   }
+  const dice = '2d6'
   const { tag, name, title, characteristic, skill, tn } = data
   const characteristicValue = subject.characteristics[characteristic]
+  const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
   const skillValue = subject.skills[skill]
   const handleTry = () => {
-    dispatch(skillCheck(name, subject.name, object.name, name, characteristic, skill, '2d6', tn))
+    dispatch(skillCheck(name, subject.name, object.name, name, characteristic, skill, dice, tn))
     dispatch(removeTag(object.name, tag))
   }
   return (
     <>
-      <p>{characteristicValue} ({characteristic}) + {skillValue} ({skill}) = {tn}</p>
+      <p className="skill-formula">
+        <em>
+          <ruby>{characteristicBonus}<rp>(</rp><rt>{characteristic} bonus</rt><rp>)</rp></ruby>
+          {' + '}
+          <ruby>{skillValue}<rp>(</rp><rt>{skill}</rt><rp>)</rp></ruby>
+          {' + '}
+          <ruby>?<rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
+          {' '}&ge;{' '}
+          <ruby>{tn}<rp>(</rp><rt>target number</rt><rp>)</rp></ruby>
+        </em>
+      </p>
+      <p>You will need to roll at least <em>{tn - (characteristicBonus - skillValue)}</em> to succeed.</p>
       <p><a onClick={handleTry}>Try</a>.</p>
     </>
   )
@@ -46,7 +59,7 @@ export const SkillCheckPostView = () => {
     return null
   }
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const { objectName, skillCheckName, characteristicValue, skillValue, roll, total, tn, isSuccess } = skillCheck.result
+  const { objectName, skillCheckName, characteristicName, characteristicValue, skillName, skillValue, roll, total, tn, isSuccess } = skillCheck.result
   if (object.tags.some((t) => t === `skill-check:${skillCheckName}:success` || t === `skill-check:${skillCheckName}:failure`)) {
     return null
   }
@@ -56,22 +69,30 @@ export const SkillCheckPostView = () => {
     dispatch(changeScene('entity'))
     dispatch(removeLastSkillCheckEvent())
   }
+  const dice = '2d6'
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
   return (
     <>
+      <p className="skill-formula">
+        <em>
+          <ruby>{characteristicBonus}<rp>(</rp><rt>{characteristicName} bonus</rt><rp>)</rp></ruby>
+          {skillValue < 0 ? ' - ' : ' + '}
+          <ruby>{Math.abs(skillValue)}<rp>(</rp><rt>{skillName}</rt><rp>)</rp></ruby>
+          {' + '}
+          <ruby>({roll.rolls.map((n) => n.toString()).join(' + ')})<rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
+          {' = '}
+          {total}
+          {isSuccess ? ' ≥ ' : ' ≱ '}
+          {tn}
+        </em>
+      </p>
       <p>
-        You rolled
+        You rolled <em>{total}</em> {isSuccess ? 'and' : 'but'}
         {' '}
-        <em>{`${commaSeparateStrings(roll.rolls.map((n) => n.toString()))} (${roll.rolls.length}d${roll.sides})`}</em>
-        {' '}
-        and got
-        {' '}
-        <em>{total} ({characteristicValue} {skillValue < 0 ? '-' : '+'} {Math.abs(skillValue)} + {roll.sum})</em>
-        {' '}
-        but you needed at least <em>{tn}</em>.
+        you needed at least <em>{tn}</em>.
         {' '}
         <em>{isSuccess ? 'Success!' : 'Fail.'}</em>
-        {' '}
       </p>
       <p>
         <a onClick={handleNext}>Continue</a>.

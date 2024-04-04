@@ -143,3 +143,9 @@ main {
   margin-top: 1.6em;
   margin-bottom: 0.8em;
 }
+
+.skill-formula {
+  font-size: 1.4em;
+  background-color: var(--color-pre-background);
+  padding: 1em;
+}

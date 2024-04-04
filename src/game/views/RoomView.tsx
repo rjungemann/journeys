@@ -1,17 +1,6 @@
 import { changeEntity, changeRoom, changeScene, movePartyRoom } from "../actions"
 import { useGame } from "../context"
 import { capitalize, commaSeparateComponents } from "../utils"
-// @ts-ignore
-import * as roomMarkdownFiles from '../markdown/rooms/*.md'
-
-const RoomDescription = () => {
-  const { state } = useGame()
-  const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
-  const description = roomMarkdownFiles[room.name] ? roomMarkdownFiles[room.name].default : null
-  return (
-    description ? <span dangerouslySetInnerHTML={{ __html: description }} /> : null
-  )
-}
 
 const RoomExits = () => {
   const { state, dispatch } = useGame()
@@ -106,7 +95,7 @@ export const RoomView = () => {
   const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
   return (
     <>
-      <RoomDescription />
+      <h2>{capitalize(room.title)}</h2>
       <RoomEntities />
       <RoomExits />
     </>
