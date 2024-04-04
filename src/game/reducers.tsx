@@ -1,5 +1,5 @@
-import { ADD_TAG, Action, AddTagAction, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, ChangeDialogueAction, ChangeEntityAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveLastSkillCheckEventAction, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction, moveEntityRoom } from "./actions"
-import { Game } from "./data"
+import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ITEM_CHECK, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveLastSkillCheckEventAction, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction, moveEntityRoom } from "./actions"
+import { Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY } from "./data"
 import { defaultGame } from "./defaultGame"
 import { dice } from "./utils"
 
@@ -30,6 +30,16 @@ export const changeEntityReducer = (state: Game, action: ChangeEntityAction) => 
 export const changeDialogueReducer = (state: Game, action: ChangeDialogueAction) => {
   const { dialogueName } = action
   return { ...state, dialogueName }
+}
+
+export const changeChoiceReducer = (state: Game, action: ChangeChoiceAction) => {
+  const { choiceName } = action
+  return { ...state, choiceName }
+}
+
+export const changeItemCheckReducer = (state: Game, action: ChangeItemCheckAction) => {
+  const { itemCheckName } = action
+  return { ...state, itemCheckName }
 }
 
 export const changeSkillCheckReducer = (state: Game, action: ChangeSkillCheckAction) => {
@@ -116,8 +126,38 @@ export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
   }
 }
 
+export const itemCheckReducer = (state: Game, action: ItemCheckAction) => {
+  const { subjectName, itemCheckName } = action
+  const subject = state.entities.filter((s) => s.name === subjectName)[0]!
+  const otherEntities = state.entities.filter((s) => s.name !== subjectName)
+  const itemCheck = state.itemChecks.filter((ic) => ic.name === itemCheckName)[0]!
+  if (itemCheck.variant.type === ITEM_CHECK_VARIANT_GIVE) {
+    const updatedInventory = [...subject.inventory, itemCheck.itemName]
+    const updatedSubject = { ...subject, inventory: updatedInventory }
+    return { ...state, entities: [...otherEntities, updatedSubject] }
+  }
+  if (itemCheck.variant.type === ITEM_CHECK_VARIANT_TAKE) {
+    const hasItem = subject.inventory.some((itemName) => itemName === itemCheck.itemName)
+    // TODO: Do something different than throw
+    if (!hasItem) {
+      throw new Error(`Character does not have item ${itemCheck.itemName}`)
+    }
+    const updatedInventory = subject.inventory.filter((itemName) => itemName !== itemCheck.itemName)
+    const updatedSubject = { ...subject, inventory: updatedInventory }
+    return { ...state, entities: [...otherEntities, updatedSubject] }
+  }
+  if (itemCheck.variant.type === ITEM_CHECK_VARIANT_VERIFY) {
+    const hasItem = subject.inventory.some((itemName) => itemName === itemCheck.itemName)
+    // TODO: Do something different than throw
+    if (!hasItem) {
+      throw new Error(`Character does not have item ${itemCheck.itemName}`)
+    }
+    return state
+  }
+  throw new Error(`Unrecognized item check variant for ${itemCheck.name}`)
+}
+
 export const gameReducer = (state: Game, action: Action) => {
-  // console.log('action', action)
   const { type } = action
   if (type === RESET_STATE) {
     return resetStateReducer(state, action)
@@ -136,6 +176,12 @@ export const gameReducer = (state: Game, action: Action) => {
   }
   if (type === CHANGE_DIALOGUE) {
     return changeDialogueReducer(state, action)
+  }
+  if (type === CHANGE_CHOICE) {
+    return changeChoiceReducer(state, action)
+  }
+  if (type === CHANGE_ITEM_CHECK) {
+    return changeItemCheckReducer(state, action)
   }
   if (type === CHANGE_SKILL_CHECK) {
     return changeSkillCheckReducer(state, action)
@@ -157,6 +203,9 @@ export const gameReducer = (state: Game, action: Action) => {
   }
   if (type === SKILL_CHECK) {
     return skillCheckReducer(state, action)
+  }
+  if (type === ITEM_CHECK) {
+    return itemCheckReducer(state, action)
   }
   throw new Error('Unrecognized action')
 }

@@ -1,4 +1,4 @@
-import { DESCRIPTION_ATTACHMENT, Game, SKILL_CHECK_ATTACHMENT } from "./data";
+import { DESCRIPTION_ATTACHMENT, Game, ITEM_CHECK_VARIANT_VERIFY, SKILL_CHECK_ATTACHMENT } from "./data";
 
 export const defaultGame: Game = {
   showInspector: false,
@@ -77,7 +77,9 @@ export const defaultGame: Game = {
       name: 'kynon-morgan',
       title: 'Kynon Morgan',
       tags: [
-        'character'
+        'character',
+        'choice:birds-1',
+        'item-check:has-revolver-1'
       ],
       characteristics: {
         strength: 10,
@@ -175,8 +177,47 @@ export const defaultGame: Game = {
       result: null
     }
   ],
-  choices: [],
+  itemCheckName: null,
+  itemChecks: [
+    {
+      name: 'has-revolver-1',
+      conditionTag: null,
+      title: 'Do you have the gun?',
+      message: 'Looks like you have it.',
+      variant: { type: ITEM_CHECK_VARIANT_VERIFY },
+      itemName: 'revolver-1'
+    }
+  ],
+  choiceName: null,
+  choices: [
+    {
+      name: 'birds-1',
+      title: 'A quick question about birds',
+      conditionTag: null,
+      message: 'Do you like birds?',
+      options: [
+        {
+          name: 'birds-1:yes',
+          message: 'Yes'
+        },
+        {
+          name: 'birds-1:no',
+          message: 'No'
+        }
+      ]
+    }
+  ],
   descriptions: [
+    {
+      name: 'birds-1:yes',
+      conditionTag: 'birds-1:yes',
+      message: 'That is cool that you like birds.'
+    },
+    {
+      name: 'birds-1:no',
+      conditionTag: 'birds-1:no',
+      message: 'How can you not like birds?'
+    },
     {
       name: 'alard-1:success',
       conditionTag: 'skill-check:alard-1:success',

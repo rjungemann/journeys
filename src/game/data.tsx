@@ -14,12 +14,17 @@ export type Game = {
   log: LogItem[]
   skillCheckName: string | null
   skillChecks: SkillCheck[]
+  itemCheckName: string | null
+  itemChecks: ItemCheck[]
+  choiceName: string | null
   choices: Choice[]
   descriptions: Description[]
 }
 
 type Choice = {
   name: string
+  title: string
+  conditionTag: string
   message: string
   options: Option[]
 }
@@ -29,9 +34,8 @@ type Option = {
   message: string
 }
 
-// TODO: Replace tidbits with descriptions
-// TODO: Entities
 // TODO: Items
+// TODO: Rooms
 export type Description = {
   name: string
   conditionTag: string | null
@@ -122,3 +126,27 @@ export type SkillCheckResult = {
   tn: number
   isSuccess: boolean
 }
+
+export type ItemCheck = {
+  name: string
+  conditionTag: string | null
+  title: string
+  message: string
+  variant: ItemCheckVariant
+  itemName: string
+}
+
+export const ITEM_CHECK_VARIANT_GIVE = 'ITEM_CHECK_VARIANT_GIVE'
+export const ITEM_CHECK_VARIANT_TAKE = 'ITEM_CHECK_VARIANT_TAKE'
+export const ITEM_CHECK_VARIANT_VERIFY = 'ITEM_CHECK_VARIANT_VERIFY'
+
+export type ItemCheckVariantGive = {
+  type: 'ITEM_CHECK_VARIANT_GIVE'
+}
+export type ItemCheckVariantTake = {
+  type: 'ITEM_CHECK_VARIANT_TAKE'
+}
+export type ItemCheckVariantVerify = {
+  type: 'ITEM_CHECK_VARIANT_VERIFY'
+}
+export type ItemCheckVariant = ItemCheckVariantGive | ItemCheckVariantTake | ItemCheckVariantVerify

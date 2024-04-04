@@ -1,8 +1,8 @@
-import { changeDialogue, changeScene, changeSkillCheck } from "../actions"
+import { changeChoice, changeDialogue, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
 import { capitalize, commaSeparateComponents, hasMatchingTag, matchTags } from "../utils"
 
-export const EntityTidbitsView = () => {
+export const DescriptionView = () => {
   const { state, dispatch } = useGame()
   const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
   const descriptions = entity.tags.reduce((sum, tag) => {
@@ -74,7 +74,93 @@ export const ConversibleView = () => {
   )
 }
 
-export const SkillCheckChoiceView = () => {
+export const ChoiceListView = () => {
+  const { state, dispatch } = useGame()
+  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const choices = object.tags.reduce(
+    (sum, tag) => {
+      const [_, name] = tag.match(/^choice:([^:]+)$/) || []
+      if (!name) {
+        return sum
+      }
+      const choice = state.choices.filter((c) => c.name === name)[0]!
+      if (choice.conditionTag) {
+        const hasTag = hasMatchingTag(state, choice.conditionTag)
+        if (hasTag) {
+          return [...sum, choice]
+        } else {
+          return sum
+        }
+      } else {
+        return [...sum, choice]
+      }
+    },
+    []
+  )
+  const handleNextFn = (name) => (event) => {
+    dispatch(changeChoice(name))
+    dispatch(changeScene('choice'))
+  }
+  return (
+    <p>
+      {
+        commaSeparateComponents(
+          choices.map((choice) => {
+            return (
+              <a onClick={handleNextFn(choice.name)}>{choice.title}</a>
+            )
+          }),
+          'or'
+        )
+      }
+    </p>
+  )
+}
+
+export const ItemCheckListView = () => {
+  const { state, dispatch } = useGame()
+  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const itemChecks = object.tags.reduce(
+    (sum, tag) => {
+      const [_, name] = tag.match(/^item-check:([^:]+)$/) || []
+      if (!name) {
+        return sum
+      }
+      const itemCheck = state.itemChecks.filter((c) => c.name === name)[0]!
+      if (itemCheck.conditionTag) {
+        const hasTag = hasMatchingTag(state, itemCheck.conditionTag)
+        if (hasTag) {
+          return [...sum, itemCheck]
+        } else {
+          return sum
+        }
+      } else {
+        return [...sum, itemCheck]
+      }
+    },
+    []
+  )
+  const handleNextFn = (name) => (event) => {
+    dispatch(changeItemCheck(name))
+    dispatch(changeScene('item-check'))
+  }
+  return (
+    <p>
+      {
+        commaSeparateComponents(
+          itemChecks.map((itemCheck) => {
+            return (
+              <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+            )
+          }),
+          'or'
+        )
+      }
+    </p>
+  )
+}
+
+export const SkillCheckListView = () => {
   const { state, dispatch } = useGame()
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
   const data = object.tags.reduce(
@@ -102,7 +188,7 @@ export const SkillCheckChoiceView = () => {
     dispatch(changeScene('skill-check'))
   }
   return (
-    <>
+    <p>
       {
         commaSeparateComponents(
           data.map(({ name, title }) => {
@@ -113,7 +199,7 @@ export const SkillCheckChoiceView = () => {
           'or'
         )
       }
-    </>
+    </p>
   )
 }
 
@@ -133,9 +219,11 @@ export const EntityView = () => {
   return (
     <>
       <h2>{capitalize(entity.title)}</h2>
-      <EntityTidbitsView />
+      <DescriptionView />
+      <ChoiceListView />
       <ConversibleView />
-      <SkillCheckChoiceView />
+      <ItemCheckListView />
+      <SkillCheckListView />
       <p>
         <a onClick={handleLeave}>Go Back</a>.
       </p>

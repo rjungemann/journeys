@@ -7,6 +7,8 @@ import { SkillCheckView } from "./SkillCheckView"
 import { useGame } from "../context"
 import { moveEntityRoom } from "../actions"
 import { dice } from "../utils"
+import { ChoiceView } from "./ChoiceView"
+import { ItemCheckView } from "./ItemCheckView"
 
 export const GameView = () => {
   const { state, dispatch } = useGame()
@@ -30,6 +32,8 @@ export const GameView = () => {
       <RoomView />
       <EntityView />
       <DialogueView />
+      <ChoiceView />
+      <ItemCheckView />
       <SkillCheckView />
       <InspectorView />
     </>

@@ -4,13 +4,16 @@ export const CHANGE_SCENE = 'CHANGE_SCENE'
 export const CHANGE_ROOM = 'CHANGE_ROOM'
 export const CHANGE_ENTITY = 'CHANGE_ENTITY'
 export const CHANGE_DIALOGUE = 'CHANGE_DIALOGUE'
+export const CHANGE_CHOICE = 'CHANGE_CHOICE'
 export const CHANGE_SKILL_CHECK = 'CHANGE_SKILL_CHECK'
+export const CHANGE_ITEM_CHECK = 'CHANGE_ITEM_CHECK'
 export const REMOVE_LAST_SKILL_CHECK_EVENT = 'REMOVE_LAST_SKILL_CHECK_EVENT'
 export const MOVE_ENTITY_ROOM = 'MOVE_ENTITY_ROOM'
 export const MOVE_PARTY_ROOM = 'MOVE_PARTY_ROOM'
 export const ADD_TAG = 'ADD_TAG'
 export const REMOVE_TAG = 'REMOVE_TAG'
 export const SKILL_CHECK = 'SKILL_CHECK'
+export const ITEM_CHECK = 'ITEM_CHECK'
 
 export type ResetStateAction = {
   type: 'RESET_STATE'
@@ -41,9 +44,19 @@ export type ChangeDialogueAction = {
   dialogueName: string
 }
 
+export type ChangeChoiceAction = {
+  type: 'CHANGE_CHOICE'
+  choiceName: string
+}
+
 export type ChangeSkillCheckAction = {
   type: 'CHANGE_SKILL_CHECK'
   skillCheckName: string
+}
+
+export type ChangeItemCheckAction = {
+  type: 'CHANGE_ITEM_CHECK'
+  itemCheckName: string
 }
 
 export type RemoveLastSkillCheckEventAction = {
@@ -100,6 +113,12 @@ export type SkillCheckAction = {
   tn: number
 }
 
+export type ItemCheckAction = {
+  type: 'ITEM_CHECK'
+  subjectName: string
+  itemCheckName: string
+}
+
 export type Action =
   ResetStateAction
   | ShowInspectorAction
@@ -107,6 +126,8 @@ export type Action =
   | ChangeRoomAction
   | ChangeEntityAction
   | ChangeDialogueAction
+  | ChangeChoiceAction
+  | ChangeItemCheckAction
   | ChangeSkillCheckAction
   | RemoveLastSkillCheckEventAction
   | MoveEntityAction
@@ -116,6 +137,7 @@ export type Action =
   | RemoveTagAction
   | AddTagAction
   | SkillCheckAction
+  | ItemCheckAction
 
 export const resetState = (): ResetStateAction => ({
   type: RESET_STATE,
@@ -144,6 +166,16 @@ export const changeEntity = (entityName: string): ChangeEntityAction => ({
 export const changeDialogue = (dialogueName: string): ChangeDialogueAction => ({
   type: CHANGE_DIALOGUE,
   dialogueName,
+})
+
+export const changeChoice = (choiceName: string): ChangeChoiceAction => ({
+  type: CHANGE_CHOICE,
+  choiceName,
+})
+
+export const changeItemCheck = (itemCheckName: string): ChangeItemCheckAction => ({
+  type: CHANGE_ITEM_CHECK,
+  itemCheckName,
 })
 
 export const changeSkillCheck = (skillCheckName: string): ChangeSkillCheckAction => ({
@@ -190,4 +222,10 @@ export const skillCheck = (name: string, subjectName: string, objectName: string
   skillName,
   dice,
   tn,
+})
+
+export const itemCheck = (subjectName: string, itemCheckName: string): ItemCheckAction => ({
+  type: ITEM_CHECK,
+  subjectName,
+  itemCheckName,
 })
