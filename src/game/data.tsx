@@ -6,6 +6,7 @@ export type Game = {
   sceneName: string
   roomName: string
   rooms: Room[]
+  partyRepresentativeName: string
   party: string[]
   entityName: string | null
   entities: Entity[]
@@ -42,7 +43,6 @@ export type Description = {
   message: string
 }
 
-// TODO: Optional conditionTag
 export type Dialogue = {
   name: string
   conditionTag: string | null
@@ -50,7 +50,6 @@ export type Dialogue = {
   messages: string[]
 }
 
-// TODO: Tags on rooms
 export type Room = {
   name: string
   title: string

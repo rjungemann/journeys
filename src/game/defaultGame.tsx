@@ -40,6 +40,7 @@ export const defaultGame: Game = {
       entities: ['kynon-morgan']
     }
   ],
+  partyRepresentativeName: 'alard-tyney',
   party: ['alard-tyney'],
   entityName: null,
   entities: [
@@ -49,9 +50,8 @@ export const defaultGame: Game = {
       tags: [
         'character',
         'dialogue:alard-1:0',
-        'dialogue:alard-1:tag:skill-check:alard-1',
-        'dialogue:alard-1:tag:skill-check:alard-1:success:tag:alard-1:success',
-        'dialogue:alard-1:tag:skill-check:alard-1:failure:tag:alard-1:failure',
+        'skill-check:alard-1',
+        'skill-check:alard-2',
         'description:alard-1:success',
         'description:alard-1:failure'
       ],
@@ -160,7 +160,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'alard-1',
-      conditionTag: null,
+      conditionTag: 'dialogue:alard-1:done',
       title: 'Do you think you could give me some guidance?',
       characteristic: 'education',
       skill: 'mechanics',
@@ -169,7 +169,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'alard-2',
-      conditionTag: null,
+      conditionTag: 'skill-check:alard-1:failure',
       title: 'Do you want to try again?',
       characteristic: 'education',
       skill: 'mechanics',

@@ -13,7 +13,7 @@ export const SkillCheckPreView = () => {
     return null
   }
   const object = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const subject = state.entities.filter((e) => state.party.some((en) => e.name === en))[0]!
+  const subject = state.entities.filter((e) => e.name === state.partyRepresentativeName)[0]!
   const data = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
@@ -29,7 +29,7 @@ export const SkillCheckPreView = () => {
     return null
   }
   const dice = '2d6'
-  const { tag, name, title, characteristic, skill, tn } = data
+  const { tag, name, characteristic, skill, tn } = data
   const characteristicValue = subject.characteristics[characteristic]
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
   const skillValue = subject.skills[skill]
@@ -68,15 +68,14 @@ export const SkillCheckPostView = () => {
     return null
   }
   const handleNext = () => {
+    console.log('skill check done', objectName)
     // Add the success or failure tag to the object, such ass `skill-check:fix-1:success`
-    // TODO: Hard-coded to first character
     dispatch(addTag(objectName, `skill-check:${skillCheckName}:${isSuccess ? 'success' : 'failure'}`))
 
     dispatch(changeScene('entity'))
     dispatch(removeLastSkillCheckEvent())
   }
   const dice = '2d6'
-  const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
   return (
     <>
@@ -110,7 +109,6 @@ export const SkillCheckPostView = () => {
 export const SkillCheckPartial = ({ skillCheck }: { skillCheck: SkillCheck }) => {
   const { state, dispatch } = useGame()
   const handleLeave = (event) => {
-    // TODO: Should go back to previous scene, not hard-code to entity
     dispatch(changeScene('entity'))
   }
   return (

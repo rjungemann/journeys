@@ -43,6 +43,7 @@ export const DialogueView = () => {
   const handleNext = () => {
     dispatch(removeTag(entity.name, tag))
     if (index >= dialogue.messages.length - 1) {
+      console.log('dialogue done', entity.name)
       dispatch(addTag(entity.name, `dialogue:${name}:done`))
       dispatch(changeScene('entity'))
     } else {

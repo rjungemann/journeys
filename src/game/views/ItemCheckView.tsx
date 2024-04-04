@@ -10,7 +10,6 @@ export const ItemCheckView = () => {
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
   const tag = matchTags(entity.tags, /item-check:([^:]+)$/)[0]
   const handleLeave = () => {
-    // TODO: Don't hard-code to entity, keep track of scene to go back to
     dispatch(changeScene('entity'))
   }
   if (!tag) {
@@ -42,8 +41,7 @@ export const ItemCheckView = () => {
 
   const handleNext = () => {
     dispatch(removeTag(entity.name, tag))
-    // TODO: Hard-coded to first party member
-    const subject = state.entities.filter((e) => e.name === state.party[0])[0]!
+    const subject = state.entities.filter((e) => e.name === state.partyRepresentativeName)[0]!
     dispatch(itemCheck(subject.name, ic.name))
     dispatch(addTag(entity.name, `item-check:${ic.name}:done`))
     dispatch(changeScene('entity'))

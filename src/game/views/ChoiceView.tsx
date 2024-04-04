@@ -10,7 +10,6 @@ export const ChoiceView = () => {
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
   const tag = matchTags(entity.tags, /choice:([^:]+)$/)[0]
   const handleLeave = () => {
-    // TODO: Don't hard-code to entity, keep track of scene to go back to
     dispatch(changeScene('entity'))
   }
   if (!tag) {

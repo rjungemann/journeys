@@ -211,10 +211,6 @@ export const EntityView = () => {
   if (state.sceneName !== 'entity') {
     return null
   }
-  if (!state.entityName) {
-    // TODO
-    return null
-  }
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
   return (
     <>

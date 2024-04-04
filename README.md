@@ -1,14 +1,8 @@
 ## TODO
 
 * Move entity views into room view
-* Items as entities?
-* Choices
 * Combat
 * Expand `conditionTag` into `Condition` type
-* Condition: verify item in inventory
-* Condition: consume item in inventory
-* Condition: verify character in party
-
 * Tag behaviors, movement
 * Other tag behaviors
 
@@ -20,14 +14,20 @@ TODO
 
 TODO
 
-### Attachments
+### Items
+
+TODO
+
+### Tags and Attachments
+
+There are the following kinds of attachments: Descriptions, Dialogues, Choices, Item Checks, Skill Checks, and Party Checks.
 
 Add these tags to your entities to map them to attachments. Sophisticated behavior can be created by the careful placement of tags.
 
 ```
 description:<name>
 
-dialogue:<name>
+dialogue:<name>:0
 dialogue:<name>:<index>
 dialogue:<name>:done
 
@@ -40,4 +40,8 @@ skill-check:<name>:failure
 
 item-check:<name>
 item-check:<name>:done
+
+# TODO: A way to make sure a character is in the party
+party-check:<name>
+party-check:<name>:done
 ```

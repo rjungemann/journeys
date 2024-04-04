@@ -3,6 +3,45 @@ import { Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARI
 import { defaultGame } from "./defaultGame"
 import { dice } from "./utils"
 
+export const moveEntity = (state: Game) => (from: string, to: string, entityName: string) => {
+  const fromRoom = state.rooms.filter((s) => s.name === from)[0]!
+  const updatedFrom = {
+    ...fromRoom,
+    entities: fromRoom.entities.filter((en) => en !== entityName)
+  }
+  const toRoom = state.rooms.filter((s) => s.name === to)[0]!
+  const updatedTo = {
+    ...toRoom,
+    entities: [...toRoom.entities, entityName]
+  }
+
+  const rooms = state.rooms.filter((s) => s.name !== from && s.name !== to)
+
+  return { ...state, rooms: [...rooms, updatedFrom, updatedTo] }
+}
+
+export const moveParty = (state: Game) => (from: string, to: string) => {
+  let updatedState = { ...state }
+  for (let entityName of state.party) {
+    updatedState = moveEntity(updatedState)(from, to, entityName)
+  }
+  return updatedState
+}
+
+export const addTag = (state: Game) => (entityName: string, tag: string) => {
+  const entity = state.entities.filter((e) => e.name === entityName)[0]!
+  const updatedEntity = { ...entity, tags: [...entity.tags, tag] }
+  const updatedEntities = [...state.entities.filter((e) => e.name !== entityName), updatedEntity]
+  return { ...state, entities: updatedEntities }
+}
+
+export const removeTag = (state: Game) => (entityName: string, tag: string) => {
+  const entity = state.entities.filter((e) => e.name === entityName)[0]!
+  const updatedEntity = { ...entity, tags: entity.tags.filter((t) => t !== tag) }
+  const updatedEntities = [...state.entities.filter((e) => e.name !== entityName), updatedEntity]
+  return { ...state, entities: updatedEntities }
+}
+
 export const resetStateReducer = (state: Game, action: ResetStateAction) => {
   return { ...defaultGame }
 }
@@ -53,46 +92,22 @@ export const removeLastSkillCheckEventReducer = (state: Game, action: RemoveLast
 
 export const moveEntityRoomReducer = (state: Game, action: MoveEntityRoomAction) => {
   const { from, to, entityName } = action
-
-  const fromRoom = state.rooms.filter((s) => s.name === from)[0]!
-  const updatedFrom = {
-    ...fromRoom,
-    entities: fromRoom.entities.filter((en) => en !== entityName)
-  }
-  const toRoom = state.rooms.filter((s) => s.name === to)[0]!
-  const updatedTo = {
-    ...toRoom,
-    entities: [...toRoom.entities, entityName]
-  }
-
-  const rooms = state.rooms.filter((s) => s.name !== from && s.name !== to)
-
-  return { ...state, rooms: [...rooms, updatedFrom, updatedTo] }
+  return moveEntity(state)(from, to, entityName)
 }
 
 export const movePartyRoomReducer = (state: Game, action: MovePartyRoomAction) => {
   const { from, to } = action
-  let updatedState = { ...state }
-  for (let entityName of state.party) {
-    updatedState = moveEntityRoomReducer(updatedState, moveEntityRoom(from, to, entityName))
-  }
-  return updatedState
+  return moveParty(state)(from, to)
 }
 
 export const addTagReducer = (state: Game, action: AddTagAction) => {
   const { entityName, tag } = action
-  const entity = state.entities.filter((e) => e.name === entityName)[0]!
-  const updatedEntity = { ...entity, tags: [...entity.tags, tag] }
-  const updatedEntities = [...state.entities.filter((e) => e.name !== entityName), updatedEntity]
-  return { ...state, entities: updatedEntities }
+  return addTag(state)(entityName, tag)
 }
 
 export const removeTagReducer = (state: Game, action: RemoveTagAction) => {
   const { entityName, tag } = action
-  const entity = state.entities.filter((e) => e.name === entityName)[0]!
-  const updatedEntity = { ...entity, tags: entity.tags.filter((t) => t !== tag) }
-  const updatedEntities = [...state.entities.filter((e) => e.name !== entityName), updatedEntity]
-  return { ...state, entities: updatedEntities }
+  return removeTag(state)(entityName, tag)
 }
 
 export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
