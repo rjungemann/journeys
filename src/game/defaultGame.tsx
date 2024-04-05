@@ -195,7 +195,7 @@ export const defaultGame: Game = {
         'character',
         'wandering',
         'choice:birds-1',
-        'item-check:has-revolver-6'
+        'item-check:has-revolver-1'
       ],
       characteristics: {
         strength: 10,
@@ -341,7 +341,7 @@ export const defaultGame: Game = {
       title: 'Do you have the gun?',
       message: 'Looks like you have it.',
       variant: { type: ITEM_CHECK_VARIANT_VERIFY },
-      itemName: 'revolver-1'
+      itemName: 'revolver-5'
     }
   ],
   partyCheckName: null,

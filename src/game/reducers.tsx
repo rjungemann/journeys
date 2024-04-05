@@ -1,7 +1,7 @@
-import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CREATE_FIELD, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, CreateFieldAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, ITEM_CHECK, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
-import { Field, Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, Teammate } from "./data"
+import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CREATE_FIELD, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, CreateFieldAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
+import { BARRIER_OBSTACLE, COVER_OBSTACLE, Field, Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, TEAMMATE, Teammate } from "./data"
 import { defaultGame } from "./defaultGame"
-import { addTag, findField, moveEntity, moveParty, removeTag } from "./helpers"
+import { addTag, findEntity, findField, moveEntity, moveParty, removeTag } from "./helpers"
 import { dice } from "./utils"
 
 export const handleTicksReducer = (state: Game, action: Action) => {
@@ -21,6 +21,10 @@ export const handleTicksReducer = (state: Game, action: Action) => {
     n++
   }
   if (action.type === ITEM_CHECK) {
+    // Trigger a tick if an item check is performed
+    n++
+  }
+  if (action.type === FIELD_RANDOMLY_MOVE_ALL) {
     // Trigger a tick if an item check is performed
     n++
   }
@@ -167,14 +171,31 @@ const createFieldReducer = (state: Game, action: CreateFieldAction) => {
   for (let i = 0; i < 5; i++) {
     obstacles.push({
       name: `obstacle-${i + 1}`,
+      type: Math.random() < 0.5 ? BARRIER_OBSTACLE : COVER_OBSTACLE,
       x: Math.random() * 100 + 100
     })
   }
-  const teammates: Teammate[] = sides.reduce<Teammate[]>((sum, names) => {
-    const teammates = names.map((en) => ({ name: en, x: Math.random() * 100 + 100, movement: 5 }))
+  const teammates = sides.reduce<Teammate[]>((sum: Teammate[], names: string[])=> {
+    const teammates = names.map((en: string): Teammate => ({ name: en, type: TEAMMATE, x: Math.random() * 100 + 100, movement: 5 }))
     return [...sum, ...teammates]
   }, [])
-  const field: Field = { name: fieldName, sides: ss, obstacles, teammates }
+  const initiativePairs: [number, string][] = teammates
+  .map((teammate) => {
+    const entity = findEntity(state)(teammate.name)
+    const dexterity = entity.characteristics.dexterity
+    const { sum } = dice('2d6')
+    const pair: [number, string] = [sum + dexterity, teammate.name]
+    return pair
+  })
+  .sort((a: [number, string], b: [number, string]) => a[0] - b[0])
+  const field: Field = {
+    name: fieldName,
+    sides: ss,
+    obstacles,
+    teammates,
+    initiativePairs,
+    initiativeIndex: 0
+  }
   return { ...state, fields: [...state.fields, field] }
 }
 
@@ -188,6 +209,13 @@ const fieldRandomlyMoveAllReducer = (state: Game, action: FieldRandomlyMoveAllAc
   const updatedField = { ...field, teammates: tms }
   const otherFields = state.fields.filter((f) => f.name !== fieldName)
   return { ...state, fields: [...otherFields, updatedField] }
+}
+
+const incrementFieldInitiativeReducer = (state: Game, action: IncrementFieldInitiativeAction) => {
+  const field = findField(state)(state.fieldName)
+  const otherFields = state.fields.filter((f) => f.name !== state.fieldName)
+  const initiativeIndex = (field.initiativeIndex + 1) % field.initiativePairs.length
+  return { ...state, fields: [...otherFields, { ...field, initiativeIndex }] }
 }
 
 export const gameReducer = (state: Game, action: Action) => {
@@ -249,6 +277,9 @@ export const gameReducer = (state: Game, action: Action) => {
   }
   if (type === FIELD_RANDOMLY_MOVE_ALL) {
     return fieldRandomlyMoveAllReducer(state, action)
+  }
+  if (type === INCREMENT_FIELD_INITIATIVE) {
+    return incrementFieldInitiativeReducer(state, action)
   }
   throw new Error(`Unrecognized action ${action.type}`)
 }

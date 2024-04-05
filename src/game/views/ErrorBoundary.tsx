@@ -17,6 +17,7 @@ export class ErrorBoundary extends Component {
   render() {
     const resetStorage = () => {
       localStorage.removeItem(GAME_KEY)
+      window.location.reload()
     }
     if (this.state.error) {
       // You can render any custom fallback UI
@@ -28,7 +29,7 @@ export class ErrorBoundary extends Component {
                 <>
                   <h1>An error occurred.</h1>
                   <h2>{this.state.error.name}: {this.state.error.message}</h2>
-                  <a onClick={resetStorage}>Reset Storage</a>
+                  <button onClick={resetStorage}>Reset Storage</button>
                   <pre className="code">{JSON.stringify(state, null, 2)}</pre>
                 </>
               )

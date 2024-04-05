@@ -173,6 +173,7 @@ export type PartyCheckVariantAbsent = {
 }
 export type PartyCheckVariant = PartyCheckVariantPresent | PartyCheckVariantAbsent
 
+export const TEAMMATE = 'TEAMMATE'
 export const COVER_OBSTACLE = 'COVER_OBSTACLE'
 export const BARRIER_OBSTACLE = 'BARRIER_OBSTACLE'
 
@@ -181,12 +182,8 @@ export type Field = {
   sides: Side[]
   obstacles: Obstacle[]
   teammates: Teammate[]
-}
-
-export type Teammate = {
-  name: string
-  x: number
-  movement: number
+  initiativePairs: [number, string][]
+  initiativeIndex: number
 }
 
 export type Side = {
@@ -194,16 +191,27 @@ export type Side = {
   team: string[]
 }
 
+export type Teammate = {
+  name: string
+  type: 'TEAMMATE'
+  x: number
+  movement: number
+}
+
 export type CoverObstacle = {
   name: string
   type: 'COVER_OBSTACLE'
   x: number
+  movement: 0
 }
 
 export type BarrierObstacle = {
   name: string
   type: 'BARRIER_OBSTACLE'
   x: number
+  movement: 0
 }
+
+export type FieldEntity = Teammate | CoverObstacle | BarrierObstacle
 
 export type Obstacle = CoverObstacle | BarrierObstacle

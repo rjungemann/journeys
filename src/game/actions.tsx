@@ -18,6 +18,7 @@ export const ITEM_CHECK = 'ITEM_CHECK'
 export const PARTY_CHECK = 'PARTY_CHECK'
 export const CREATE_FIELD = 'CREATE_FIELD'
 export const FIELD_RANDOMLY_MOVE_ALL = 'FIELD_RANDOMLY_MOVE_ALL'
+export const INCREMENT_FIELD_INITIATIVE = 'INCREMENT_FIELD_INITIATIVE'
 
 export type ResetStateAction = {
   type: 'RESET_STATE'
@@ -140,6 +141,11 @@ export type FieldRandomlyMoveAllAction = {
   fieldName: string
 }
 
+export type IncrementFieldInitiativeAction = {
+  type: 'INCREMENT_FIELD_INITIATIVE'
+  fieldName: string
+}
+
 export type Action =
   ResetStateAction
   | ShowInspectorAction
@@ -162,6 +168,7 @@ export type Action =
   | PartyCheckAction
   | CreateFieldAction
   | FieldRandomlyMoveAllAction
+  | IncrementFieldInitiativeAction
 
 export const resetState = (): ResetStateAction => ({
   type: RESET_STATE,
@@ -268,5 +275,10 @@ export const createField = (fieldName: string, sides: string[][]): CreateFieldAc
 
 export const fieldRandomlyMoveAll = (fieldName: string): FieldRandomlyMoveAllAction => ({
   type: FIELD_RANDOMLY_MOVE_ALL,
+  fieldName,
+})
+
+export const incrementFieldInitiative = (fieldName: string): IncrementFieldInitiativeAction => ({
+  type: INCREMENT_FIELD_INITIATIVE,
   fieldName,
 })

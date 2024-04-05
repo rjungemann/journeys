@@ -1,5 +1,6 @@
 ## TODO
 
+* Editor section
 * Multiple `conditionTags`, with an optional `!` prefix for negation
 * Other tag behaviors for movement and other activity?
 * Combat
