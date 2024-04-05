@@ -1,6 +1,7 @@
 import { Game, ITEM_CHECK_VARIANT_VERIFY } from "./data";
 
 export const defaultGame: Game = {
+  ticks: 0,
   showInspector: false,
   sceneName: 'room',
   roomName: 'quarters',
@@ -82,6 +83,7 @@ export const defaultGame: Game = {
       title: 'Kynon Morgan',
       tags: [
         'character',
+        'wandering',
         'choice:birds-1',
         'item-check:has-revolver-1'
       ],
@@ -191,6 +193,10 @@ export const defaultGame: Game = {
       variant: { type: ITEM_CHECK_VARIANT_VERIFY },
       itemName: 'revolver-1'
     }
+  ],
+  partyCheckName: null,
+  partyChecks: [
+
   ],
   choiceName: null,
   choices: [

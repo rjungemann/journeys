@@ -1,28 +1,22 @@
 import { changeEntity, changeRoom, changeScene, movePartyRoom } from "../actions"
 import { useGame } from "../context"
-import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
+import { findExit, findNonPartyEntitiesInRoom, findParty, findRoom, tagExitsGlobally } from "../helpers"
+import { capitalize, commaSeparateComponents } from "../utils"
 
 export const RoomDescriptionsView = () => {
-  const { state, dispatch } = useGame()
-  const room = state.rooms.filter((entity) => entity.name === state.roomName)[0]!
+  const { state } = useGame()
+  const room = findRoom(state)(state.roomName)
   const descriptions = room.tags.reduce((sum, tag) => {
     const [_, name] = tag.match(/^description:(.*)$/) || []
-    if (!name) {
-      return sum
-    }
-    return [...sum, ...state.descriptions.filter((d) => d.name === name)]
+    return name ? [...sum, ...state.descriptions.filter((d) => d.name === name)] : sum
   }, [])
   return (
     <>
       {
         descriptions.map((description) => {
           if (description.conditionTag) {
-            const hasTag = hasMatchingTag(state, description.conditionTag)
-            if (hasTag) {
-              return <p key={description.name}>{description.message}</p>
-            } else {
-              return null
-            }
+            const hasTag = tagExitsGlobally(state)(description.conditionTag)
+            return hasTag ? <p key={description.name}>{description.message}</p> : null
           } else {
             return <p key={description.name}>{description.message}</p>
           }
@@ -34,13 +28,13 @@ export const RoomDescriptionsView = () => {
 
 export const RoomExitsView = () => {
   const { state, dispatch } = useGame()
-  const handleExitFn = (exitName) => (event) => {
-    const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
-    const exit = room.exits.filter((exit) => exit.name === exitName)[0]!
+  const handleExitFn = (exitName: string) => () => {
+    const room = findRoom(state)(state.roomName)
+    const exit = findExit(state)(state.roomName, exitName)
     dispatch(movePartyRoom(room.name, exit.to))
     dispatch(changeRoom(exit.to))
   }
-  const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
+  const room = findRoom(state)(state.roomName)
   return (
     room.exits.length > 0
     ? (
@@ -50,10 +44,10 @@ export const RoomExitsView = () => {
         {
           commaSeparateComponents(
             room.exits.map((exit) => {
-              const room = state.rooms.filter((r) => r.name === exit.to)[0]!
+              const room = findRoom(state)(exit.to)
               return (
                 <span key={exit.name}>
-                  to the <a onClick={handleExitFn(exit.name)} title={`${capitalize(exit.title)}, leading to the {room.title}`}>{exit.title}</a>
+                  to the <a onClick={handleExitFn(exit.name)} title={`${capitalize(exit.title)}, leading to the ${room.title}`}>{exit.title}</a>
                 </span>
               )
             })
@@ -65,18 +59,13 @@ export const RoomExitsView = () => {
   )
 }
 
-export const RoomEntitiesView = () => {
+export const RoomPartyEntitiesView = () => {
   const { state, dispatch } = useGame()
-  const handleEntityFn = (entity) => (event) => {
-    dispatch(changeEntity(entity.name))
+  const handleEntityFn = (entityName: string) => () => {
+    dispatch(changeEntity(entityName))
     dispatch(changeScene('entity'))
   }
-  const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
-  const party = state.party.map((en) => state.entities.filter((e) => e.name === en)[0]!)
-  const otherEntities = room
-    .entities
-    .filter((entityName) => !state.party.some((en) => en === entityName))
-    .map((entityName) => state.entities.filter((e) => e.name === entityName)[0]!)
+  const party = findParty(state)()
   return (
     <>
       <p>
@@ -85,49 +74,52 @@ export const RoomEntitiesView = () => {
         {
           commaSeparateComponents(
             party.map((entity) => {
-              return (
-                <a key={entity.name} onClick={handleEntityFn(entity)}>{entity.title}</a>
-              )
+              return <a key={entity.name} onClick={handleEntityFn(entity.name)}>{entity.title}</a>
             })
           )
         }
         {' '}
         {state.party.length === 1 ? 'is' : 'are'} here.
       </p>
-      {
-        (otherEntities.length > 0)
-        ? (
-          <p>
-            Also in the room:
-            {' '}
-            {
-              commaSeparateComponents(
-                otherEntities.map((entity) => {
-                  return (
-                    <a key={entity.name} onClick={handleEntityFn(entity)}>{entity.title}</a>
-                  )
-                })
-              )
-            }.
-          </p>
-        )
-        : null
-      }
     </>
+  )
+}
+
+export const RoomOtherEntitiesView = () => {
+  const { state, dispatch } = useGame()
+  const handleEntityFn = (entity) => (event) => {
+    dispatch(changeEntity(entity.name))
+    dispatch(changeScene('entity'))
+  }
+  const otherEntities = findNonPartyEntitiesInRoom(state)(state.roomName)
+  return (
+    (otherEntities.length > 0)
+    ? (
+      <p>
+        Also in the room:
+        {' '}
+        {
+          commaSeparateComponents(
+            otherEntities.map((entity) => {
+              return <a key={entity.name} onClick={handleEntityFn(entity)}>{entity.title}</a>
+            })
+          )
+        }.
+      </p>
+    )
+    : null
   )
 }
 
 export const RoomView = () => {
   const { state } = useGame()
-  if (state.sceneName !== 'room') {
-    return null
-  }
-  const room = state.rooms.filter((room) => room.name === state.roomName)[0]!
+  const room = findRoom(state)(state.roomName)
   return (
     <>
       <h2>{capitalize(room.title)}</h2>
       <RoomDescriptionsView />
-      <RoomEntitiesView />
+      <RoomPartyEntitiesView />
+      <RoomOtherEntitiesView />
       <RoomExitsView />
     </>
   )

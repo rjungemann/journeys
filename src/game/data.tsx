@@ -1,4 +1,5 @@
 export type Game = {
+  ticks: number
   showInspector: boolean
   sceneName: string
   roomName: string
@@ -14,12 +15,14 @@ export type Game = {
   skillChecks: SkillCheck[]
   itemCheckName: string | null
   itemChecks: ItemCheck[]
+  partyCheckName: string | null
+  partyChecks: PartyCheck[]
   choiceName: string | null
   choices: Choice[]
   descriptions: Description[]
 }
 
-type Choice = {
+export type Choice = {
   name: string
   title: string
   conditionTag: string
@@ -27,7 +30,7 @@ type Choice = {
   options: Option[]
 }
 
-type Option = {
+export type Option = {
   name: string
   message: string
 }
@@ -133,6 +136,15 @@ export type ItemCheck = {
   itemName: string
 }
 
+export type PartyCheck = {
+  name: string
+  conditionTag: string | null
+  title: string
+  message: string
+  variant: PartyCheckVariant
+  itemName: string
+}
+
 export const ITEM_CHECK_VARIANT_GIVE = 'ITEM_CHECK_VARIANT_GIVE'
 export const ITEM_CHECK_VARIANT_TAKE = 'ITEM_CHECK_VARIANT_TAKE'
 export const ITEM_CHECK_VARIANT_VERIFY = 'ITEM_CHECK_VARIANT_VERIFY'
@@ -147,3 +159,14 @@ export type ItemCheckVariantVerify = {
   type: 'ITEM_CHECK_VARIANT_VERIFY'
 }
 export type ItemCheckVariant = ItemCheckVariantGive | ItemCheckVariantTake | ItemCheckVariantVerify
+
+export const PARTY_CHECK_VARIANT_PRESENT = 'PARTY_CHECK_VARIANT_PRESENT'
+export const PARTY_CHECK_VARIANT_ABSENT = 'PARTY_CHECK_VARIANT_ABSENT'
+
+export type PartyCheckVariantPresent = {
+  type: 'PARTY_CHECK_VARIANT_PRESENT'
+}
+export type PartyCheckVariantAbsent = {
+  type: 'PARTY_CHECK_VARIANT_ABSENT'
+}
+export type PartyCheckVariant = PartyCheckVariantPresent | PartyCheckVariantAbsent

@@ -1,40 +1,30 @@
 import { changeChoice, changeDialogue, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
-import { capitalize, commaSeparateComponents, hasMatchingTag } from "../utils"
+import { tagExitsGlobally } from "../helpers"
+import { capitalize, commaSeparateComponents } from "../utils"
 
-export const EntityDescriptionView = () => {
-  const { state, dispatch } = useGame()
-  const entity = state.entities.filter((entity) => entity.name === state.entityName)[0]!
+export const EntityDescriptionView = ({ entityName }: { entityName: string }) => {
+  const { state } = useGame()
+  const entity = state.entities.filter((entity) => entity.name === entityName)[0]!
   const descriptions = entity.tags.reduce((sum, tag) => {
     const [_, name] = tag.match(/^description:(.*)$/) || []
-    if (!name) {
-      return sum
-    }
-    return [...sum, ...state.descriptions.filter((d) => d.name === name)]
+    return !name ? sum : [...sum, ...state.descriptions.filter((d) => d.name === name)]
   }, [])
   return (
-    <>
-      {
-        descriptions.map((description) => {
-          if (description.conditionTag) {
-            const hasTag = hasMatchingTag(state, description.conditionTag)
-            if (hasTag) {
-              return <p key={description.name}>{description.message}</p>
-            } else {
-              return null
-            }
-          } else {
-            return <p key={description.name}>{description.message}</p>
-          }
-        })
+    descriptions.map((description) => {
+      if (description.conditionTag) {
+        const hasTag = tagExitsGlobally(state)(description.conditionTag)
+        return hasTag ? <p key={description.name}>{description.message}</p> : null
+      } else {
+        return <p key={description.name}>{description.message}</p>
       }
-    </>
+    })
   )
 }
 
-export const EntityConversibleView = () => {
+export const EntityConversibleView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const entity = state.entities.filter((e) => e.name === entityName)[0]!
   const dialogueNames = entity.tags.reduce(
     (sum, tag) => {
       const match = tag.match(/^dialogue:([^:]+):(\d+)$/)
@@ -49,34 +39,28 @@ export const EntityConversibleView = () => {
     dispatch(changeScene('dialogue'))
   }
   return (
-    <>
-      {
-        dialogues.length > 0
-        ? (
-          <p>
-            Would you like to talk about
-            {' '}
-            {
-              commaSeparateComponents(
-                dialogues.map((dialogue) => {
-                  return (
-                    <a key={dialogue.name} onClick={handleNextFn(dialogue)}>{dialogue.topic}</a>
-                  )
-                }),
-                'or'
-              )
-            }?
-          </p>
-        )
-        : null
-      }
-    </>
+    dialogues.length > 0
+    ? (
+      <p>
+        Would you like to talk about
+        {' '}
+        {
+          commaSeparateComponents(
+            dialogues.map((dialogue) => (
+              <a key={dialogue.name} onClick={handleNextFn(dialogue)}>{dialogue.topic}</a>
+            )),
+            'or'
+          )
+        }?
+      </p>
+    )
+    : null
   )
 }
 
-export const EntityChoiceListView = () => {
+export const EntityChoiceListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const object = state.entities.filter((e) => e.name === entityName)[0]!
   const choices = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^choice:([^:]+)$/) || []
@@ -85,12 +69,8 @@ export const EntityChoiceListView = () => {
       }
       const choice = state.choices.filter((c) => c.name === name)[0]!
       if (choice.conditionTag) {
-        const hasTag = hasMatchingTag(state, choice.conditionTag)
-        if (hasTag) {
-          return [...sum, choice]
-        } else {
-          return sum
-        }
+        const hasTag = tagExitsGlobally(state)(choice.conditionTag)
+        return hasTag ? [...sum, choice] : sum
       } else {
         return [...sum, choice]
       }
@@ -106,9 +86,7 @@ export const EntityChoiceListView = () => {
       {
         commaSeparateComponents(
           choices.map((choice) => {
-            return (
-              <a onClick={handleNextFn(choice.name)}>{choice.title}</a>
-            )
+            return <a onClick={handleNextFn(choice.name)}>{choice.title}</a>
           }),
           'or'
         )
@@ -117,9 +95,9 @@ export const EntityChoiceListView = () => {
   )
 }
 
-export const EntityItemCheckListView = () => {
+export const EntityItemCheckListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const object = state.entities.filter((e) => e.name === entityName)[0]!
   const itemChecks = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^item-check:([^:]+)$/) || []
@@ -128,12 +106,8 @@ export const EntityItemCheckListView = () => {
       }
       const itemCheck = state.itemChecks.filter((c) => c.name === name)[0]!
       if (itemCheck.conditionTag) {
-        const hasTag = hasMatchingTag(state, itemCheck.conditionTag)
-        if (hasTag) {
-          return [...sum, itemCheck]
-        } else {
-          return sum
-        }
+        const hasTag = tagExitsGlobally(state)(itemCheck.conditionTag)
+        return hasTag ? [...sum, itemCheck] : sum
       } else {
         return [...sum, itemCheck]
       }
@@ -148,11 +122,9 @@ export const EntityItemCheckListView = () => {
     <p>
       {
         commaSeparateComponents(
-          itemChecks.map((itemCheck) => {
-            return (
-              <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
-            )
-          }),
+          itemChecks.map((itemCheck) => (
+            <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+          )),
           'or'
         )
       }
@@ -160,9 +132,9 @@ export const EntityItemCheckListView = () => {
   )
 }
 
-export const EntitySkillCheckListView = () => {
+export const EntitySkillCheckListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const object = state.entities.filter((e) => e.name === entityName)[0]!
   const data = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
@@ -171,12 +143,8 @@ export const EntitySkillCheckListView = () => {
       }
       const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
       if (skillCheck.conditionTag) {
-        const hasTag = hasMatchingTag(state, skillCheck.conditionTag)
-        if (hasTag) {
-          return [...sum, { name, title: skillCheck.title }]
-        } else {
-          return sum
-        }
+        const hasTag = tagExitsGlobally(state)(skillCheck.conditionTag)
+        return hasTag ? [...sum, { name, title: skillCheck.title }] : sum
       } else {
         return [...sum, { name, title: skillCheck.title }]
       }
@@ -191,11 +159,9 @@ export const EntitySkillCheckListView = () => {
     <p>
       {
         commaSeparateComponents(
-          data.map(({ name, title }) => {
-            return (
-              <a onClick={handleNextFn(name)}>{title}</a>
-            )
-          }),
+          data.map(({ name, title }) => (
+            <a onClick={handleNextFn(name)}>{title}</a>
+          )),
           'or'
         )
       }
@@ -205,21 +171,18 @@ export const EntitySkillCheckListView = () => {
 
 export const EntityView = () => {
   const { state, dispatch } = useGame()
-  const handleLeave = (event) => {
+  const handleLeave = () => {
     dispatch(changeScene('room'))
-  }
-  if (state.sceneName !== 'entity') {
-    return null
   }
   const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
   return (
     <>
       <h2>{capitalize(entity.title)}</h2>
-      <EntityDescriptionView />
-      <EntityChoiceListView />
-      <EntityConversibleView />
-      <EntityItemCheckListView />
-      <EntitySkillCheckListView />
+      <EntityDescriptionView entityName={state.entityName} />
+      <EntityChoiceListView entityName={state.entityName} />
+      <EntityConversibleView entityName={state.entityName} />
+      <EntityItemCheckListView entityName={state.entityName} />
+      <EntitySkillCheckListView entityName={state.entityName} />
       <p>
         <a onClick={handleLeave}>Go Back</a>.
       </p>

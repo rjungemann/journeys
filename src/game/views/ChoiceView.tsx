@@ -1,41 +1,41 @@
 import { addTag, changeScene, removeTag } from "../actions"
 import { useGame } from "../context"
-import { hasMatchingTag, matchTags } from "../utils"
+import { findChoice, findEntity, tagExitsGlobally } from "../helpers"
+import { matchTags } from "../utils"
+
+export const NoChoiceView = ({ entityName }: { entityName: string }) => {
+  const { state, dispatch } = useGame()
+  const entity = findEntity(state)(entityName)
+  const handleLeave = () => {
+    dispatch(changeScene('entity'))
+  }
+  return (
+    <>
+      <h2>Talking to {entity.title}</h2>
+      <p>
+        <a onClick={handleLeave}>Leave</a>.
+      </p>
+    </>
+  )
+}
 
 export const ChoiceView = () => {
   const { state, dispatch } = useGame()
-  if (state.sceneName !== 'choice') {
-    return null
-  }
-  const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
+  const entity = findEntity(state)(state.entityName)
   const tag = matchTags(entity.tags, /choice:([^:]+)$/)[0]
   const handleLeave = () => {
     dispatch(changeScene('entity'))
   }
   if (!tag) {
-    return (
-      <>
-        <h2>Talking to {entity.title}</h2>
-        <p>
-          <a onClick={handleLeave}>Leave</a>.
-        </p>
-      </>
-    )
+    return <NoChoiceView entityName={entity.name} />
   }
   const split = tag.split(':')
   const name = split[1]
-  const choice = state.choices.filter((c) => c.name === name)[0]!
+  const choice = findChoice(state)(name)
   if (choice.conditionTag) {
-    const hasTag = hasMatchingTag(state, choice.conditionTag)
+    const hasTag = tagExitsGlobally(state)(choice.conditionTag)
     if (!hasTag) {
-      return (
-        <>
-          <h2>Talking to {entity.title}</h2>
-          <p>
-            <a onClick={handleLeave}>Leave</a>.
-          </p>
-        </>
-      )
+      return <NoChoiceView entityName={entity.name} />
     }
   }
 

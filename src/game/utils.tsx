@@ -1,5 +1,4 @@
 import { ReactNode } from "react"
-import { Game } from "./data"
 
 export const dice = (input: string): { rolls: number[], sum: number, sides: number } => {
   const match = input.match(/^(\d+)\s*?d(\d+)([+-]\d+)?$/)
@@ -17,12 +16,12 @@ export const dice = (input: string): { rolls: number[], sum: number, sides: numb
   return { sum, rolls, sides }
 }
 
-export const commaSeparateStrings = (words: string[]) => {
+export const commaSeparateStrings = (words: string[], word: string = 'and') => {
   if (words.length < 2) return words[0]
   if (words.length === 2) return `${words[0]} and ${words[1]}`
   const head = words.slice(0, -1)
   const last = words[words.length - 1]
-  return `${head.join(', ')}, and ${last}`
+  return `${head.join(', ')}, ${word} ${last}`
 }
 
 export const commaSeparateComponents = (components: ReactNode[], word: string = 'and') => {
@@ -45,15 +44,4 @@ export const capitalize = (words: string) => {
 
 export const matchTags = (tags: string[], regexp: RegExp): string[] => {
   return tags.filter((tag) => tag.match(regexp))
-}
-
-export const hasMatchingTag = (state: Game, tag: string): boolean => {
-  for (let entity of state.entities) {
-    for (let t of entity.tags) {
-      if (t === tag) {
-        return true
-      }
-    }
-  }
-  return false
 }

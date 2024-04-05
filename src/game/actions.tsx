@@ -14,6 +14,7 @@ export const ADD_TAG = 'ADD_TAG'
 export const REMOVE_TAG = 'REMOVE_TAG'
 export const SKILL_CHECK = 'SKILL_CHECK'
 export const ITEM_CHECK = 'ITEM_CHECK'
+export const PARTY_CHECK = 'PARTY_CHECK'
 
 export type ResetStateAction = {
   type: 'RESET_STATE'
@@ -57,10 +58,6 @@ export type ChangeSkillCheckAction = {
 export type ChangeItemCheckAction = {
   type: 'CHANGE_ITEM_CHECK'
   itemCheckName: string
-}
-
-export type RemoveLastSkillCheckEventAction = {
-  type: 'REMOVE_LAST_SKILL_CHECK_EVENT'
 }
 
 export type MoveEntityAction = {
@@ -119,6 +116,11 @@ export type ItemCheckAction = {
   itemCheckName: string
 }
 
+export type PartyCheckAction = {
+  type: 'PARTY_CHECK'
+  partyCheckName: string
+}
+
 export type Action =
   ResetStateAction
   | ShowInspectorAction
@@ -129,7 +131,6 @@ export type Action =
   | ChangeChoiceAction
   | ChangeItemCheckAction
   | ChangeSkillCheckAction
-  | RemoveLastSkillCheckEventAction
   | MoveEntityAction
   | MoveEntityRoomAction
   | MovePartyAction
@@ -138,6 +139,7 @@ export type Action =
   | AddTagAction
   | SkillCheckAction
   | ItemCheckAction
+  | PartyCheckAction
 
 export const resetState = (): ResetStateAction => ({
   type: RESET_STATE,
@@ -183,10 +185,6 @@ export const changeSkillCheck = (skillCheckName: string): ChangeSkillCheckAction
   skillCheckName,
 })
 
-export const removeLastSkillCheckEvent = (): RemoveLastSkillCheckEventAction => ({
-  type: REMOVE_LAST_SKILL_CHECK_EVENT,
-})
-
 export const moveEntityRoom = (from: string, to: string, entityName: string): MoveEntityRoomAction => ({
   type: MOVE_ENTITY_ROOM,
   from,
@@ -228,4 +226,9 @@ export const itemCheck = (subjectName: string, itemCheckName: string): ItemCheck
   type: ITEM_CHECK,
   subjectName,
   itemCheckName,
+})
+
+export const partyCheck = (partyCheckName: string): PartyCheckAction => ({
+  type: PARTY_CHECK,
+  partyCheckName,
 })

@@ -1,6 +1,7 @@
 import { MDXProvider } from '@mdx-js/react'
 import { GameProvider, ThemeProvider } from "./game/context"
 import { GameView } from "./game/views/GameView"
+import { ErrorBoundary } from './game/views/ErrorBoundary'
 
 const mdxComponents = {
   
@@ -11,7 +12,9 @@ export const App = () => {
     <ThemeProvider>
       <MDXProvider components={mdxComponents}>
         <GameProvider>
-          <GameView />
+          <ErrorBoundary>
+            <GameView />
+          </ErrorBoundary>
         </GameProvider>
       </MDXProvider>
     </ThemeProvider>

@@ -1,47 +1,44 @@
 import { addTag, changeScene, removeTag, itemCheck } from "../actions"
 import { useGame } from "../context"
-import { hasMatchingTag, matchTags } from "../utils"
+import { findEntity, findItemCheck, tagExitsGlobally } from "../helpers"
+import { matchTags } from "../utils"
 
-export const ItemCheckView = () => {
+export const NoItemCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  if (state.sceneName !== 'item-check') {
-    return null
-  }
-  const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const tag = matchTags(entity.tags, /item-check:([^:]+)$/)[0]
+  const entity = findEntity(state)(entityName)
   const handleLeave = () => {
     dispatch(changeScene('entity'))
   }
+  return (
+    <>
+      <h2>Talking to {entity.title}</h2>
+      <p>
+        <a onClick={handleLeave}>Leave</a>.
+      </p>
+    </>
+  )
+}
+
+export const ItemCheckView = () => {
+  const { state, dispatch } = useGame()
+  const entity = findEntity(state)(state.entityName)
+  const tag = matchTags(entity.tags, /item-check:([^:]+)$/)[0]
   if (!tag) {
-    return (
-      <>
-        <h2>Talking to {entity.title}</h2>
-        <p>
-          <a onClick={handleLeave}>Leave</a>.
-        </p>
-      </>
-    )
+    return <NoItemCheckView entityName={entity.name} />
   }
   const split = tag.split(':')
   const name = split[1]
-  const ic = state.itemChecks.filter((ic) => ic.name === name)[0]!
+  const ic = findItemCheck(state)(name)
   if (ic.conditionTag) {
-    const hasTag = hasMatchingTag(state, ic.conditionTag)
+    const hasTag = tagExitsGlobally(state)(ic.conditionTag)
     if (!hasTag) {
-      return (
-        <>
-          <h2>Talking to {entity.title}</h2>
-          <p>
-            <a onClick={handleLeave}>Leave</a>.
-          </p>
-        </>
-      )
+      return <NoItemCheckView entityName={entity.name} />
     }
   }
 
   const handleNext = () => {
     dispatch(removeTag(entity.name, tag))
-    const subject = state.entities.filter((e) => e.name === state.partyRepresentativeName)[0]!
+    const subject = findEntity(state)(state.partyRepresentativeName)
     dispatch(itemCheck(subject.name, ic.name))
     dispatch(addTag(entity.name, `item-check:${ic.name}:done`))
     dispatch(changeScene('entity'))

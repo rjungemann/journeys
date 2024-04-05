@@ -1,45 +1,30 @@
 import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ITEM_CHECK, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveLastSkillCheckEventAction, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
 import { Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY } from "./data"
 import { defaultGame } from "./defaultGame"
+import { addTag, moveEntity, moveParty, removeTag } from "./helpers"
 import { dice } from "./utils"
 
-export const moveEntity = (state: Game) => (from: string, to: string, entityName: string) => {
-  const fromRoom = state.rooms.filter((s) => s.name === from)[0]!
-  const updatedFrom = {
-    ...fromRoom,
-    entities: fromRoom.entities.filter((en) => en !== entityName)
+export const handleTicksReducer = (state: Game, action: Action) => {
+  let n = 0
+  if (action.type === MOVE_ENTITY_ROOM) {
+    // If a party member moves, tick the clock
+    if (state.party.some((en) => en === action.entityName)) {
+      n++
+    }
   }
-  const toRoom = state.rooms.filter((s) => s.name === to)[0]!
-  const updatedTo = {
-    ...toRoom,
-    entities: [...toRoom.entities, entityName]
+  if (action.type === MOVE_PARTY_ROOM) {
+    // If the party moves, tick the clock
+    n++
   }
-
-  const rooms = state.rooms.filter((s) => s.name !== from && s.name !== to)
-
-  return { ...state, rooms: [...rooms, updatedFrom, updatedTo] }
-}
-
-export const moveParty = (state: Game) => (from: string, to: string) => {
-  let updatedState = { ...state }
-  for (let entityName of state.party) {
-    updatedState = moveEntity(updatedState)(from, to, entityName)
+  if (action.type === SKILL_CHECK) {
+    // Trigger a tick if a skill check is performed
+    n++
   }
-  return updatedState
-}
-
-export const addTag = (state: Game) => (entityName: string, tag: string) => {
-  const entity = state.entities.filter((e) => e.name === entityName)[0]!
-  const updatedEntity = { ...entity, tags: [...entity.tags, tag] }
-  const updatedEntities = [...state.entities.filter((e) => e.name !== entityName), updatedEntity]
-  return { ...state, entities: updatedEntities }
-}
-
-export const removeTag = (state: Game) => (entityName: string, tag: string) => {
-  const entity = state.entities.filter((e) => e.name === entityName)[0]!
-  const updatedEntity = { ...entity, tags: entity.tags.filter((t) => t !== tag) }
-  const updatedEntities = [...state.entities.filter((e) => e.name !== entityName), updatedEntity]
-  return { ...state, entities: updatedEntities }
+  if (action.type === ITEM_CHECK) {
+    // Trigger a tick if an item check is performed
+    n++
+  }
+  return { ...state, ticks: state.ticks + n }
 }
 
 export const resetStateReducer = (state: Game, action: ResetStateAction) => {
@@ -174,6 +159,10 @@ export const itemCheckReducer = (state: Game, action: ItemCheckAction) => {
 
 export const gameReducer = (state: Game, action: Action) => {
   const { type } = action
+
+  // Passively handle
+  state = handleTicksReducer(state, action)
+
   if (type === RESET_STATE) {
     return resetStateReducer(state, action)
   }

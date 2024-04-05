@@ -10,36 +10,24 @@ import { ItemCheckView } from "./ItemCheckView"
 import logoLight from './logo-light-2x.png'
 // @ts-ignore
 import logoDark from './logo-dark-2x.png'
+import { useWanderingBehaviors } from "../behaviors"
 
 export const GameView = () => {
-  const { state, dispatch } = useGame()
-  const { theme, setTheme } = useTheme()
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     const roll = dice('2d6').sum
-  //     if (roll > 6) {
-  //       const entityName = 'kynon-morgan'
-  //       const room = state.rooms.filter((r) => r.entities.some((en) => en === entityName))[0]!
-  //       const exit = room.exits[Math.floor(Math.random() * room.exits.length)]
-  //       console.info(`${entityName} moved from ${room.name} to ${exit.to}`)
-  //       dispatch(moveEntityRoom(room.name, exit.to, entityName))
-  //     }
-  //   }, 5000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // })
+  const { state } = useGame()
+  const { theme } = useTheme()
+  useWanderingBehaviors()
+
   return (
     <div className={`theme-${theme}`}>
       <div>
         <img src={theme === 'dark' ? logoDark : logoLight} width={515/3} height={80/3} />
       </div>
-      <RoomView />
-      <EntityView />
-      <DialogueView />
-      <ChoiceView />
-      <ItemCheckView />
-      <SkillCheckView />
+      {state.sceneName === 'entity' ? <EntityView /> : null}
+      {state.sceneName === 'dialogue' ? <DialogueView /> : null}
+      {state.sceneName === 'choice' ? <ChoiceView /> : null}
+      {state.sceneName === 'room' ? <RoomView /> : null}
+      {state.sceneName === 'item-check' ? <ItemCheckView /> : null}
+      {state.sceneName === 'skill-check' ? <SkillCheckView /> : null}
       <InspectorView />
     </div>
   )

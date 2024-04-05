@@ -13,10 +13,14 @@ type GameContext = {
   dispatch: Dispatch<Action>
 }
 
+export const GAME_KEY = 'journeys'
+
 export const GameContext = createContext<GameContext | null>(null)
 
+export const GameConsumer = GameContext.Consumer
+
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const key = 'journeys'
+  const key = GAME_KEY
   const storedState = localStorage.getItem(key)
   const startingState = storedState ? JSON.parse(storedState) : defaultGame
   const [state, dispatch] = useReducer(gameReducer, startingState)
@@ -44,19 +48,25 @@ type ThemeContext = {
   setTheme: (theme: string) => void
 }
 
+export const THEME_KEY = 'theme'
+export const THEME_KEY_LIGHT = 'light'
+export const THEME_KEY_DARK = 'dark'
+
 export const ThemeContext = createContext<ThemeContext | null>(null)
 
+export const ThemeConsumer = GameContext.Consumer
+
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const key = 'theme'
+  const key = THEME_KEY
   const storedValue = localStorage.getItem(key)
-  let defaultTheme = 'light'
+  let defaultTheme = THEME_KEY_LIGHT
   if (storedValue) {
-    if (storedValue === 'dark') {
-      defaultTheme = 'dark'
+    if (storedValue === THEME_KEY_DARK) {
+      defaultTheme = THEME_KEY_DARK
     }
   } else if (window.matchMedia) {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      defaultTheme = 'dark'
+      defaultTheme = THEME_KEY_DARK
     }
   }
 

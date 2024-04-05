@@ -1,34 +1,28 @@
-import { addTag, changeScene, removeLastSkillCheckEvent, removeTag, skillCheck } from "../actions"
+import { addTag, changeScene, removeTag, skillCheck } from "../actions"
 import { useGame } from "../context"
 import { SkillCheck } from "../data"
+import { findEntity, findSkillCheck } from "../helpers"
 
 export const SkillCheckPreView = () => {
   const { state, dispatch } = useGame()
-  const sc = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]
-  if (!sc) {
+  const sc = findSkillCheck(state)(state.skillCheckName)
+  if (!sc || sc.result) {
     return null
   }
-  if (sc.result) {
-    return null
-  }
-  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const subject = state.entities.filter((e) => e.name === state.partyRepresentativeName)[0]!
-  const data = object.tags.reduce(
+  const object = findEntity(state)(state.entityName)
+  const subject = findEntity(state)(state.partyRepresentativeName)
+  const [tag, sc2] = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
       if (!name) {
         return sum
       }
-      const { title, characteristic, skill, tn } = state.skillChecks.filter((sc) => sc.name === name)[0]!
-      return [...sum, { tag, title, name, characteristic, skill, tn }]
+      return [...sum, [tag, findSkillCheck(state)(name)]]
     },
     []
   )[0]
-  if (!data) {
-    return null
-  }
   const dice = '2d6'
-  const { tag, name, characteristic, skill, tn } = data
+  const { name, characteristic, skill, tn } = sc2
   const characteristicValue = subject.characteristics[characteristic]
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
   const skillValue = subject.skills[skill]
@@ -57,22 +51,23 @@ export const SkillCheckPreView = () => {
 
 export const SkillCheckPostView = () => {
   const { state, dispatch } = useGame()
-  const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]!
+  const skillCheck = findSkillCheck(state)(state.skillCheckName)
   if (!skillCheck || !skillCheck.result) {
     return null
   }
-  const object = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const { objectName, skillCheckName, characteristicName, characteristicValue, skillName, skillValue, roll, total, tn, isSuccess } = skillCheck.result
-  if (object.tags.some((t) => t === `skill-check:${skillCheckName}:success` || t === `skill-check:${skillCheckName}:failure`)) {
+  const object = findEntity(state)(state.entityName)
+  const { objectName, skillCheckName, characteristicName, skillName } = skillCheck.result
+  const { characteristicValue, skillValue, roll, total, tn, isSuccess } = skillCheck.result
+  if (object.tags.some((t) => t === `skill-check:${skillCheckName}:success`)) {
+    return null
+  }
+  if (object.tags.some((t) => t === `skill-check:${skillCheckName}:failure`)) {
     return null
   }
   const handleNext = () => {
-    console.log('skill check done', objectName)
     // Add the success or failure tag to the object, such ass `skill-check:fix-1:success`
     dispatch(addTag(objectName, `skill-check:${skillCheckName}:${isSuccess ? 'success' : 'failure'}`))
-
     dispatch(changeScene('entity'))
-    dispatch(removeLastSkillCheckEvent())
   }
   const dice = '2d6'
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
@@ -105,8 +100,12 @@ export const SkillCheckPostView = () => {
   )
 }
 
-export const SkillCheckPartial = ({ skillCheck }: { skillCheck: SkillCheck }) => {
+export const SkillCheckView = () => {
   const { state, dispatch } = useGame()
+  const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]
+  if (!skillCheck) {
+    return null
+  }
   const handleLeave = (event) => {
     dispatch(changeScene('entity'))
   }
@@ -119,19 +118,5 @@ export const SkillCheckPartial = ({ skillCheck }: { skillCheck: SkillCheck }) =>
         <a onClick={handleLeave}>Leave</a>.
       </p>
     </>
-  )
-}
-
-export const SkillCheckView = () => {
-  const { state, dispatch } = useGame()
-  if (state.sceneName !== 'skill-check') {
-    return null
-  }
-  const skillCheck = state.skillChecks.filter((sc) => sc.name === state.skillCheckName)[0]
-  if (!skillCheck) {
-    return null
-  }
-  return (
-    <SkillCheckPartial skillCheck={skillCheck} />
   )
 }

@@ -1,17 +1,24 @@
 ## TODO
 
 * Multiple `conditionTags`, with an optional `!` prefix for negation
-* Tag behaviors, movement
-* Other tag behaviors
+* Other tag behaviors for movement and other activity?
 * Combat
+* Markdown
 
 ### Rooms
 
-TODO
+* A Room has, among other fields, a name, and tags
+* A Room has Descriptions (see below)
+* A Room has Entities (see below)
+* A Room has Exits
+  * An Exit has, among other fields, a "to" name (name of a different room)
 
 ### Entities
 
-TODO
+* An Entity has, among other fields, a name, and tags
+* An Entity has Descriptions (see below)
+* An Entity has Attachments (see below)
+* An Entity has Items (see below)
 
 ### Items
 
@@ -19,9 +26,38 @@ TODO
 
 ### Tags and Attachments
 
-There are the following kinds of attachments: Descriptions, Dialogues, Choices, Item Checks, Skill Checks, and Party Checks.
+Tags can be used to influence the behavior of entities, and trigger the behavior of attachments.
 
-Add these tags to your entities to map them to attachments. Sophisticated behavior can be created by the careful placement of tags.
+The following attachment types are supported:
+
+* Description
+  * Can be conditional on a tag being set
+  * Shows a description for an entity (or room)
+* Dialogue
+  * Can be conditional on a tag being set
+  * Show a sequence of dialogue
+  * Will set a tag when dialogue is complete
+* Choice
+  * Can be conditional on a tag being set
+  * Prompts for a response to a choice
+  * Will set a tag depending on the response given
+* Item Check
+  * Can be conditional on a tag being set
+  * Three possible variants:
+    * Give the character an item
+    * Take an item from a character
+    * Verify a character has an item
+  * Will set a tag when complete
+* Skill Check
+  * Can be conditional on a tag being set
+  * Prompts the user for a skill check
+  * Will set a respective tag if the character succeeds or fails
+* Party Check
+  * Can be conditional on a tag being set
+  * Two variants:
+    * Check a member is in your party
+    * Check a member is not in your party
+  * Will set a respective tag if the check succeeds or fails
 
 ```
 # Room tags
@@ -46,7 +82,9 @@ skill-check:<name>:failure
 item-check:<name>
 item-check:<name>:done
 
-# TODO: A way to make sure a character is in the party
 party-check:<name>
 party-check:<name>:done
+
+# cause the entity to move from room to room periodically
+wandering
 ```

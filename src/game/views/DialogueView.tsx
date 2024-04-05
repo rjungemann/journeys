@@ -1,41 +1,38 @@
 import { addTag, changeScene, removeTag } from "../actions"
 import { useGame } from "../context"
-import { hasMatchingTag, matchTags } from "../utils"
+import { findDialogue, findEntity, tagExitsGlobally } from "../helpers"
+import { matchTags } from "../utils"
 
-export const DialogueView = () => {
+export const NoDialogueView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  if (state.sceneName !== 'dialogue') {
-    return null
-  }
-  const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
-  const tag = matchTags(entity.tags, /dialogue:([^:]+):(\d+)$/)[0]
+  const entity = findEntity(state)(entityName)
   const handleLeave = () => {
     dispatch(changeScene('entity'))
   }
+  return (
+    <>
+      <h2>Talking to {entity.title}</h2>
+      <p>
+        <a onClick={handleLeave}>Leave</a>.
+      </p>
+    </>
+  )
+}
+
+export const DialogueView = () => {
+  const { state, dispatch } = useGame()
+  const entity = findEntity(state)(state.entityName)
+  const tag = matchTags(entity.tags, /dialogue:([^:]+):(\d+)$/)[0]
   if (!tag) {
-    return (
-      <>
-        <h2>Talking to {entity.title}</h2>
-        <p>
-          <a onClick={handleLeave}>Leave</a>.
-        </p>
-      </>
-    )
+    return <NoDialogueView entityName={state.entityName} />
   }
   const split = tag.split(':')
   const [name, index] = [split[1], parseInt(split[2], 10)]
-  const dialogue = state.dialogues.filter((d) => d.name === name)[0]!
+  const dialogue = findDialogue(state)(name)
   if (dialogue.conditionTag) {
-    const hasTag = hasMatchingTag(state, dialogue.conditionTag)
+    const hasTag = tagExitsGlobally(state)(dialogue.conditionTag)
     if (!hasTag) {
-      return (
-        <>
-          <h2>Talking to {entity.title}</h2>
-          <p>
-            <a onClick={handleLeave}>Leave</a>.
-          </p>
-        </>
-      )
+      return <NoDialogueView entityName={state.entityName} />
     }
   }
 
@@ -43,7 +40,6 @@ export const DialogueView = () => {
   const handleNext = () => {
     dispatch(removeTag(entity.name, tag))
     if (index >= dialogue.messages.length - 1) {
-      console.log('dialogue done', entity.name)
       dispatch(addTag(entity.name, `dialogue:${name}:done`))
       dispatch(changeScene('entity'))
     } else {

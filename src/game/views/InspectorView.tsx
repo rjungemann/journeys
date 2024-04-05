@@ -1,5 +1,6 @@
 import { resetState, showInspector } from "../actions"
 import { useGame, useTheme } from "../context"
+import { commaSeparateStrings } from "../utils"
 
 export const InspectorView = () => {
   const { state, dispatch } = useGame()
@@ -13,6 +14,8 @@ export const InspectorView = () => {
   const handleReset = (event) => {
     dispatch(resetState())
   }
+  const { ticks, partyRepresentativeName, party, sceneName, roomName, entityName, skillCheckName, itemCheckName, choiceName } = state
+  const abriged = { ticks, partyRepresentativeName, party, sceneName, roomName, entityName, skillCheckName, itemCheckName, choiceName }
   return (
     <div className="inspector-toggle">
       <p>
@@ -28,6 +31,9 @@ export const InspectorView = () => {
               {' | '}
               <a onClick={handleReset}>Reset State</a>
             </p>
+            <pre className="code">
+              {JSON.stringify(abriged, null, 2)}
+            </pre>
             <pre className="code">
               {JSON.stringify(state, null, 2)}
             </pre>
