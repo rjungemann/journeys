@@ -1,5 +1,6 @@
 export const RESET_STATE = 'RESET_STATE'
 export const SHOW_INSPECTOR = 'SHOW_INSPECTOR'
+export const CHANGE_EDIT_MODE = 'CHANGE_EDIT_MODE'
 export const CHANGE_SCENE = 'CHANGE_SCENE'
 export const CHANGE_ROOM = 'CHANGE_ROOM'
 export const CHANGE_ENTITY = 'CHANGE_ENTITY'
@@ -27,6 +28,11 @@ export type ResetStateAction = {
 export type ShowInspectorAction = {
   type: 'SHOW_INSPECTOR'
   state: boolean
+}
+
+export type ChangeEditModeAction = {
+  type: 'CHANGE_EDIT_MODE'
+  editMode: boolean
 }
 
 export type ChangeSceneAction = {
@@ -149,6 +155,7 @@ export type IncrementFieldInitiativeAction = {
 export type Action =
   ResetStateAction
   | ShowInspectorAction
+  | ChangeEditModeAction
   | ChangeSceneAction
   | ChangeRoomAction
   | ChangeEntityAction
@@ -177,6 +184,11 @@ export const resetState = (): ResetStateAction => ({
 export const showInspector = (state: boolean): ShowInspectorAction => ({
   type: SHOW_INSPECTOR,
   state,
+})
+
+export const changeEditMode = (editMode: boolean): ChangeEditModeAction => ({
+  type: CHANGE_EDIT_MODE,
+  editMode,
 })
 
 export const changeScene = (sceneName: string): ChangeSceneAction => ({

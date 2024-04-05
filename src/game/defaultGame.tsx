@@ -1,9 +1,12 @@
 import { Game, ITEM_CHECK_VARIANT_VERIFY } from "./data";
+import { randomColor } from "./utils";
 
 export const defaultGame: Game = {
   ticks: 0,
   showInspector: false,
+  editMode: false,
   sceneName: 'room',
+  previousSceneName: null,
   roomName: 'quarters-a',
   rooms: [
     {
@@ -62,6 +65,7 @@ export const defaultGame: Game = {
     {
       name: 'arlen-hyden',
       title: 'Arlen Hyden',
+      color: randomColor(),
       tags: [
         'character'
       ],
@@ -86,6 +90,7 @@ export const defaultGame: Game = {
     {
       name: 'alice-hewitt',
       title: 'Alice Hewitt',
+      color: randomColor(),
       tags: [
         'character'
       ],
@@ -110,6 +115,7 @@ export const defaultGame: Game = {
     {
       name: 'beth-raschke',
       title: 'Beth Raschke',
+      color: randomColor(),
       tags: [
         'character',
         'ally:nikos-rosek',
@@ -136,6 +142,7 @@ export const defaultGame: Game = {
     {
       name: 'nikos-rosek',
       title: 'Nikos Rosek',
+      color: randomColor(),
       tags: [
         'character',
         'ally:beth-raschke',
@@ -162,6 +169,7 @@ export const defaultGame: Game = {
     {
       name: 'alard-tyney',
       title: 'Alard Tyney',
+      color: randomColor(),
       tags: [
         'character',
         'dialogue:alard-1:0',
@@ -191,6 +199,7 @@ export const defaultGame: Game = {
     {
       name: 'kynon-morgan',
       title: 'Kynon Morgan',
+      color: randomColor(),
       tags: [
         'character',
         'wandering',
@@ -218,6 +227,7 @@ export const defaultGame: Game = {
     {
       name: 'terminal-1',
       title: 'terminal',
+      color: randomColor(),
       characteristics: {
         strength: 7,
         dexterity: 7,

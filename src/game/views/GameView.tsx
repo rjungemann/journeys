@@ -7,24 +7,28 @@ import { useGame, useTheme } from "../context"
 import { ChoiceView } from "./ChoiceView"
 import { ItemCheckView } from "./ItemCheckView"
 // @ts-ignore
-import logoLight from './logo-light-2x.png'
+import logoLight from './assets/logo-light-2x.png'
 // @ts-ignore
-import logoDark from './logo-dark-2x.png'
+import logoDark from './assets/logo-dark-2x.png'
 // @ts-ignore
-import gearSolidDark from './gear-solid-dark.svg'
+import sunDark from './assets/sun-dark.svg'
 // @ts-ignore
-import gearSolidLight from './gear-solid-light.svg'
+import sunLight from './assets/sun-light.svg'
 // @ts-ignore
-import sunDark from './sun-dark.svg'
+import bombDark from './assets/bomb-dark.svg'
 // @ts-ignore
-import sunLight from './sun-light.svg'
+import bombLight from './assets/bomb-light.svg'
 // @ts-ignore
-import bombDark from './bomb-dark.svg'
+import editLight from './assets/edit-light.svg'
 // @ts-ignore
-import bombLight from './bomb-light.svg'
+import editDark from './assets/edit-dark.svg'
+// @ts-ignore
+import codeLight from './assets/code-light.svg'
+// @ts-ignore
+import codeDark from './assets/code-dark.svg'
 import { useWanderingBehaviors } from "../behaviors"
 import { CombatView } from "./CombatView"
-import { showInspector } from "../actions"
+import { changeEditMode, changeScene, showInspector } from "../actions"
 
 export const Logo = () => {
   const { theme } = useTheme()
@@ -41,15 +45,30 @@ export const Nav = () => {
   const { theme, setTheme } = useTheme()
   const [buttonWidth, buttonHeight] = [28, 28]
   const toggleInspector = (event) => {
-    dispatch(showInspector(!state.showInspector))
+    if (state.sceneName === 'inspector') {
+      dispatch(changeScene(state.previousSceneName!))
+    } else {
+      dispatch(changeScene('inspector'))
+    }
+  }
+  const toggleEdit = (event) => {
+    dispatch(changeEditMode(!state.editMode))
   }
   return (
     <nav style={{ flexGrow: 0 }}>
       <a onClick={toggleInspector} title="Show or hide debug info">
         {
           theme === 'dark'
-          ? <img src={gearSolidLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={gearSolidDark} width={buttonWidth} height={buttonHeight} />
+          ? <img src={codeLight} width={buttonWidth} height={buttonHeight} />
+          : <img src={codeDark} width={buttonWidth} height={buttonHeight} />
+        }
+      </a>
+      {' '}
+      <a onClick={toggleEdit} title="Toggle Edit Mode">
+        {
+          theme === 'dark'
+          ? <img src={editLight} width={buttonWidth} height={buttonHeight} />
+          : <img src={editDark} width={buttonWidth} height={buttonHeight} />
         }
       </a>
       {' '}
@@ -90,7 +109,7 @@ export const GameView = () => {
       {state.sceneName === 'item-check' ? <ItemCheckView /> : null}
       {state.sceneName === 'skill-check' ? <SkillCheckView /> : null}
       {state.sceneName === 'combat' ? <CombatView /> : null}
-      <InspectorView />
+      {state.sceneName === 'inspector' ? <InspectorView /> : null}
     </div>
   )
 }

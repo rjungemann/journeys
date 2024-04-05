@@ -1,7 +1,9 @@
 export type Game = {
   ticks: number
   showInspector: boolean
+  editMode: boolean
   sceneName: string
+  previousSceneName: string
   roomName: string
   rooms: Room[]
   partyRepresentativeName: string
@@ -69,6 +71,7 @@ export type Exit = {
 export type Entity = {
   name: string
   title: string
+  color: string
   characteristics: Characteristics
   skills: Record<string, number>
   tags: string[]
@@ -188,6 +191,7 @@ export type Field = {
 
 export type Side = {
   name: string
+  title: string
   team: string[]
 }
 

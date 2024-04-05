@@ -49,3 +49,7 @@ export const matchTags = (tags: string[], regexp: RegExp): string[] => {
 export const smallUid = () => {
   return Math.floor(Math.random() * Math.pow(36, 5)).toString(36)
 }
+
+export const randomColor = () => {
+  return `hsl(${Math.floor(Math.random() * 256.0)}, 70%, 60%)`
+}
