@@ -1,7 +1,7 @@
-import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ITEM_CHECK, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveLastSkillCheckEventAction, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
-import { Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY } from "./data"
+import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CREATE_FIELD, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, CreateFieldAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, ITEM_CHECK, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
+import { Field, Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, Teammate } from "./data"
 import { defaultGame } from "./defaultGame"
-import { addTag, moveEntity, moveParty, removeTag } from "./helpers"
+import { addTag, findField, moveEntity, moveParty, removeTag } from "./helpers"
 import { dice } from "./utils"
 
 export const handleTicksReducer = (state: Game, action: Action) => {
@@ -71,8 +71,9 @@ export const changeSkillCheckReducer = (state: Game, action: ChangeSkillCheckAct
   return { ...state, skillCheckName }
 }
 
-export const removeLastSkillCheckEventReducer = (state: Game, action: RemoveLastSkillCheckEventAction) => {
-  return { ...state, lastSkillCheckEvent: null }
+export const changeFieldReducer = (state: Game, action: ChangeFieldAction) => {
+  const { fieldName } = action
+  return { ...state, fieldName }
 }
 
 export const moveEntityRoomReducer = (state: Game, action: MoveEntityRoomAction) => {
@@ -157,6 +158,38 @@ export const itemCheckReducer = (state: Game, action: ItemCheckAction) => {
   throw new Error(`Unrecognized item check variant for ${itemCheck.name}`)
 }
 
+const createFieldReducer = (state: Game, action: CreateFieldAction) => {
+  const { fieldName, sides } = action
+  const ss = sides.map((team, i) => {
+    return { name: `team-${i + 1}`, title: `Team #${i + 1}`, team }
+  })
+  let obstacles = []
+  for (let i = 0; i < 5; i++) {
+    obstacles.push({
+      name: `obstacle-${i + 1}`,
+      x: Math.random() * 100 + 100
+    })
+  }
+  const teammates: Teammate[] = sides.reduce<Teammate[]>((sum, names) => {
+    const teammates = names.map((en) => ({ name: en, x: Math.random() * 100 + 100, movement: 5 }))
+    return [...sum, ...teammates]
+  }, [])
+  const field: Field = { name: fieldName, sides: ss, obstacles, teammates }
+  return { ...state, fields: [...state.fields, field] }
+}
+
+const fieldRandomlyMoveAllReducer = (state: Game, action: FieldRandomlyMoveAllAction) => {
+  const { fieldName } = action
+  const field = findField(state)(fieldName)
+  const { teammates, obstacles, sides } = field
+  const tms = field.teammates.map((tm) => {
+    return { ...tm, x: Math.random() < 0.5 ? tm.x - tm.movement : tm.x + tm.movement }
+  })
+  const updatedField = { ...field, teammates: tms }
+  const otherFields = state.fields.filter((f) => f.name !== fieldName)
+  return { ...state, fields: [...otherFields, updatedField] }
+}
+
 export const gameReducer = (state: Game, action: Action) => {
   const { type } = action
 
@@ -190,8 +223,8 @@ export const gameReducer = (state: Game, action: Action) => {
   if (type === CHANGE_SKILL_CHECK) {
     return changeSkillCheckReducer(state, action)
   }
-  if (type === REMOVE_LAST_SKILL_CHECK_EVENT) {
-    return removeLastSkillCheckEventReducer(state, action)
+  if (type === CHANGE_FIELD) {
+    return changeFieldReducer(state, action)
   }
   if (type === MOVE_ENTITY_ROOM) {
     return moveEntityRoomReducer(state, action)
@@ -211,5 +244,11 @@ export const gameReducer = (state: Game, action: Action) => {
   if (type === ITEM_CHECK) {
     return itemCheckReducer(state, action)
   }
-  throw new Error('Unrecognized action')
+  if (type === CREATE_FIELD) {
+    return createFieldReducer(state, action)
+  }
+  if (type === FIELD_RANDOMLY_MOVE_ALL) {
+    return fieldRandomlyMoveAllReducer(state, action)
+  }
+  throw new Error(`Unrecognized action ${action.type}`)
 }

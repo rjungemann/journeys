@@ -11,6 +11,7 @@ import logoLight from './logo-light-2x.png'
 // @ts-ignore
 import logoDark from './logo-dark-2x.png'
 import { useWanderingBehaviors } from "../behaviors"
+import { CombatView } from "./CombatView"
 
 export const GameView = () => {
   const { state } = useGame()
@@ -28,6 +29,7 @@ export const GameView = () => {
       {state.sceneName === 'room' ? <RoomView /> : null}
       {state.sceneName === 'item-check' ? <ItemCheckView /> : null}
       {state.sceneName === 'skill-check' ? <SkillCheckView /> : null}
+      {state.sceneName === 'combat' ? <CombatView /> : null}
       <InspectorView />
     </div>
   )

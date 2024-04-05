@@ -7,6 +7,7 @@ export const CHANGE_DIALOGUE = 'CHANGE_DIALOGUE'
 export const CHANGE_CHOICE = 'CHANGE_CHOICE'
 export const CHANGE_SKILL_CHECK = 'CHANGE_SKILL_CHECK'
 export const CHANGE_ITEM_CHECK = 'CHANGE_ITEM_CHECK'
+export const CHANGE_FIELD = 'CHANGE_FIELD'
 export const REMOVE_LAST_SKILL_CHECK_EVENT = 'REMOVE_LAST_SKILL_CHECK_EVENT'
 export const MOVE_ENTITY_ROOM = 'MOVE_ENTITY_ROOM'
 export const MOVE_PARTY_ROOM = 'MOVE_PARTY_ROOM'
@@ -15,6 +16,8 @@ export const REMOVE_TAG = 'REMOVE_TAG'
 export const SKILL_CHECK = 'SKILL_CHECK'
 export const ITEM_CHECK = 'ITEM_CHECK'
 export const PARTY_CHECK = 'PARTY_CHECK'
+export const CREATE_FIELD = 'CREATE_FIELD'
+export const FIELD_RANDOMLY_MOVE_ALL = 'FIELD_RANDOMLY_MOVE_ALL'
 
 export type ResetStateAction = {
   type: 'RESET_STATE'
@@ -58,6 +61,11 @@ export type ChangeSkillCheckAction = {
 export type ChangeItemCheckAction = {
   type: 'CHANGE_ITEM_CHECK'
   itemCheckName: string
+}
+
+export type ChangeFieldAction = {
+  type: 'CHANGE_FIELD'
+  fieldName: string
 }
 
 export type MoveEntityAction = {
@@ -121,6 +129,17 @@ export type PartyCheckAction = {
   partyCheckName: string
 }
 
+export type CreateFieldAction = {
+  type: 'CREATE_FIELD'
+  fieldName: string
+  sides: string[][]
+}
+
+export type FieldRandomlyMoveAllAction = {
+  type: 'FIELD_RANDOMLY_MOVE_ALL'
+  fieldName: string
+}
+
 export type Action =
   ResetStateAction
   | ShowInspectorAction
@@ -131,6 +150,7 @@ export type Action =
   | ChangeChoiceAction
   | ChangeItemCheckAction
   | ChangeSkillCheckAction
+  | ChangeFieldAction
   | MoveEntityAction
   | MoveEntityRoomAction
   | MovePartyAction
@@ -140,6 +160,8 @@ export type Action =
   | SkillCheckAction
   | ItemCheckAction
   | PartyCheckAction
+  | CreateFieldAction
+  | FieldRandomlyMoveAllAction
 
 export const resetState = (): ResetStateAction => ({
   type: RESET_STATE,
@@ -183,6 +205,11 @@ export const changeItemCheck = (itemCheckName: string): ChangeItemCheckAction =>
 export const changeSkillCheck = (skillCheckName: string): ChangeSkillCheckAction => ({
   type: CHANGE_SKILL_CHECK,
   skillCheckName,
+})
+
+export const changeField = (fieldName: string): ChangeFieldAction => ({
+  type: CHANGE_FIELD,
+  fieldName,
 })
 
 export const moveEntityRoom = (from: string, to: string, entityName: string): MoveEntityRoomAction => ({
@@ -231,4 +258,15 @@ export const itemCheck = (subjectName: string, itemCheckName: string): ItemCheck
 export const partyCheck = (partyCheckName: string): PartyCheckAction => ({
   type: PARTY_CHECK,
   partyCheckName,
+})
+
+export const createField = (fieldName: string, sides: string[][]): CreateFieldAction => ({
+  type: CREATE_FIELD,
+  fieldName,
+  sides,
+})
+
+export const fieldRandomlyMoveAll = (fieldName: string): FieldRandomlyMoveAllAction => ({
+  type: FIELD_RANDOMLY_MOVE_ALL,
+  fieldName,
 })

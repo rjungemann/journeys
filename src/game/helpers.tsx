@@ -1,4 +1,4 @@
-import { Choice, Description, Dialogue, Entity, Exit, Game, ItemCheck, PartyCheck, Room, SkillCheck } from "./data"
+import { Choice, Description, Dialogue, Entity, Exit, Field, Game, ItemCheck, PartyCheck, Room, SkillCheck } from "./data"
 
 export const findEntity = (state: Game) => (name: string): Entity => {
   return state.entities.filter((e) => e.name === name)[0]!
@@ -48,6 +48,10 @@ export const findItemCheck = (state: Game) => (name: string): ItemCheck => {
 
 export const findPartyCheck = (state: Game) => (name: string): PartyCheck => {
   return state.partyChecks.filter((pc) => pc.name === name)[0]!
+}
+
+export const findField = (state: Game) => (name: string): Field => {
+  return state.fields.filter((f) => f.name === name)[0]!
 }
 
 export const moveEntity = (state: Game) => (from: string, to: string, entityName: string): Game => {

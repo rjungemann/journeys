@@ -20,6 +20,8 @@ export type Game = {
   choiceName: string | null
   choices: Choice[]
   descriptions: Description[]
+  fieldName: string | null
+  fields: Field[]
 }
 
 export type Choice = {
@@ -170,3 +172,38 @@ export type PartyCheckVariantAbsent = {
   type: 'PARTY_CHECK_VARIANT_ABSENT'
 }
 export type PartyCheckVariant = PartyCheckVariantPresent | PartyCheckVariantAbsent
+
+export const COVER_OBSTACLE = 'COVER_OBSTACLE'
+export const BARRIER_OBSTACLE = 'BARRIER_OBSTACLE'
+
+export type Field = {
+  name: string
+  sides: Side[]
+  obstacles: Obstacle[]
+  teammates: Teammate[]
+}
+
+export type Teammate = {
+  name: string
+  x: number
+  movement: number
+}
+
+export type Side = {
+  name: string
+  team: string[]
+}
+
+export type CoverObstacle = {
+  name: string
+  type: 'COVER_OBSTACLE'
+  x: number
+}
+
+export type BarrierObstacle = {
+  name: string
+  type: 'BARRIER_OBSTACLE'
+  x: number
+}
+
+export type Obstacle = CoverObstacle | BarrierObstacle

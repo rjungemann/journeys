@@ -1,5 +1,6 @@
 import { resetState, showInspector } from "../actions"
 import { useGame, useTheme } from "../context"
+import { findField } from "../helpers"
 import { commaSeparateStrings } from "../utils"
 
 export const InspectorView = () => {
@@ -31,12 +32,29 @@ export const InspectorView = () => {
               {' | '}
               <a onClick={handleReset}>Reset State</a>
             </p>
+
+            <h3>Abriged State</h3>
             <pre className="code">
               {JSON.stringify(abriged, null, 2)}
             </pre>
-            <pre className="code">
-              {JSON.stringify(state, null, 2)}
-            </pre>
+            {
+              state.fieldName
+              ? (
+                <>
+                  <h3>Field State</h3>
+                  <pre className="code">
+                    {JSON.stringify(findField(state)(state.fieldName), null, 2)}
+                  </pre>
+                </>
+              )
+              : null
+            }
+            <>
+              <h3>Full State</h3>
+              <pre className="code">
+                {JSON.stringify(state, null, 2)}
+              </pre>
+            </>
           </>
         )
         : null

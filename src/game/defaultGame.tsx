@@ -4,10 +4,10 @@ export const defaultGame: Game = {
   ticks: 0,
   showInspector: false,
   sceneName: 'room',
-  roomName: 'quarters',
+  roomName: 'quarters-a',
   rooms: [
     {
-      name: 'quarters',
+      name: 'quarters-a',
       title: 'quarters',
       exits: [
         { name: 'north', title: 'north', to: 'hallway' }
@@ -16,10 +16,20 @@ export const defaultGame: Game = {
       tags: ['description:fix-1:success']
     },
     {
+      name: 'quarters-b',
+      title: 'quarters',
+      exits: [
+        { name: 'south', title: 'south', to: 'hallway' }
+      ],
+      entities: ['beth-raschke', 'nikos-rosek'],
+      tags: ['description:fix-1:success']
+    },
+    {
       name: 'hallway',
       title: 'hallway',
       exits: [
-        { name: 'south', title: 'south', to: 'quarters' },
+        { name: 'north', title: 'north', to: 'quarters-b' },
+        { name: 'south', title: 'south', to: 'quarters-a' },
         { name: 'east', title: 'east', to: 'bridge' },
         { name: 'west', title: 'west', to: 'galley' }
       ],
@@ -46,9 +56,109 @@ export const defaultGame: Game = {
     }
   ],
   partyRepresentativeName: 'alard-tyney',
-  party: ['alard-tyney'],
+  party: ['arlen-hyden', 'alice-hewitt'],
   entityName: null,
   entities: [
+    {
+      name: 'arlen-hyden',
+      title: 'Arlen Hyden',
+      tags: [
+        'character'
+      ],
+      characteristics: {
+        strength: 6,
+        dexterity: 10,
+        endurance: 9,
+        intelligence: 8,
+        education: 5,
+        socialStanding: 7,
+        psionicStrength: 0
+      },
+      skills: {
+        mechanics: 0,
+        gunCombat: 0,
+        slugPistol: 1,
+        vehicle: 0,
+        groundVehicle: 0
+      },
+      inventory: ['revolver-1']
+    },
+    {
+      name: 'alice-hewitt',
+      title: 'Alice Hewitt',
+      tags: [
+        'character'
+      ],
+      characteristics: {
+        strength: 6,
+        dexterity: 10,
+        endurance: 9,
+        intelligence: 8,
+        education: 5,
+        socialStanding: 7,
+        psionicStrength: 0
+      },
+      skills: {
+        mechanics: 0,
+        gunCombat: 0,
+        slugPistol: 1,
+        vehicle: 0,
+        groundVehicle: 0
+      },
+      inventory: ['revolver-2']
+    },
+    {
+      name: 'beth-raschke',
+      title: 'Beth Raschke',
+      tags: [
+        'character',
+        'ally:nikos-rosek',
+        'hostile'
+      ],
+      characteristics: {
+        strength: 6,
+        dexterity: 10,
+        endurance: 9,
+        intelligence: 8,
+        education: 5,
+        socialStanding: 7,
+        psionicStrength: 0
+      },
+      skills: {
+        mechanics: 0,
+        gunCombat: 0,
+        slugPistol: 1,
+        vehicle: 0,
+        groundVehicle: 0
+      },
+      inventory: ['revolver-3']
+    },
+    {
+      name: 'nikos-rosek',
+      title: 'Nikos Rosek',
+      tags: [
+        'character',
+        'ally:beth-raschke',
+        'hostile'
+      ],
+      characteristics: {
+        strength: 6,
+        dexterity: 10,
+        endurance: 9,
+        intelligence: 8,
+        education: 5,
+        socialStanding: 7,
+        psionicStrength: 0
+      },
+      skills: {
+        mechanics: 0,
+        gunCombat: 0,
+        slugPistol: 1,
+        vehicle: 0,
+        groundVehicle: 0
+      },
+      inventory: ['revolver-4']
+    },
     {
       name: 'alard-tyney',
       title: 'Alard Tyney',
@@ -76,7 +186,7 @@ export const defaultGame: Game = {
         vehicle: 0,
         groundVehicle: 0
       },
-      inventory: ['revolver-1']
+      inventory: ['revolver-5']
     },
     {
       name: 'kynon-morgan',
@@ -85,7 +195,7 @@ export const defaultGame: Game = {
         'character',
         'wandering',
         'choice:birds-1',
-        'item-check:has-revolver-1'
+        'item-check:has-revolver-6'
       ],
       characteristics: {
         strength: 10,
@@ -129,6 +239,46 @@ export const defaultGame: Game = {
   items: [
     {
       name: 'revolver-1',
+      title: 'revolver',
+      rounds: 6,
+      tags: ['ranged'],
+      damage: '2d6',
+      isEquipped: true,
+    },
+    {
+      name: 'revolver-2',
+      title: 'revolver',
+      rounds: 6,
+      tags: ['ranged'],
+      damage: '2d6',
+      isEquipped: true,
+    },
+    {
+      name: 'revolver-3',
+      title: 'revolver',
+      rounds: 6,
+      tags: ['ranged'],
+      damage: '2d6',
+      isEquipped: true,
+    },
+    {
+      name: 'revolver-4',
+      title: 'revolver',
+      rounds: 6,
+      tags: ['ranged'],
+      damage: '2d6',
+      isEquipped: true,
+    },
+    {
+      name: 'revolver-5',
+      title: 'revolver',
+      rounds: 6,
+      tags: ['ranged'],
+      damage: '2d6',
+      isEquipped: true,
+    },
+    {
+      name: 'revolver-6',
       title: 'revolver',
       rounds: 6,
       tags: ['ranged'],
@@ -248,5 +398,7 @@ export const defaultGame: Game = {
       conditionTag: 'skill-check:fix-1:failure',
       message: 'Nobody expected you to be able to fix the terminal.'
     }
-  ]
+  ],
+  fieldName: null,
+  fields: []
 }

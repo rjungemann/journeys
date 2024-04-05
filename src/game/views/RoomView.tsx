@@ -1,7 +1,7 @@
-import { changeEntity, changeRoom, changeScene, movePartyRoom } from "../actions"
+import { changeEntity, changeField, changeRoom, changeScene, createField, movePartyRoom } from "../actions"
 import { useGame } from "../context"
-import { findExit, findNonPartyEntitiesInRoom, findParty, findRoom, tagExitsGlobally } from "../helpers"
-import { capitalize, commaSeparateComponents } from "../utils"
+import { findEntity, findExit, findNonPartyEntitiesInRoom, findParty, findRoom, tagExitsGlobally } from "../helpers"
+import { capitalize, commaSeparateComponents, commaSeparateStrings, smallUid } from "../utils"
 
 export const RoomDescriptionsView = () => {
   const { state } = useGame()
@@ -91,23 +91,50 @@ export const RoomOtherEntitiesView = () => {
     dispatch(changeEntity(entity.name))
     dispatch(changeScene('entity'))
   }
+
   const otherEntities = findNonPartyEntitiesInRoom(state)(state.roomName)
+  const openlyHostileEntities = findRoom(state)(state.roomName).entities
+  .map((entityName) => findEntity(state)(entityName))
+  .filter((entity) => entity.tags.some((t) => t === 'hostile'))
+  const alliedHostileEntities = findRoom(state)(state.roomName).entities
+  .map((entityName) => findEntity(state)(entityName))
+  .filter((entity) => entity.tags.some((t) => t.match(new RegExp(`^ally:${entity.name}$`))))
+  const hostileEntities = [...openlyHostileEntities, ...alliedHostileEntities]
+  const startFight = () => {
+    console.log('start fight', hostileEntities)
+    const uid = smallUid()
+    dispatch(createField(`field-${uid}`, [state.party, hostileEntities.map((e) => e.name)]))
+    dispatch(changeField(`field-${uid}`))
+    dispatch(changeScene('combat'))
+  }
+
   return (
-    (otherEntities.length > 0)
-    ? (
-      <p>
-        Also in the room:
-        {' '}
-        {
-          commaSeparateComponents(
-            otherEntities.map((entity) => {
-              return <a key={entity.name} onClick={handleEntityFn(entity)}>{entity.title}</a>
-            })
-          )
-        }.
-      </p>
-    )
-    : null
+    <>
+      {
+        (otherEntities.length > 0)
+        ? (
+          <p>
+            Also in the room:
+            {' '}
+            {
+              commaSeparateComponents(
+                otherEntities.map((entity) => {
+                  return <a key={entity.name} onClick={handleEntityFn(entity)}>{entity.title}</a>
+                })
+              )
+            }.
+          </p>
+        )
+        : null
+      }
+      {
+        (hostileEntities.length > 0)
+        ? (
+          <p><a onClick={startFight}>Start fight</a> with {commaSeparateStrings(hostileEntities.map((e) => e.title))}?</p>
+        )
+        : null
+      }
+    </>
   )
 }
 

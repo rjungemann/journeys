@@ -87,4 +87,12 @@ party-check:<name>:done
 
 # cause the entity to move from room to room periodically
 wandering
+
+# TODO
+# if in the same room, will jump to their aid
+# if enters room during combat, will also jump to their aid
+ally:<name>
+# TODO
+# Will attack those not on their side in combat
+hostile
 ```

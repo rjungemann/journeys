@@ -45,3 +45,7 @@ export const capitalize = (words: string) => {
 export const matchTags = (tags: string[], regexp: RegExp): string[] => {
   return tags.filter((tag) => tag.match(regexp))
 }
+
+export const smallUid = () => {
+  return Math.floor(Math.random() * Math.pow(36, 5)).toString(36)
+}
