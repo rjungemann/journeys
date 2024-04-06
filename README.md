@@ -86,9 +86,10 @@ item-check:<name>:done
 party-check:<name>
 party-check:<name>:done
 
-# cause the entity to move from room to room periodically
+# Cause the entity to move from room to room periodically
 wandering
-
+# Will move on their own during combat
+offensive
 # Will attack those not on their side in combat
 hostile
 # If in the same room, will jump to their aid

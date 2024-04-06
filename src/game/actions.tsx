@@ -1,8 +1,11 @@
 export const RESET_STATE = 'RESET_STATE'
 export const SHOW_INSPECTOR = 'SHOW_INSPECTOR'
-export const CHANGE_EDIT_MODE = 'CHANGE_EDIT_MODE'
+export const CHANGE_TICKS = 'CHANGE_TICKS'
 export const CHANGE_SCENE = 'CHANGE_SCENE'
+export const CHANGE_EDIT_SCENE = 'CHANGE_EDIT_SCENE'
+export const CHANGE_PARTY_REPRESENTATIVE_NAME = 'CHANGE_PARTY_REPRESENTATIVE_NAME'
 export const CHANGE_ROOM = 'CHANGE_ROOM'
+export const CHANGE_EDIT_ROOM = 'CHANGE_EDIT_ROOM'
 export const CHANGE_ENTITY = 'CHANGE_ENTITY'
 export const CHANGE_DIALOGUE = 'CHANGE_DIALOGUE'
 export const CHANGE_CHOICE = 'CHANGE_CHOICE'
@@ -30,9 +33,9 @@ export type ShowInspectorAction = {
   state: boolean
 }
 
-export type ChangeEditModeAction = {
-  type: 'CHANGE_EDIT_MODE'
-  editMode: boolean
+export type ChangeTicksAction = {
+  type: 'CHANGE_TICKS'
+  ticks: number
 }
 
 export type ChangeSceneAction = {
@@ -40,8 +43,23 @@ export type ChangeSceneAction = {
   sceneName: string
 }
 
+export type ChangeEditSceneAction = {
+  type: 'CHANGE_EDIT_SCENE'
+  sceneName: string
+}
+
+export type ChangePartyRepresentativeNameAction = {
+  type: 'CHANGE_PARTY_REPRESENTATIVE_NAME'
+  partyRepresentativeName: string
+}
+
 export type ChangeRoomAction = {
   type: 'CHANGE_ROOM'
+  roomName: string
+}
+
+export type ChangeEditRoomAction = {
+  type: 'CHANGE_EDIT_ROOM'
   roomName: string
 }
 
@@ -155,9 +173,12 @@ export type IncrementFieldInitiativeAction = {
 export type Action =
   ResetStateAction
   | ShowInspectorAction
-  | ChangeEditModeAction
+  | ChangeTicksAction
   | ChangeSceneAction
+  | ChangeEditSceneAction
+  | ChangePartyRepresentativeNameAction
   | ChangeRoomAction
+  | ChangeEditRoomAction
   | ChangeEntityAction
   | ChangeDialogueAction
   | ChangeChoiceAction
@@ -186,9 +207,9 @@ export const showInspector = (state: boolean): ShowInspectorAction => ({
   state,
 })
 
-export const changeEditMode = (editMode: boolean): ChangeEditModeAction => ({
-  type: CHANGE_EDIT_MODE,
-  editMode,
+export const changeTicks = (ticks: number): ChangeTicksAction => ({
+  type: CHANGE_TICKS,
+  ticks,
 })
 
 export const changeScene = (sceneName: string): ChangeSceneAction => ({
@@ -196,8 +217,23 @@ export const changeScene = (sceneName: string): ChangeSceneAction => ({
   sceneName,
 })
 
+export const changeEditScene = (sceneName: string): ChangeEditSceneAction => ({
+  type: CHANGE_EDIT_SCENE,
+  sceneName,
+})
+
+export const changePartyRepresentativeName = (partyRepresentativeName: string): ChangePartyRepresentativeNameAction => ({
+  type: CHANGE_PARTY_REPRESENTATIVE_NAME,
+  partyRepresentativeName,
+})
+
 export const changeRoom = (roomName: string): ChangeRoomAction => ({
   type: CHANGE_ROOM,
+  roomName,
+})
+
+export const changeEditRoom = (roomName: string): ChangeEditRoomAction => ({
+  type: CHANGE_EDIT_ROOM,
   roomName,
 })
 

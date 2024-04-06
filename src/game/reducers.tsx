@@ -1,4 +1,4 @@
-import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_EDIT_MODE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CREATE_FIELD, ChangeChoiceAction, ChangeDialogueAction, ChangeEditModeAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, CreateFieldAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
+import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_EDIT_ROOM, CHANGE_EDIT_SCENE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_PARTY_REPRESENTATIVE_NAME, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CHANGE_TICKS, CREATE_FIELD, ChangeChoiceAction, ChangeDialogueAction, ChangeEditRoomAction, ChangeEditSceneAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangePartyRepresentativeNameAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ChangeTicksAction, CreateFieldAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
 import { BARRIER_OBSTACLE, COVER_OBSTACLE, Field, Game, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, TEAMMATE, Teammate } from "./data"
 import { defaultGame } from "./defaultGame"
 import { addTag, findEntity, findField, moveEntity, moveParty, removeTag } from "./helpers"
@@ -40,9 +40,9 @@ export const showInspectorReducer = (state: Game, action: ShowInspectorAction) =
   return { ...state, showInspector }
 }
 
-export const changeEditModeReducer = (state: Game, action: ChangeEditModeAction) => {
-  const { editMode } = action
-  return { ...state, editMode }
+export const changeTicksReducer = (state: Game, action: ChangeTicksAction) => {
+  const { ticks } = action
+  return { ...state, ticks }
 }
 
 export const changeSceneReducer = (state: Game, action: ChangeSceneAction) => {
@@ -50,9 +50,24 @@ export const changeSceneReducer = (state: Game, action: ChangeSceneAction) => {
   return { ...state, sceneName, previousSceneName: state.sceneName }
 }
 
+export const changeEditSceneReducer = (state: Game, action: ChangeEditSceneAction) => {
+  const { sceneName } = action
+  return { ...state, editSceneName: sceneName }
+}
+
+export const changePartyRepresentativeNameReducer = (state: Game, action: ChangePartyRepresentativeNameAction) => {
+  const { partyRepresentativeName } = action
+  return { ...state, partyRepresentativeName }
+}
+
 export const changeRoomReducer = (state: Game, action: ChangeRoomAction) => {
   const { roomName } = action
   return { ...state, roomName }
+}
+
+export const changeEditRoomReducer = (state: Game, action: ChangeEditRoomAction) => {
+  const { roomName } = action
+  return { ...state, editRoomName: roomName }
 }
 
 export const changeEntityReducer = (state: Game, action: ChangeEntityAction) => {
@@ -235,14 +250,23 @@ export const gameReducer = (state: Game, action: Action) => {
   if (type === SHOW_INSPECTOR) {
     return showInspectorReducer(state, action)
   }
-  if (type === CHANGE_EDIT_MODE) {
-    return changeEditModeReducer(state, action)
+  if (type === CHANGE_TICKS) {
+    return changeTicksReducer(state, action)
   }
   if (type === CHANGE_SCENE) {
     return changeSceneReducer(state, action)
   }
+  if (type === CHANGE_EDIT_SCENE) {
+    return changeEditSceneReducer(state, action)
+  }
+  if (type === CHANGE_PARTY_REPRESENTATIVE_NAME) {
+    return changePartyRepresentativeNameReducer(state, action)
+  }
   if (type === CHANGE_ROOM) {
     return changeRoomReducer(state, action)
+  }
+  if (type === CHANGE_EDIT_ROOM) {
+    return changeEditRoomReducer(state, action)
   }
   if (type === CHANGE_ENTITY) {
     return changeEntityReducer(state, action)

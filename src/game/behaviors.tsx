@@ -1,7 +1,8 @@
 import { useEffect } from "react"
 import { useGame } from "./context"
-import { dice } from "./utils"
+import { dice, matchTags } from "./utils"
 import { moveEntityRoom } from "./actions"
+import { findEntity, findField } from "./helpers"
 
 export const useWanderingBehaviors = () => {
   const { state, dispatch } = useGame()
@@ -17,5 +18,26 @@ export const useWanderingBehaviors = () => {
         }
       }
     })
+  }, [state.ticks])
+}
+
+export const useActsDuringCombat = () => {
+  const { state, dispatch } = useGame()
+  useEffect(() => {
+    if (!state.fieldName) {
+      return
+    }
+    const field = findField(state)(state.fieldName)
+    const [index, entityName] = field.initiativePairs[field.initiativeIndex]
+    const entity = findEntity(state)(entityName)
+    const teammate = field.teammates.filter((tm) => tm.name === entityName)[0]!
+
+    const leftX = teammate.x - teammate.movement
+    const rightX = teammate.x + teammate.movement
+    const averageX = field.teammates.reduce((s, tm) => s + tm.x, 0) / field.teammates.length
+    const isLeftBusier = Math.abs(averageX - leftX) < Math.abs(averageX - rightX)
+    
+    // TODO: Move away from busy area and try to make a shot
+    console.log('isLeftBusier', entityName, isLeftBusier)
   }, [state.ticks])
 }

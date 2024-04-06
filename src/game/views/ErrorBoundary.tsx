@@ -1,5 +1,6 @@
 import { Component, PropsWithChildren } from "react"
-import { GAME_KEY, GameConsumer } from "../context"
+import { GAME_KEY, GameConsumer, ThemeConsumer, useTheme } from "../context"
+import { HeadView } from "./HeadView"
 
 export type ErrorBoundaryState = {
   error: Error | null
@@ -22,20 +23,25 @@ export class ErrorBoundary extends Component {
     if (this.state.error) {
       // You can render any custom fallback UI
       return (
-        <GameConsumer>
-          {
-            (state) => {
-              return (
-                <>
-                  <h1>An error occurred.</h1>
-                  <h2>{this.state.error.name}: {this.state.error.message}</h2>
-                  <button onClick={resetStorage}>Reset Storage</button>
-                  <pre className="code">{JSON.stringify(state, null, 2)}</pre>
-                </>
-              )
-            }
-          }
-        </GameConsumer>
+        <ThemeConsumer>
+          {({ theme }) => {
+            return (
+              <GameConsumer>
+                {({ state }) => {
+                  return (
+                    <div className={`theme-${theme}`}>
+                      <HeadView />
+                      <h2>An error occurred.</h2>
+                      <h3>{this.state.error.name}: {this.state.error.message}</h3>
+                      <p><a onClick={resetStorage}>Reset Storage</a></p>
+                      <pre className="code">{JSON.stringify(state, null, 2)}</pre>
+                    </div>
+                  )
+                }}
+              </GameConsumer>
+            )
+          }}
+        </ThemeConsumer>
       )
     }
     return this.props.children

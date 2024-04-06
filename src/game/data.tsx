@@ -1,10 +1,11 @@
 export type Game = {
   ticks: number
   showInspector: boolean
-  editMode: boolean
   sceneName: string
+  editSceneName: string
   previousSceneName: string
   roomName: string
+  editRoomName: string
   rooms: Room[]
   partyRepresentativeName: string
   party: string[]

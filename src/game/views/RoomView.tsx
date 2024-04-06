@@ -143,7 +143,7 @@ export const RoomView = () => {
   const room = findRoom(state)(state.roomName)
   return (
     <>
-      <h2>{capitalize(room.title)}</h2>
+      <h2>{room.title}</h2>
       <RoomDescriptionsView />
       <RoomPartyEntitiesView />
       <RoomOtherEntitiesView />

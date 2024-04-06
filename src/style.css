@@ -1,4 +1,8 @@
 body {
+  --serif-font: "IBM Plex Serif";
+  --sans-serif-font: "IBM Plex Sans";
+  --mono-font: "IBM Plex Mono";
+
   --color-far-background: #57534e; /* stone-600 */
   --color-near-background: #f5f5f4; /* stone-100 */
   --color-pre-background: #d6d3d1; /* stone-300 */
@@ -29,16 +33,16 @@ html, body {
 
 /* Set fonts */
 body {
-  font-family: "IBM Plex Serif";
+  font-family: var(--serif-font);
   font-weight: 300;
   letter-spacing: -0.02rem;
   line-height: 1.5;
 }
 h1, h2, h3, h4, h5, h6, input, button {
-  font-family: "IBM Plex Sans";
+  font-family: var(--sans-serif-font);
 }
 pre, code {
-  font-family: "IBM Plex Mono";
+  font-family: var(--mono-font);
   font-size: 0.6em;
 }
 
@@ -70,19 +74,29 @@ a {
   cursor: pointer;
 }
 
-input[type=text], textarea {
+input[type=text], input[type=number] {
+  padding: 0.5em;
+  border: 1px solid var(--color-input-border);
+}
+
+textarea {
   width: 100%;
   padding: 0.5em;
   border: 1px solid var(--color-input-border);
 }
 
-input[type=text], textarea {
+label { 
+  font-family: var(--sans-serif-font);
+  font-weight: bold;
+}
+
+input[type=text], input[type=number], textarea {
   opacity: 0.6
 }
-input[type=text]:hover, textarea:hover {
+input[type=text]:hover, input[type=number]:hover, textarea:hover {
   opacity: 0.8
 }
-input[type=text]:active, textarea:active {
+input[type=text]:active, input[type=number]:active, textarea:active {
   opacity: 1.0
 }
 
@@ -185,4 +199,23 @@ svg .obstacle circle,
 svg .obstacle text
 {
   fill: var(--color-text);
+}
+
+.form-control {
+  margin-bottom: 0.5em;
+}
+
+.form-control label {
+  margin-right: 0.5em;
+  display: block;
+}
+
+.form-control input[type=text],
+.form-control input[type=number]
+{
+  margin-bottom: 0.5em;
+}
+
+.form-control .exits {
+  margin-bottom: 1em;
 }

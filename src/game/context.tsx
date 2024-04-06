@@ -58,7 +58,7 @@ export const THEME_KEY_DARK = 'dark'
 
 export const ThemeContext = createContext<ThemeContext | null>(null)
 
-export const ThemeConsumer = GameContext.Consumer
+export const ThemeConsumer = ThemeContext.Consumer
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const key = THEME_KEY

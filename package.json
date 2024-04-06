@@ -5,7 +5,8 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "dev": "yarn parcel src/index.html",
-    "build": "yarn parcel build src/index.html"
+    "build": "yarn parcel build src/index.html",
+    "cache:clear": "rm -rf .parcel-cache"
   },
   "dependencies": {
     "parcel-transformer-markdown": "^3.0.1",

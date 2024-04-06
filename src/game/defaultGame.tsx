@@ -4,14 +4,15 @@ import { randomColor } from "./utils";
 export const defaultGame: Game = {
   ticks: 0,
   showInspector: false,
-  editMode: false,
   sceneName: 'room',
-  previousSceneName: null,
+  editSceneName: 'basic',
+  previousSceneName: 'room',
   roomName: 'quarters-a',
+  editRoomName: 'quarters-a',
   rooms: [
     {
       name: 'quarters-a',
-      title: 'quarters',
+      title: 'Quarters A',
       exits: [
         { name: 'north', title: 'north', to: 'hallway' }
       ],
@@ -20,7 +21,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'quarters-b',
-      title: 'quarters',
+      title: 'Quarters B',
       exits: [
         { name: 'south', title: 'south', to: 'hallway' }
       ],
@@ -29,7 +30,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'hallway',
-      title: 'hallway',
+      title: 'Hallway',
       exits: [
         { name: 'north', title: 'north', to: 'quarters-b' },
         { name: 'south', title: 'south', to: 'quarters-a' },
@@ -41,7 +42,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'bridge',
-      title: 'bridge',
+      title: 'Bridge',
       exits: [
         { name: 'west', title: 'west', to: 'hallway' }
       ],
@@ -50,7 +51,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'galley',
-      title: 'galley',
+      title: 'Galley',
       exits: [
         { name: 'east', title: 'east', to: 'hallway' }
       ],
@@ -67,7 +68,8 @@ export const defaultGame: Game = {
       title: 'Arlen Hyden',
       color: randomColor(),
       tags: [
-        'character'
+        'character',
+        'offensive'
       ],
       characteristics: {
         strength: 6,
@@ -92,7 +94,8 @@ export const defaultGame: Game = {
       title: 'Alice Hewitt',
       color: randomColor(),
       tags: [
-        'character'
+        'character',
+        'offensive'
       ],
       characteristics: {
         strength: 6,
@@ -119,7 +122,8 @@ export const defaultGame: Game = {
       tags: [
         'character',
         'ally:nikos-rosek',
-        'hostile'
+        'hostile',
+        'offensive'
       ],
       characteristics: {
         strength: 6,
@@ -146,7 +150,8 @@ export const defaultGame: Game = {
       tags: [
         'character',
         'ally:beth-raschke',
-        'hostile'
+        'hostile',
+        'offensive'
       ],
       characteristics: {
         strength: 6,
@@ -176,7 +181,8 @@ export const defaultGame: Game = {
         'skill-check:alard-1',
         'skill-check:alard-2',
         'description:alard-1:success',
-        'description:alard-1:failure'
+        'description:alard-1:failure',
+        'offensive'
       ],
       characteristics: {
         strength: 6,
