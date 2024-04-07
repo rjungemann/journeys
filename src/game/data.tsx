@@ -1,224 +1,256 @@
-export type Game = {
-  ticks: number
-  showInspector: boolean
-  sceneName: string
-  editSceneName: string
-  previousSceneName: string
-  roomName: string
-  editRoomName: string
-  characteristicLabels: Record<string, string>
-  skillLabels: Record<string, string>
-  rooms: Room[]
-  partyRepresentativeName: string
-  party: string[]
-  entityName: string | null
-  entities: Entity[]
-  items: Item[]
-  dialogues: Dialogue[]
-  log: LogItem[]
-  skillCheckName: string | null
-  skillChecks: SkillCheck[]
-  itemCheckName: string | null
-  itemChecks: ItemCheck[]
-  partyCheckName: string | null
-  partyChecks: PartyCheck[]
-  choiceName: string | null
-  choices: Choice[]
-  descriptions: Description[]
-  fieldName: string | null
-  fields: Field[]
-}
+import { z } from 'zod'
 
-export type Choice = {
-  name: string
-  title: string
-  conditionTag: string
-  message: string
-  options: Option[]
-}
+// Usage:
+//
+//   const json = '{}'
+//   const data = JSON.parse(json)
+//   const game = GameSchema.parse(data) // throws if invalid Game
+//
 
-export type Option = {
-  name: string
-  message: string
-}
+export const OptionSchema = z.object({
+  name: z.string(),
+  message: z.string()
+})
+
+export type Option = z.infer<typeof OptionSchema>
+
+export const ChoiceSchema = z.object({
+  name: z.string(),
+  title: z.string(),
+  conditionTag: z.nullable(z.string()),
+  message: z.string(),
+  options: OptionSchema.array()
+})
+
+export type Choice = z.infer<typeof ChoiceSchema>
+
+export const DescriptionSchema = z.object({
+  name: z.string(),
+  conditionTag: z.nullable(z.string()),
+  message: z.string()
+})
 
 // TODO: Items
 // TODO: Rooms
-export type Description = {
-  name: string
-  conditionTag: string | null
-  message: string
-}
+export type Description = z.infer<typeof DescriptionSchema>
 
-export type Dialogue = {
-  name: string
-  conditionTag: string | null
-  topic: string
-  messages: string[]
-}
+export const DialogueSchema = z.object({
+  name: z.string(),
+  conditionTag: z.nullable(z.string()),
+  topic: z.string(),
+  messages: z.string().array()
+})
 
-export type Room = {
-  name: string
-  title: string
-  exits: Exit[]
-  entities: string[]
-  tags: string[]
-}
+export type Dialogue = z.infer<typeof DialogueSchema>
 
-export type Exit = {
-  name: string
-  title: string
-  to: string
-}
+export const ExitSchema = z.object({
+  name: z.string(),
+  title: z.string(),
+  to: z.string()
+})
 
-export type Entity = {
-  name: string
-  title: string
-  color: string
-  characteristics?: Characteristics
-  skills?: Record<string, number>
-  tags: string[]
-  inventory: string[]
-}
+export type Exit = z.infer<typeof ExitSchema>
 
-export type Characteristics = {
-  strength: number
-  dexterity: number
-  endurance: number
-  intelligence: number
-  education: number
-  socialStanding: number
-  psionicStrength: number
-}
+const RoomSchema = z.object({
+  name: z.string(),
+  title: z.string(),
+  exits: ExitSchema.array(),
+  entities: z.string().array(),
+  tags: z.string().array()
+})
 
-export type Weapon = {
-  name: string
-  title: string
-  rounds: number | null
-  tags: string[]
-  damage: string
-  isEquipped: boolean
-}
+export type Room = z.infer<typeof RoomSchema>
 
-export type Item = Weapon
+export const CharacteristicsSchema = z.object({
+  strength: z.number(),
+  dexterity: z.number(),
+  endurance: z.number(),
+  intelligence: z.number(),
+  education: z.number(),
+  socialStanding: z.number(),
+  psionicStrength: z.number()
+})
 
-export type LogItem = {
-  message: string
-}
+export type Characteristics = z.infer<typeof CharacteristicsSchema>
 
-export type SkillCheck = {
-  name: string
-  conditionTag: string | null,
-  title: string
-  characteristic: string
-  skill: string
-  tn: number
-  result: SkillCheckResult | null
-}
+export const EntitySchema = z.object({
+  name: z.string(),
+  title: z.string(),
+  color: z.string(),
+  characteristics: z.optional(CharacteristicsSchema),
+  skills: z.optional(z.record(z.string(), z.number())),
+  tags: z.string().array(),
+  inventory: z.string().array()
+})
 
-export type SkillCheckResult = {
-  subjectName: string
-  objectName: string | null
-  skillCheckName: string
-  characteristicName: string
-  skillName: string
-  characteristicValue: number
-  skillValue: number
-  dice: string
-  roll: {
-    rolls: number[]
-    sum: number
-    sides: number
-  }
-  total: number
-  tn: number
-  isSuccess: boolean
-}
+export type Entity = z.infer<typeof EntitySchema>
 
-export type ItemCheck = {
-  name: string
-  conditionTag: string | null
-  title: string
-  message: string
-  variant: ItemCheckVariant
-  itemName: string
-}
+// TODO: `type` field to differentiate kinds of items
+export const ItemSchema = z.object({
+  name: z.string(),
+  title: z.string(),
+  rounds: z.nullable(z.number()),
+  tags: z.string().array(),
+  damage: z.string(),
+  isEquipped: z.boolean()
+})
 
-export type PartyCheck = {
-  name: string
-  conditionTag: string | null
-  title: string
-  message: string
-  variant: PartyCheckVariant
-  itemName: string
-}
+export type Item = z.infer<typeof ItemSchema>
+
+export const LogItemSchema = z.object({
+  message: z.string()
+})
+
+export type LogItem = z.infer<typeof LogItemSchema>
+
+export const SkillCheckResultSchema = z.object({
+  subjectName: z.string(),
+  objectName: z.nullable(z.string()),
+  skillCheckName: z.string(),
+  characteristicName: z.string(),
+  skillName: z.string(),
+  characteristicValue: z.number(),
+  skillValue: z.number(),
+  dice: z.string(),
+  roll: z.object({
+    rolls: z.number().array(),
+    sum: z.number(),
+    sides: z.number()
+  }),
+  total: z.number(),
+  tn: z.number(),
+  isSuccess: z.boolean()
+})
+
+export type SkillCheckResult = z.infer<typeof SkillCheckResultSchema>
+
+export const SkillCheckSchema = z.object({
+  name: z.string(),
+  conditionTag: z.nullable(z.string()),
+  title: z.string(),
+  characteristic: z.string(),
+  skill: z.string(),
+  tn: z.number(),
+  result: z.nullable(SkillCheckResultSchema)
+})
+
+export type SkillCheck = z.infer<typeof SkillCheckSchema>
 
 export const ITEM_CHECK_VARIANT_GIVE = 'ITEM_CHECK_VARIANT_GIVE'
 export const ITEM_CHECK_VARIANT_TAKE = 'ITEM_CHECK_VARIANT_TAKE'
 export const ITEM_CHECK_VARIANT_VERIFY = 'ITEM_CHECK_VARIANT_VERIFY'
 
-export type ItemCheckVariantGive = {
-  type: 'ITEM_CHECK_VARIANT_GIVE'
-}
-export type ItemCheckVariantTake = {
-  type: 'ITEM_CHECK_VARIANT_TAKE'
-}
-export type ItemCheckVariantVerify = {
-  type: 'ITEM_CHECK_VARIANT_VERIFY'
-}
-export type ItemCheckVariant = ItemCheckVariantGive | ItemCheckVariantTake | ItemCheckVariantVerify
+export const ItemCheckVariantSchema = z.object({
+  type: z.enum([ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY])
+})
+
+export type ItemCheckVariant = z.infer<typeof ItemCheckVariantSchema>
+
+export const ItemCheckSchema = z.object({
+  name: z.string(),
+  conditionTag: z.nullable(z.string()),
+  title: z.string(),
+  message: z.string(),
+  variant: ItemCheckVariantSchema,
+  itemName: z.string()
+})
+
+export type ItemCheck = z.infer<typeof ItemCheckSchema>
 
 export const PARTY_CHECK_VARIANT_PRESENT = 'PARTY_CHECK_VARIANT_PRESENT'
 export const PARTY_CHECK_VARIANT_ABSENT = 'PARTY_CHECK_VARIANT_ABSENT'
 
-export type PartyCheckVariantPresent = {
-  type: 'PARTY_CHECK_VARIANT_PRESENT'
-}
-export type PartyCheckVariantAbsent = {
-  type: 'PARTY_CHECK_VARIANT_ABSENT'
-}
-export type PartyCheckVariant = PartyCheckVariantPresent | PartyCheckVariantAbsent
+export const PartyCheckVariantSchema = z.object({
+  type: z.enum([PARTY_CHECK_VARIANT_PRESENT, PARTY_CHECK_VARIANT_ABSENT])
+})
+
+export type PartyCheckVariant = z.infer<typeof PartyCheckVariantSchema>
+
+export const PartyCheckSchema = z.object({
+  name: z.string(),
+  conditionTag: z.nullable(z.string()),
+  title: z.string(),
+  message: z.string(),
+  variant: PartyCheckVariantSchema,
+  itemName: z.string()
+})
+
+export type PartyCheck = z.infer<typeof PartyCheckSchema>
 
 export const TEAMMATE = 'TEAMMATE'
 export const COVER_OBSTACLE = 'COVER_OBSTACLE'
 export const BARRIER_OBSTACLE = 'BARRIER_OBSTACLE'
 
-export type Field = {
-  name: string
-  sides: Side[]
-  obstacles: Obstacle[]
-  teammates: Teammate[]
-  initiativePairs: [number, string][]
-  initiativeIndex: number
-}
+export const ObstacleSchema = z.object({
+  name: z.string(),
+  type: z.enum([COVER_OBSTACLE, BARRIER_OBSTACLE]),
+  x: z.number(),
+  movement: z.number()
+})
 
-export type Side = {
-  name: string
-  title: string
-  team: string[]
-}
+export type Obstacle = z.infer<typeof ObstacleSchema>
 
-export type Teammate = {
-  name: string
-  type: 'TEAMMATE'
-  x: number
-  movement: number
-}
+export const TeammateSchema = z.object({
+  name: z.string(),
+  type: z.enum([TEAMMATE]),
+  x: z.number(),
+  movement: z.number()
+})
 
-export type CoverObstacle = {
-  name: string
-  type: 'COVER_OBSTACLE'
-  x: number
-  movement: 0
-}
+export type Teammate = z.infer<typeof TeammateSchema>
 
-export type BarrierObstacle = {
-  name: string
-  type: 'BARRIER_OBSTACLE'
-  x: number
-  movement: 0
-}
+export const FieldEntitySchema = z.union([TeammateSchema, ObstacleSchema])
 
-export type FieldEntity = Teammate | CoverObstacle | BarrierObstacle
+export type FieldEntity = z.infer<typeof FieldEntitySchema>
 
-export type Obstacle = CoverObstacle | BarrierObstacle
+export const SideSchema = z.object({
+  name: z.string(),
+  title: z.string(),
+  team: z.string().array()
+})
+
+export type Side = z.infer<typeof SideSchema>
+
+export const FieldSchema = z.object({
+  name: z.string(),
+  sides: z.array(SideSchema),
+  obstacles: z.array(ObstacleSchema),
+  teammates: z.array(TeammateSchema),
+  initiativePairs: z.array(z.tuple([z.number(), z.string()])),
+  initiativeIndex: z.number()
+})
+
+export type Field = z.infer<typeof FieldSchema>
+
+export const GameSchema = z.object({
+  ticks: z.number(),
+  showInspector: z.boolean(),
+  sceneName: z.string(),
+  editSceneName: z.string(),
+  previousSceneName: z.string(),
+  roomName: z.string(),
+  editRoomName: z.string(),
+  characteristicLabels: z.record(z.string(), z.string()),
+  skillLabels: z.record(z.string(), z.string()),
+  rooms: RoomSchema.array(),
+  partyRepresentativeName: z.string(),
+  party: z.string().array(),
+  entityName: z.nullable(z.string()),
+  entities: EntitySchema.array(),
+  items: ItemSchema.array(),
+  dialogues: DialogueSchema.array(),
+  log: LogItemSchema.array(),
+  skillCheckName: z.nullable(z.string()),
+  skillChecks: SkillCheckSchema.array(),
+  itemCheckName: z.nullable(z.string()),
+  itemChecks: ItemCheckSchema.array(),
+  partyCheckName: z.nullable(z.string()),
+  partyChecks: PartyCheckSchema.array(),
+  choiceName: z.nullable(z.string()),
+  choices: ChoiceSchema.array(),
+  descriptions: DescriptionSchema.array(),
+  fieldName: z.nullable(z.string()),
+  fields: FieldSchema.array()
+})
+
+export type Game = z.infer<typeof GameSchema>
