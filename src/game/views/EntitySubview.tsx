@@ -1,11 +1,11 @@
-import { changeChoice, changeDialogue, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
+import { changeChoice, changeDialogue, changeEntity, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
-import { tagExitsGlobally } from "../helpers"
-import { capitalize, commaSeparateComponents } from "../utils"
+import { findEntity, tagExitsGlobally } from "../helpers"
+import { commaSeparateComponents } from "../utils"
 
 export const EntityDescriptionView = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
-  const entity = state.entities.filter((entity) => entity.name === entityName)[0]!
+  const entity = findEntity(state)(entityName)
   const descriptions = entity.tags.reduce((sum, tag) => {
     const [_, name] = tag.match(/^description:(.*)$/) || []
     return !name ? sum : [...sum, ...state.descriptions.filter((d) => d.name === name)]
@@ -22,9 +22,9 @@ export const EntityDescriptionView = ({ entityName }: { entityName: string }) =>
   )
 }
 
-export const EntityConversibleView = ({ entityName }: { entityName: string }) => {
+export const EntityDialogueView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const entity = state.entities.filter((e) => e.name === entityName)[0]!
+  const entity = findEntity(state)(entityName)
   const dialogueNames = entity.tags.reduce(
     (sum, tag) => {
       const match = tag.match(/^dialogue:([^:]+):(\d+)$/)
@@ -35,6 +35,7 @@ export const EntityConversibleView = ({ entityName }: { entityName: string }) =>
   )
   const dialogues = dialogueNames.map((name) => state.dialogues.filter((d) => d.name === name)[0]!)
   const handleNextFn = (dialogue) => (event) => {
+    dispatch(changeEntity(entityName))
     dispatch(changeDialogue(dialogue.name))
     dispatch(changeScene('dialogue'))
   }
@@ -60,7 +61,7 @@ export const EntityConversibleView = ({ entityName }: { entityName: string }) =>
 
 export const EntityChoiceListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === entityName)[0]!
+  const object = findEntity(state)(entityName)
   const choices = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^choice:([^:]+)$/) || []
@@ -78,6 +79,7 @@ export const EntityChoiceListView = ({ entityName }: { entityName: string }) => 
     []
   )
   const handleNextFn = (name) => (event) => {
+    dispatch(changeEntity(entityName))
     dispatch(changeChoice(name))
     dispatch(changeScene('choice'))
   }
@@ -97,7 +99,7 @@ export const EntityChoiceListView = ({ entityName }: { entityName: string }) => 
 
 export const EntityItemCheckListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === entityName)[0]!
+  const object = findEntity(state)(entityName)
   const itemChecks = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^item-check:([^:]+)$/) || []
@@ -115,6 +117,7 @@ export const EntityItemCheckListView = ({ entityName }: { entityName: string }) 
     []
   )
   const handleNextFn = (name) => (event) => {
+    dispatch(changeEntity(entityName))
     dispatch(changeItemCheck(name))
     dispatch(changeScene('item-check'))
   }
@@ -134,7 +137,7 @@ export const EntityItemCheckListView = ({ entityName }: { entityName: string }) 
 
 export const EntitySkillCheckListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
-  const object = state.entities.filter((e) => e.name === entityName)[0]!
+  const object = findEntity(state)(entityName)
   const data = object.tags.reduce(
     (sum, tag) => {
       const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
@@ -152,6 +155,7 @@ export const EntitySkillCheckListView = ({ entityName }: { entityName: string })
     []
   )
   const handleNextFn = (name) => (event) => {
+    dispatch(changeEntity(entityName))
     dispatch(changeSkillCheck(name))
     dispatch(changeScene('skill-check'))
   }
@@ -169,23 +173,74 @@ export const EntitySkillCheckListView = ({ entityName }: { entityName: string })
   )
 }
 
-export const EntityView = () => {
-  const { state, dispatch } = useGame()
-  const handleLeave = () => {
-    dispatch(changeScene('room'))
-  }
-  const entity = state.entities.filter((e) => e.name === state.entityName)[0]!
+export const EntityStats = ({ entityName }: { entityName: string }) => {
+  const { state } = useGame()
+  const entity = findEntity(state)(entityName)
+  const characteristicData = Object.keys(entity.characteristics || {}).map((name) => {
+    const label = state.characteristicLabels[name]
+    const value = entity.characteristics[name]
+    return { name, label, value }
+  })
+  const skillData = Object.keys(entity.skills || {}).map((name) => {
+    const label = state.skillLabels[name]
+    const value = entity.skills[name]
+    return { name, label, value }
+  })
   return (
     <>
-      <h2>{capitalize(entity.title)}</h2>
-      <EntityDescriptionView entityName={state.entityName} />
-      <EntityChoiceListView entityName={state.entityName} />
-      <EntityConversibleView entityName={state.entityName} />
-      <EntityItemCheckListView entityName={state.entityName} />
-      <EntitySkillCheckListView entityName={state.entityName} />
-      <p>
-        <a onClick={handleLeave}>Go Back</a>.
-      </p>
+      {
+        characteristicData.length > 0 || skillData.length > 0
+        ? (
+          <div style={{ display: 'flex', gap: '1.5em', opacity: 0.5 }}>
+            {
+              characteristicData.length > 0
+              ? (
+                <table className="characteristics">
+                  <tbody>
+                    {characteristicData.map(({ name, label, value}) => (
+                      <tr key={name}>
+                        <td className="label">{label}</td>
+                        <td>{value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+              : null
+            }
+            {
+              skillData.length > 0
+              ? (
+                <table className="skills">
+                  <tbody>
+                    {skillData.map(({ name, label, value}) => (
+                      <tr key={name}>
+                        <td className="label">{label}</td>
+                        <td>{value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+              : null
+            }
+          </div>
+        )
+        : null
+      }
+    </>
+  )
+}
+
+export const EntitySubview = ({ entityName }: { entityName: string }) => {
+  return (
+    <>
+      <EntityDescriptionView entityName={entityName} />
+      <EntityChoiceListView entityName={entityName} />
+      <EntityDialogueView entityName={entityName} />
+      <EntityItemCheckListView entityName={entityName} />
+      <EntitySkillCheckListView entityName={entityName} />
+      <EntityStats entityName={entityName} />
     </>
   )
 }

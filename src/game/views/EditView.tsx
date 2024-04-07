@@ -2,7 +2,6 @@ import { ChangeEvent, InputHTMLAttributes, useEffect, useState } from "react"
 import { useGame, useTheme } from "../context"
 import { changeEditRoom, changeEditScene, changePartyRepresentativeName, changeScene, changeTicks } from "../actions"
 import { findRoom } from "../helpers"
-import { MultiInput } from "./MultiInput"
 
 export const EditBasicView = () => {
   const { state, dispatch } = useGame()
@@ -123,13 +122,13 @@ export const NewRoomView = () => {
         <label>Tags (comma-separated)</label>
         <input name="tags" id="tags" type="text" value={tagsString} onChange={handleChangeTagsString} onBlur={handleBlurTags} />
       </div>
-      <div className="form-control">
+      <div className="form-control exits-control">
         <h3>Exits</h3>
         {
           exits.map((exit, i) => {
             return (
               <div className="exits" key={i}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                <div style={{ display: 'flex', gap: '0.5em' }}>
                   <div style={{ flex: 1, minWidth: 0, marginBottom: 0 }}>
                     <label>Name</label>
                     <input type="text" style={{ width: '100%' }} value={exit.name} onChange={handleChangeExitNameFn(i)} />
@@ -142,15 +141,16 @@ export const NewRoomView = () => {
                     <label>To</label>
                     <input type="text" style={{ width: '100%' }} value={exit.to} onChange={handleChangeExitToFn(i)} />
                   </div>
-                </div>
-                <div>
-                  <button onClick={handleRemoveExitFn(i)}>Remove</button>
+                  <div style={{ flex: 1, minWidth: 0, marginBottom: 0 }}>
+                    <label style={{ opacity: 0, pointerEvents: 'none' }}>Actions</label>
+                    <button onClick={handleRemoveExitFn(i)}>Remove</button>
+                  </div>
                 </div>
               </div>
             )
           })
         }
-        <a onClick={handleAddExit}>Add Exit</a>
+        <button onClick={handleAddExit}>Add Exit</button>
       </div>
     </>
   )

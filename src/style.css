@@ -219,3 +219,24 @@ svg .obstacle text
 .form-control .exits {
   margin-bottom: 1em;
 }
+
+.form-control.exits-control {
+  background-color: var(--color-pre-background);
+  padding: 1em;
+}
+
+.form-control.exits-control h3 {
+  margin-top: 0;
+}
+
+.characteristics,
+.skills
+{
+  font-size: 0.8em;
+}
+
+.characteristics .label,
+.skills .label
+{
+  font-weight: bold;
+}

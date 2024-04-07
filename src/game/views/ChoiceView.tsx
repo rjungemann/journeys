@@ -7,7 +7,7 @@ export const NoChoiceView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
   const entity = findEntity(state)(entityName)
   const handleLeave = () => {
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>
@@ -23,9 +23,6 @@ export const ChoiceView = () => {
   const { state, dispatch } = useGame()
   const entity = findEntity(state)(state.entityName)
   const tag = matchTags(entity.tags, /choice:([^:]+)$/)[0]
-  const handleLeave = () => {
-    dispatch(changeScene('entity'))
-  }
   if (!tag) {
     return <NoChoiceView entityName={entity.name} />
   }
@@ -42,7 +39,7 @@ export const ChoiceView = () => {
   const handleNextFn = (option) => () => {
     dispatch(removeTag(entity.name, tag))
     dispatch(addTag(entity.name, `choice:${choice.name}:${option.name}`))
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>

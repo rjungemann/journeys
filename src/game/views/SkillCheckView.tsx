@@ -67,7 +67,7 @@ export const SkillCheckPostView = () => {
   const handleNext = () => {
     // Add the success or failure tag to the object, such ass `skill-check:fix-1:success`
     dispatch(addTag(objectName, `skill-check:${skillCheckName}:${isSuccess ? 'success' : 'failure'}`))
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   const dice = '2d6'
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
@@ -107,7 +107,7 @@ export const SkillCheckView = () => {
     return null
   }
   const handleLeave = (event) => {
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>

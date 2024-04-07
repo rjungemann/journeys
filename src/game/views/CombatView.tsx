@@ -93,7 +93,6 @@ export const FieldEntityListView = () => {
           }
           if (fieldEntity.type === TEAMMATE) {
             const entity = findEntity(state)(fieldEntity.name)
-            console.log('entity', entity)
             const side = field.sides.filter((s) => s.team.some((en) => en === entity.name))[0]!
             return (
               <span key={fieldEntity.name} style={{ color: entity.color }}>{capitalize(entity.title)} @ {fieldEntity.x.toFixed(0)}m ({side.title}){i < ordered.length - 1 ? <br /> : null}</span>

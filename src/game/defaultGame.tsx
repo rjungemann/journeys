@@ -9,6 +9,22 @@ export const defaultGame: Game = {
   previousSceneName: 'room',
   roomName: 'quarters-a',
   editRoomName: 'quarters-a',
+  characteristicLabels: {
+    strength: 'Strength',
+    dexterity: 'Dexterity',
+    endurance: 'Endurance',
+    intelligence: 'Intelligence',
+    education: 'Education',
+    socialStanding: 'Social Standing',
+    psionicStrength: 'Psionic Strength'
+  },
+  skillLabels: {
+    groundVehicle: 'Ground Vehicle',
+    gunCombat: 'Gun Combat',
+    mechanics: 'Mechanics',
+    slugPistol: 'Slug Pistol',
+    vehicle: 'Vehicle',
+  },
   rooms: [
     {
       name: 'quarters-a',
@@ -232,18 +248,8 @@ export const defaultGame: Game = {
     },
     {
       name: 'terminal-1',
-      title: 'terminal',
+      title: 'Terminal',
       color: randomColor(),
-      characteristics: {
-        strength: 7,
-        dexterity: 7,
-        endurance: 7,
-        intelligence: 7,
-        education: 7,
-        socialStanding: 7,
-        psionicStrength: 0
-      },
-      skills: {},
       inventory: [],
       tags: [
         'skill-check:fix-1',
@@ -255,7 +261,7 @@ export const defaultGame: Game = {
   items: [
     {
       name: 'revolver-1',
-      title: 'revolver',
+      title: 'Revolver',
       rounds: 6,
       tags: ['ranged'],
       damage: '2d6',
@@ -263,7 +269,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'revolver-2',
-      title: 'revolver',
+      title: 'Revolver',
       rounds: 6,
       tags: ['ranged'],
       damage: '2d6',
@@ -271,7 +277,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'revolver-3',
-      title: 'revolver',
+      title: 'Revolver',
       rounds: 6,
       tags: ['ranged'],
       damage: '2d6',
@@ -279,7 +285,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'revolver-4',
-      title: 'revolver',
+      title: 'Revolver',
       rounds: 6,
       tags: ['ranged'],
       damage: '2d6',
@@ -287,7 +293,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'revolver-5',
-      title: 'revolver',
+      title: 'Revolver',
       rounds: 6,
       tags: ['ranged'],
       damage: '2d6',
@@ -295,7 +301,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'revolver-6',
-      title: 'revolver',
+      title: 'Revolver',
       rounds: 6,
       tags: ['ranged'],
       damage: '2d6',
@@ -303,7 +309,7 @@ export const defaultGame: Game = {
     },
     {
       name: 'knife-1',
-      title: 'knife',
+      title: 'Knife',
       rounds: null,
       tags: ['melee'],
       damage: '1d6',

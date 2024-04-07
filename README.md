@@ -1,5 +1,7 @@
 ## TODO
 
+* Party view
+* Change party representative in party view
 * Editor section
 * Multiple `conditionTags`, with an optional `!` prefix for negation
 * Other tag behaviors for movement and other activity?

@@ -51,5 +51,5 @@ export const smallUid = () => {
 }
 
 export const randomColor = () => {
-  return `hsl(${Math.floor(Math.random() * 256.0)}, 70%, 60%)`
+  return `hsl(${Math.floor(Math.random() * 360.0)}deg 70% 60%)`
 }

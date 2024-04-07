@@ -1,5 +1,4 @@
 import { DialogueView } from "./DialogueView"
-import { EntityView } from "./EntityView"
 import { InspectorView } from "./InspectorView"
 import { RoomView } from "./RoomView"
 import { SkillCheckView } from "./SkillCheckView"
@@ -20,7 +19,6 @@ export const GameView = () => {
   return (
     <div className={`theme-${theme}`}>
       <HeadView />
-      {state.sceneName === 'entity' ? <EntityView /> : null}
       {state.sceneName === 'dialogue' ? <DialogueView /> : null}
       {state.sceneName === 'choice' ? <ChoiceView /> : null}
       {state.sceneName === 'room' ? <RoomView /> : null}

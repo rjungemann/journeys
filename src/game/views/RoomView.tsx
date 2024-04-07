@@ -2,6 +2,7 @@ import { changeEntity, changeField, changeRoom, changeScene, createField, movePa
 import { useGame } from "../context"
 import { findEntity, findExit, findNonPartyEntitiesInRoom, findParty, findRoom, tagExitsGlobally } from "../helpers"
 import { capitalize, commaSeparateComponents, commaSeparateStrings, smallUid } from "../utils"
+import { EntitySubview } from "./EntitySubview"
 
 export const RoomDescriptionsView = () => {
   const { state } = useGame()
@@ -61,23 +62,13 @@ export const RoomExitsView = () => {
 
 export const RoomPartyEntitiesView = () => {
   const { state, dispatch } = useGame()
-  const handleEntityFn = (entityName: string) => () => {
-    dispatch(changeEntity(entityName))
-    dispatch(changeScene('entity'))
-  }
   const party = findParty(state)()
   return (
     <>
       <p>
         From the party,
         {' '}
-        {
-          commaSeparateComponents(
-            party.map((entity) => {
-              return <a key={entity.name} onClick={handleEntityFn(entity.name)}>{entity.title}</a>
-            })
-          )
-        }
+        {commaSeparateStrings(party.map((entity) => entity.title))}
         {' '}
         {state.party.length === 1 ? 'is' : 'are'} here.
       </p>
@@ -88,8 +79,7 @@ export const RoomPartyEntitiesView = () => {
 export const RoomOtherEntitiesView = () => {
   const { state, dispatch } = useGame()
   const handleEntityFn = (entity) => (event) => {
-    dispatch(changeEntity(entity.name))
-    dispatch(changeScene('entity'))
+    document.getElementById(`other-entity-${entity.name}`).scrollIntoView(true)
   }
 
   const otherEntities = findNonPartyEntitiesInRoom(state)(state.roomName)
@@ -101,7 +91,6 @@ export const RoomOtherEntitiesView = () => {
   .filter((entity) => entity.tags.some((t) => t.match(new RegExp(`^ally:${entity.name}$`))))
   const hostileEntities = [...openlyHostileEntities, ...alliedHostileEntities]
   const startFight = () => {
-    console.log('start fight', hostileEntities)
     const uid = smallUid()
     dispatch(createField(`field-${uid}`, [state.party, hostileEntities.map((e) => e.name)]))
     dispatch(changeField(`field-${uid}`))
@@ -114,7 +103,7 @@ export const RoomOtherEntitiesView = () => {
         (otherEntities.length > 0)
         ? (
           <p>
-            Also in the room:
+            In the room {otherEntities.length === 1 ? 'is' : 'are'}
             {' '}
             {
               commaSeparateComponents(
@@ -141,6 +130,7 @@ export const RoomOtherEntitiesView = () => {
 export const RoomView = () => {
   const { state } = useGame()
   const room = findRoom(state)(state.roomName)
+  const otherEntities = findNonPartyEntitiesInRoom(state)(state.roomName)
   return (
     <>
       <h2>{room.title}</h2>
@@ -148,6 +138,16 @@ export const RoomView = () => {
       <RoomPartyEntitiesView />
       <RoomOtherEntitiesView />
       <RoomExitsView />
+      {
+        otherEntities.map((entity) => {
+          return (
+            <div key={entity.name}>
+              <h3 id={`other-entity-${entity.name}`}>{entity.title}</h3>
+              <EntitySubview entityName={entity.name} />
+            </div>
+          )
+        })
+      }
     </>
   )
 }

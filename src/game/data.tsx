@@ -6,6 +6,8 @@ export type Game = {
   previousSceneName: string
   roomName: string
   editRoomName: string
+  characteristicLabels: Record<string, string>
+  skillLabels: Record<string, string>
   rooms: Room[]
   partyRepresentativeName: string
   party: string[]
@@ -73,8 +75,8 @@ export type Entity = {
   name: string
   title: string
   color: string
-  characteristics: Characteristics
-  skills: Record<string, number>
+  characteristics?: Characteristics
+  skills?: Record<string, number>
   tags: string[]
   inventory: string[]
 }
