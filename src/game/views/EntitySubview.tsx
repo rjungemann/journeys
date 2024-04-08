@@ -29,7 +29,9 @@ export const EntityDescriptionView = ({
   return descriptions.map((description) => {
     if (description.conditionTag) {
       const hasTag = tagExitsGlobally(state)(description.conditionTag)
-      return hasTag ? <p key={description.name}>{t(description.stringKey)}</p> : null
+      return hasTag ? (
+        <p key={description.name}>{t(description.stringKey)}</p>
+      ) : null
     } else {
       return <p key={description.name}>{t(description.stringKey)}</p>
     }

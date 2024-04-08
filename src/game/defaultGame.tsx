@@ -294,7 +294,11 @@ export const defaultGame: Game = {
       name: 'alard-1',
       conditionTag: null,
       topic: `what's on my mind`,
-      stringKeys: ['dialogues.alard-1.0', 'dialogues.alard-1.1', 'dialogues.alard-1.2'],
+      stringKeys: [
+        'dialogues.alard-1.0',
+        'dialogues.alard-1.1',
+        'dialogues.alard-1.2',
+      ],
     },
   ],
   skillCheckName: null,
@@ -401,14 +405,14 @@ export const defaultGame: Game = {
   strings: {
     en: {
       sample: {
-        message: 'Hello, *<%= name %>*!'
+        message: 'Hello, *<%= name %>*!',
       },
       choices: {
         'birds-1': {
           question: 'Do you like birds?',
           yes: 'Yes',
           no: 'No',
-        }
+        },
       },
       descriptions: {
         'birds-1': {
@@ -429,11 +433,11 @@ export const defaultGame: Game = {
           '0': 'One...',
           '1': 'Two...',
           '2': 'Three...',
-        }
+        },
       },
       itemChecks: {
-        'has-revolver-1': 'Looks like you have it.'
-      }
-    }
-  }
+        'has-revolver-1': 'Looks like you have it.',
+      },
+    },
+  },
 }

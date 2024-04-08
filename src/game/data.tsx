@@ -233,7 +233,10 @@ export const FieldSchema = z.object({
 
 export type Field = z.infer<typeof FieldSchema>
 
-export const TranslationStrings = z.record(z.string(), z.union([z.string(), z.lazy(() => TranslationStrings)]))
+export const TranslationStrings = z.record(
+  z.string(),
+  z.union([z.string(), z.lazy(() => TranslationStrings)]),
+)
 
 export type TranslationStrings = z.infer<typeof TranslationStrings>
 
