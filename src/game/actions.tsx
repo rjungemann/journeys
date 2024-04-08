@@ -1,13 +1,12 @@
-import { Room } from "./data"
+import { Game, Room } from "./data"
 
 export const RESET_STATE = 'RESET_STATE'
+export const CHANGE_STATE = 'CHANGE_STATE'
 export const SHOW_INSPECTOR = 'SHOW_INSPECTOR'
 export const CHANGE_TICKS = 'CHANGE_TICKS'
 export const CHANGE_SCENE = 'CHANGE_SCENE'
-export const CHANGE_EDIT_SCENE = 'CHANGE_EDIT_SCENE'
 export const CHANGE_PARTY_REPRESENTATIVE_NAME = 'CHANGE_PARTY_REPRESENTATIVE_NAME'
 export const CHANGE_ROOM = 'CHANGE_ROOM'
-export const CHANGE_EDIT_ROOM = 'CHANGE_EDIT_ROOM'
 export const CHANGE_ENTITY = 'CHANGE_ENTITY'
 export const CHANGE_DIALOGUE = 'CHANGE_DIALOGUE'
 export const CHANGE_CHOICE = 'CHANGE_CHOICE'
@@ -26,10 +25,16 @@ export const BATTLE_CHECK = 'BATTLE_CHECK'
 export const CREATE_FIELD = 'CREATE_FIELD'
 export const CREATE_ROOM = 'CREATE_ROOM'
 export const FIELD_RANDOMLY_MOVE_ALL = 'FIELD_RANDOMLY_MOVE_ALL'
+export const FIELD_COMBAT_COMPLETE = 'FIELD_COMBAT_COMPLETE'
 export const INCREMENT_FIELD_INITIATIVE = 'INCREMENT_FIELD_INITIATIVE'
 
 export type ResetStateAction = {
   type: 'RESET_STATE'
+}
+
+export type ChangeStateAction = {
+  type: 'CHANGE_STATE'
+  state: Game
 }
 
 export type ShowInspectorAction = {
@@ -47,11 +52,6 @@ export type ChangeSceneAction = {
   sceneName: string
 }
 
-export type ChangeEditSceneAction = {
-  type: 'CHANGE_EDIT_SCENE'
-  sceneName: string
-}
-
 export type ChangePartyRepresentativeNameAction = {
   type: 'CHANGE_PARTY_REPRESENTATIVE_NAME'
   partyRepresentativeName: string
@@ -59,11 +59,6 @@ export type ChangePartyRepresentativeNameAction = {
 
 export type ChangeRoomAction = {
   type: 'CHANGE_ROOM'
-  roomName: string
-}
-
-export type ChangeEditRoomAction = {
-  type: 'CHANGE_EDIT_ROOM'
   roomName: string
 }
 
@@ -180,6 +175,12 @@ export type FieldRandomlyMoveAllAction = {
   fieldName: string
 }
 
+export type FieldCombatCompleteAction = {
+  type: 'FIELD_COMBAT_COMPLETE'
+  fieldName: string
+  isPartySuccess: boolean
+}
+
 export type IncrementFieldInitiativeAction = {
   type: 'INCREMENT_FIELD_INITIATIVE'
   fieldName: string
@@ -187,13 +188,12 @@ export type IncrementFieldInitiativeAction = {
 
 export type Action =
   ResetStateAction
+  | ChangeStateAction
   | ShowInspectorAction
   | ChangeTicksAction
   | ChangeSceneAction
-  | ChangeEditSceneAction
   | ChangePartyRepresentativeNameAction
   | ChangeRoomAction
-  | ChangeEditRoomAction
   | ChangeEntityAction
   | ChangeDialogueAction
   | ChangeChoiceAction
@@ -213,10 +213,16 @@ export type Action =
   | CreateRoomAction
   | CreateFieldAction
   | FieldRandomlyMoveAllAction
+  | FieldCombatCompleteAction
   | IncrementFieldInitiativeAction
 
 export const resetState = (): ResetStateAction => ({
   type: RESET_STATE,
+})
+
+export const changeState = (state: Game): ChangeStateAction => ({
+  type: CHANGE_STATE,
+  state,
 })
 
 export const showInspector = (state: boolean): ShowInspectorAction => ({
@@ -234,11 +240,6 @@ export const changeScene = (sceneName: string): ChangeSceneAction => ({
   sceneName,
 })
 
-export const changeEditScene = (sceneName: string): ChangeEditSceneAction => ({
-  type: CHANGE_EDIT_SCENE,
-  sceneName,
-})
-
 export const changePartyRepresentativeName = (partyRepresentativeName: string): ChangePartyRepresentativeNameAction => ({
   type: CHANGE_PARTY_REPRESENTATIVE_NAME,
   partyRepresentativeName,
@@ -246,11 +247,6 @@ export const changePartyRepresentativeName = (partyRepresentativeName: string): 
 
 export const changeRoom = (roomName: string): ChangeRoomAction => ({
   type: CHANGE_ROOM,
-  roomName,
-})
-
-export const changeEditRoom = (roomName: string): ChangeEditRoomAction => ({
-  type: CHANGE_EDIT_ROOM,
   roomName,
 })
 
@@ -352,6 +348,12 @@ export const createField = (fieldName: string, sides: string[][]): CreateFieldAc
 export const fieldRandomlyMoveAll = (fieldName: string): FieldRandomlyMoveAllAction => ({
   type: FIELD_RANDOMLY_MOVE_ALL,
   fieldName,
+})
+
+export const fieldCombatComplete = (fieldName: string, isPartySuccess: boolean): FieldCombatCompleteAction => ({
+  type: FIELD_COMBAT_COMPLETE,
+  fieldName,
+  isPartySuccess,
 })
 
 export const incrementFieldInitiative = (fieldName: string): IncrementFieldInitiativeAction => ({

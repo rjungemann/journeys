@@ -1,11 +1,21 @@
 ## TODO
 
+* Edit functionality within normal functionality
+  * Adding exits
+  * Add new rooms by adding exits to non-existent rooms, like a wiki
+  * Adding entities
+  * Adding tags
+  * Other edit functionality (entities, checks, etc.)
+* Overhaul skill check to remove and add tags as part of action
+* Overhaul party check to remove and add tags as part of action
+* Overhaul item check to remove and add tags as part of action
+* Overhaul battle check to remove and add tags as part of action
+* Overhaul passing of names in props to pass objects instead, to prevent not-refresh issue
 * `type` field to differentiate kinds of items
 * Item view
 * Item descriptions in item view, using tags
 * Party view
 * Change party representative in party view
-* Editor section
 * Multiple `conditionTags`, with an optional `!` prefix for negation
 * Other tag behaviors for movement and other activity?
 * Combat
@@ -91,7 +101,6 @@ item-check:<name>:done
 party-check:<name>
 party-check:<name>:done
 
-# TODO
 battle-check:<name>
 battle-check:<name>:success
 battle-check:<name>:failure

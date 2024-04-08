@@ -11,10 +11,6 @@ import bombDark from './assets/bomb-dark.svg'
 // @ts-ignore
 import bombLight from './assets/bomb-light.svg'
 // @ts-ignore
-import editLight from './assets/edit-light.svg'
-// @ts-ignore
-import editDark from './assets/edit-dark.svg'
-// @ts-ignore
 import codeLight from './assets/code-light.svg'
 // @ts-ignore
 import codeDark from './assets/code-dark.svg'
@@ -22,6 +18,14 @@ import codeDark from './assets/code-dark.svg'
 import playLight from './assets/play-light.svg'
 // @ts-ignore
 import playDark from './assets/play-dark.svg'
+// @ts-ignore
+import recordLight from './assets/record-light.svg'
+// @ts-ignore
+import recordDark from './assets/record-dark.svg'
+// @ts-ignore
+import rewindLight from './assets/rewind-light.svg'
+// @ts-ignore
+import rewindDark from './assets/rewind-dark.svg'
 import { useGame, useTheme } from '../context'
 import { changeScene } from '../actions'
 
@@ -36,9 +40,9 @@ export const Logo = () => {
 }
 
 export const Nav = () => {
-  const { state, dispatch, resetStorage } = useGame()
+  const { state, dispatch, resetStorage, saveState, restoreState } = useGame()
   const { theme, setTheme } = useTheme()
-  const [buttonWidth, buttonHeight] = [28, 28]
+  const [buttonWidth, buttonHeight] = [24, 24]
   const returnToGame = () => {
     dispatch(changeScene('room'))
   }
@@ -48,9 +52,6 @@ export const Nav = () => {
     } else {
       dispatch(changeScene('inspector'))
     }
-  }
-  const toggleEdit = () => {
-    dispatch(changeScene(state.sceneName === 'edit' ? state.previousSceneName : 'edit'))
   }
   return (
     <nav style={{ flexGrow: 0 }}>
@@ -70,14 +71,6 @@ export const Nav = () => {
         }
       </a>
       {' '}
-      <a onClick={toggleEdit} title="Toggle Edit Mode">
-        {
-          theme === 'dark'
-          ? <img src={editLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={editDark} width={buttonWidth} height={buttonHeight} />
-        }
-      </a>
-      {' '}
       <a onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Toggle between dark mode and light mode">
         {
           theme === 'dark'
@@ -91,6 +84,22 @@ export const Nav = () => {
           theme === 'dark'
           ? <img src={bombLight} width={buttonWidth} height={buttonHeight} />
           : <img src={bombDark} width={buttonWidth} height={buttonHeight} />
+        }
+      </a>
+      {' '}
+      <a onClick={() => saveState()} title="Save the game state for restoring later.">
+        {
+          theme === 'dark'
+          ? <img src={recordLight} width={buttonWidth} height={buttonHeight} />
+          : <img src={recordDark} width={buttonWidth} height={buttonHeight} />
+        }
+      </a>
+      {' '}
+      <a onClick={() => restoreState()} title="Restore the saved game state.">
+        {
+          theme === 'dark'
+          ? <img src={rewindLight} width={buttonWidth} height={buttonHeight} />
+          : <img src={rewindDark} width={buttonWidth} height={buttonHeight} />
         }
       </a>
     </nav>

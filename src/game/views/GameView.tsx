@@ -8,7 +8,7 @@ import { ItemCheckView } from "./ItemCheckView"
 import { useActsDuringCombat, useWanderingBehaviors } from "../behaviors"
 import { CombatView } from "./CombatView"
 import { HeadView } from "./HeadView"
-import { EditView } from "./EditView"
+import { GameOverView } from "./GameOverView"
 
 export const GameView = () => {
   const { state } = useGame()
@@ -25,8 +25,8 @@ export const GameView = () => {
       {state.sceneName === 'item-check' ? <ItemCheckView /> : null}
       {state.sceneName === 'skill-check' ? <SkillCheckView /> : null}
       {state.sceneName === 'combat' ? <CombatView /> : null}
+      {state.sceneName === 'game-over' ? <GameOverView /> : null}
       {state.sceneName === 'inspector' ? <InspectorView /> : null}
-      {state.sceneName === 'edit' ? <EditView /> : null}
     </div>
   )
 }

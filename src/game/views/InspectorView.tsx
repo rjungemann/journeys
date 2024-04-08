@@ -3,8 +3,8 @@ import { findField } from "../helpers"
 
 export const InspectorView = () => {
   const { state } = useGame()
-  const { ticks, partyRepresentativeName, party, sceneName, editSceneName, roomName, editRoomName, entityName, skillCheckName, itemCheckName, choiceName } = state
-  const abriged = { ticks, partyRepresentativeName, party, sceneName, editSceneName, roomName, editRoomName, entityName, skillCheckName, itemCheckName, choiceName }
+  const { ticks, partyRepresentativeName, party, sceneName, roomName, entityName, skillCheckName, itemCheckName, choiceName } = state
+  const abriged = { ticks, partyRepresentativeName, party, sceneName, roomName, entityName, skillCheckName, itemCheckName, choiceName }
   return (
     <div>
       <h2>Inspector</h2>

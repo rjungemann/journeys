@@ -1,4 +1,4 @@
-import { BattleCheck, Choice, Description, Dialogue, Entity, Exit, Field, Game, ItemCheck, PartyCheck, Room, SkillCheck } from "./data"
+import { BattleCheck, Choice, Description, Dialogue, Entity, Exit, Field, Game, Item, ItemCheck, PartyCheck, Room, SkillCheck } from "./data"
 
 export const findEntity = (state: Game) => (name: string): Entity => {
   return state.entities.filter((e) => e.name === name)[0]!
@@ -110,4 +110,18 @@ export const tagExitsGlobally = (state: Game) => (tag: string): boolean => {
     }
   }
   return false
+}
+
+// TODO: Update to use STR/DEX/END in a flexible way
+export const isEntityDead = (state: Game) => (entityName: string): boolean => {
+  const entity = findEntity(state)(entityName)
+  const healthCharacteristic = 'endurance'
+  const health = entity.characteristics[healthCharacteristic]!
+  return health <= 0
+}
+
+export const isCombatOver = (state: Game) => (): boolean => {
+  const field = findField(state)(state.fieldName)
+  const remainingTeams = field.sides.filter((side) => side.team.filter((n) => isEntityDead(state)(n)).length === 0)
+  return remainingTeams.length < 2
 }

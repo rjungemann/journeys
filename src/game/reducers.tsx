@@ -1,7 +1,7 @@
-import { ADD_TAG, Action, AddTagAction, BATTLE_CHECK, BattleCheckAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_EDIT_ROOM, CHANGE_EDIT_SCENE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_PARTY_REPRESENTATIVE_NAME, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CHANGE_TICKS, CREATE_FIELD, CREATE_ROOM, ChangeChoiceAction, ChangeDialogueAction, ChangeEditRoomAction, ChangeEditSceneAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangePartyRepresentativeNameAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ChangeTicksAction, CreateFieldAction, CreateRoomAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, PARTY_CHECK, PartyCheckAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
-import { BARRIER_OBSTACLE, COVER_OBSTACLE, Field, Game, GameSchema, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, PARTY_CHECK_VARIANT_ABSENT, PARTY_CHECK_VARIANT_PRESENT, TEAMMATE, Teammate } from "./data"
+import { ADD_TAG, Action, AddTagAction, BATTLE_CHECK, BattleCheckAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_PARTY_REPRESENTATIVE_NAME, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CHANGE_STATE, CHANGE_TICKS, CREATE_FIELD, CREATE_ROOM, ChangeChoiceAction, ChangeDialogueAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangePartyRepresentativeNameAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ChangeStateAction, ChangeTicksAction, CreateFieldAction, CreateRoomAction, FIELD_COMBAT_COMPLETE, FIELD_RANDOMLY_MOVE_ALL, FieldCombatCompleteAction, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, PARTY_CHECK, PartyCheckAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
+import { BARRIER_OBSTACLE, COVER_OBSTACLE, Entity, Field, Game, GameSchema, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, PARTY_CHECK_VARIANT_ABSENT, PARTY_CHECK_VARIANT_PRESENT, TEAMMATE, Teammate } from "./data"
 import { defaultGame } from "./defaultGame"
-import { addTag, findBattleCheck, findEntity, findField, findPartyCheck, moveEntity, moveParty, removeTag } from "./helpers"
+import { addTag, findBattleCheck, findEntity, findField, findItem, findPartyCheck, isEntityDead, moveEntity, moveParty, removeTag } from "./helpers"
 import { dice } from "./utils"
 
 export const handleTicksReducer = (state: Game, action: Action) => {
@@ -35,6 +35,10 @@ export const resetStateReducer = (state: Game, action: ResetStateAction) => {
   return { ...defaultGame }
 }
 
+export const changeStateReducer = (state: Game, action: ChangeStateAction) => {
+  return { ...action.state }
+}
+
 export const showInspectorReducer = (state: Game, action: ShowInspectorAction) => {
   const { state: showInspector } = action
   return { ...state, showInspector }
@@ -50,11 +54,6 @@ export const changeSceneReducer = (state: Game, action: ChangeSceneAction) => {
   return { ...state, sceneName, previousSceneName: state.sceneName }
 }
 
-export const changeEditSceneReducer = (state: Game, action: ChangeEditSceneAction) => {
-  const { sceneName } = action
-  return { ...state, editSceneName: sceneName }
-}
-
 export const changePartyRepresentativeNameReducer = (state: Game, action: ChangePartyRepresentativeNameAction) => {
   const { partyRepresentativeName } = action
   return { ...state, partyRepresentativeName }
@@ -63,11 +62,6 @@ export const changePartyRepresentativeNameReducer = (state: Game, action: Change
 export const changeRoomReducer = (state: Game, action: ChangeRoomAction) => {
   const { roomName } = action
   return { ...state, roomName }
-}
-
-export const changeEditRoomReducer = (state: Game, action: ChangeEditRoomAction) => {
-  const { roomName } = action
-  return { ...state, editRoomName: roomName }
 }
 
 export const changeEntityReducer = (state: Game, action: ChangeEntityAction) => {
@@ -283,13 +277,72 @@ const createFieldReducer = (state: Game, action: CreateFieldAction) => {
 const fieldRandomlyMoveAllReducer = (state: Game, action: FieldRandomlyMoveAllAction) => {
   const { fieldName } = action
   const field = findField(state)(fieldName)
-  const { teammates, obstacles, sides } = field
-  const tms = field.teammates.map((tm) => {
-    return { ...tm, x: Math.random() < 0.5 ? tm.x - tm.movement : tm.x + tm.movement }
-  })
-  const updatedField = { ...field, teammates: tms }
   const otherFields = state.fields.filter((f) => f.name !== fieldName)
-  return { ...state, fields: [...otherFields, updatedField] }
+
+  const [_, entityName] = field.initiativePairs[field.initiativeIndex]
+  const teammate = field.teammates.filter((tm) => tm.name === entityName)[0]!
+  const otherTeammates = field.teammates.filter((tm) => tm.name !== entityName)
+  const x = Math.random() < 0.5 ? teammate.x - teammate.movement : teammate.x + teammate.movement
+  const updatedTeammate = isEntityDead(state)(entityName) ? teammate : { ...teammate, x }
+  const updatedTeammates = [...otherTeammates, updatedTeammate]
+  const updatedField = { ...field, teammates: updatedTeammates }
+
+  const otherSides = field.sides.filter((side) => !side.team.some((n) => n === entityName))
+  const otherSide = otherSides[Math.floor(Math.random() * otherSides.length)]
+  const otherEntityName = otherSide.team[Math.floor(Math.random() * otherSide.team.length)]
+  const otherEntity = findEntity(state)(otherEntityName)
+
+  // TODO: Equipping
+  const entity = findEntity(state)(entityName)
+  const weaponName = entity.inventory[0]
+  const weapon = findItem(state)(weaponName)
+  const characteristicBonus = Math.max(entity.characteristics.dexterity! - 7. -2)
+  const skill = entity.skills['gunCombat'] || -3
+  const { sum } = dice('2d6')
+  const total = characteristicBonus + skill + sum
+  const isSuccess = total >= 8
+  const damageRoll = dice(weapon.damage)
+  const damage = isSuccess ? damageRoll.sum : 0
+
+  // TODO: Don't hard-code this
+  // TODO: For v1, start with strength, then dex, then endurance
+  // TODO: For v2, prompt user when taking damage? Or make a setting
+  const healthCharacteristic = 'endurance'
+  const health = otherEntity.characteristics[healthCharacteristic]!
+  const updatedHealth = health - damage
+  // TODO: Kill
+  const otherEntities = state.entities.filter((e) => e.name !== otherEntity.name)
+  const updatedOtherEntity = {
+    ...otherEntity,
+    characteristics: {
+      ...otherEntity.characteristics,
+      endurance: updatedHealth
+    }
+  }
+  console.log('damage', damage, updatedOtherEntity)
+  return {
+    ...state,
+    entities: [...otherEntities, updatedOtherEntity],
+    fields: [...otherFields, updatedField],
+  }
+}
+
+const fieldCombatCompleteReducer = (state: Game, action: FieldCombatCompleteAction) => {
+  const { fieldName, isPartySuccess } = action
+  const field = findField(state)(fieldName)
+  const updatedField = { ...field, result: { isSuccess: isPartySuccess } }
+  const otherFields = state.fields.filter((f) => f.name !== fieldName)
+  const battleChecks = state.battleChecks.filter((bc) => bc.fieldName === fieldName)
+  const otherBattleChecks = state.battleChecks.filter((bc) => bc.fieldName !== fieldName)
+  const updatedBattleChecks = battleChecks.map((bc) => ({
+    ...bc,
+    result: { isSuccess: isPartySuccess, subjectName: state.partyRepresentativeName }
+  }))
+  return {
+    ...state,
+    battleChecks: [...otherBattleChecks, ...updatedBattleChecks],
+    fields: [...otherFields, updatedField],
+  }
 }
 
 const incrementFieldInitiativeReducer = (state: Game, action: IncrementFieldInitiativeAction) => {
@@ -302,11 +355,16 @@ const incrementFieldInitiativeReducer = (state: Game, action: IncrementFieldInit
 export const gameReducer = (state: Game, action: Action) => {
   const { type } = action
 
+  console.debug('Dispatched Action', action)
+
   // Passively handle
   state = handleTicksReducer(state, action)
 
   if (type === RESET_STATE) {
     return resetStateReducer(state, action)
+  }
+  if (type === CHANGE_STATE) {
+    return changeStateReducer(state, action)
   }
   if (type === SHOW_INSPECTOR) {
     return showInspectorReducer(state, action)
@@ -317,17 +375,11 @@ export const gameReducer = (state: Game, action: Action) => {
   if (type === CHANGE_SCENE) {
     return changeSceneReducer(state, action)
   }
-  if (type === CHANGE_EDIT_SCENE) {
-    return changeEditSceneReducer(state, action)
-  }
   if (type === CHANGE_PARTY_REPRESENTATIVE_NAME) {
     return changePartyRepresentativeNameReducer(state, action)
   }
   if (type === CHANGE_ROOM) {
     return changeRoomReducer(state, action)
-  }
-  if (type === CHANGE_EDIT_ROOM) {
-    return changeEditRoomReducer(state, action)
   }
   if (type === CHANGE_ENTITY) {
     return changeEntityReducer(state, action)
@@ -379,6 +431,9 @@ export const gameReducer = (state: Game, action: Action) => {
   }
   if (type === FIELD_RANDOMLY_MOVE_ALL) {
     return fieldRandomlyMoveAllReducer(state, action)
+  }
+  if (type === FIELD_COMBAT_COMPLETE) {
+    return fieldCombatCompleteReducer(state, action)
   }
   if (type === INCREMENT_FIELD_INITIATIVE) {
     return incrementFieldInitiativeReducer(state, action)

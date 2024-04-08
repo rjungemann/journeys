@@ -1,6 +1,6 @@
 import { Dispatch, ReactNode, createContext, useContext, useEffect, useReducer, useState } from "react"
 import { Game } from "./data"
-import { Action, resetState } from "./actions"
+import { Action, changeState, resetState } from "./actions"
 import { gameReducer } from "./reducers"
 import { defaultGame } from "./defaultGame"
 
@@ -12,9 +12,13 @@ export type GameContext = {
   state: Game
   dispatch: Dispatch<Action>
   resetStorage: () => void
+  saveState: () => void
+  restoreState: () => void
+  clearState: () => void
 }
 
 export const GAME_KEY = 'journeys'
+export const SAVED_STATE_KEY = 'journeys:saved-state'
 
 export const GameContext = createContext<GameContext | null>(null)
 
@@ -31,16 +35,28 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const resetStorage = () => {
     dispatch(resetState())
   }
+  const saveState = () => {
+    localStorage.setItem(SAVED_STATE_KEY, JSON.stringify(state))
+  }
+  const restoreState = () => {
+    const savedState = JSON.parse(localStorage.getItem(SAVED_STATE_KEY) || 'null')
+    if (savedState) {
+      dispatch(changeState(savedState))
+    }
+  }
+  const clearState = () => {
+    localStorage.removeItem(SAVED_STATE_KEY)
+  }
   return (
-    <GameContext.Provider value={{ state, dispatch, resetStorage }}>
+    <GameContext.Provider value={{ state, dispatch, resetStorage, saveState, restoreState, clearState }}>
       {children}
     </GameContext.Provider>
   )
 }
 
 export const useGame = (): GameContext => {
-  const { state, dispatch, resetStorage } = useContext(GameContext)!
-  return { state, dispatch, resetStorage }
+  const { state, dispatch, resetStorage, saveState, restoreState, clearState } = useContext(GameContext)!
+  return { state, dispatch, resetStorage, saveState, restoreState, clearState }
 }
 
 // ------------

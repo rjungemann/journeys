@@ -4,10 +4,8 @@ import { randomColor } from "./utils";
 export const defaultGame: Game = {
   ticks: 0,
   sceneName: 'room',
-  editSceneName: 'basic',
   previousSceneName: 'room',
   roomName: 'quarters-a',
-  editRoomName: 'quarters-a',
   characteristicLabels: {
     strength: 'Strength',
     dexterity: 'Dexterity',

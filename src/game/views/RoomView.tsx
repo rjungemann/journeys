@@ -1,6 +1,6 @@
 import { changeField, changeRoom, changeScene, createField, movePartyRoom } from "../actions"
 import { useGame } from "../context"
-import { findEntity, findExit, findNonPartyEntitiesInRoom, findParty, findRoom, tagExitsGlobally } from "../helpers"
+import { findEntity, findExit, findNonPartyEntitiesInRoom, findParty, findRoom, isEntityDead, tagExitsGlobally } from "../helpers"
 import { capitalize, commaSeparateComponents, commaSeparateStrings, smallUid } from "../utils"
 import { EntitySubview } from "./EntitySubview"
 
@@ -101,9 +101,11 @@ export const RoomHostileEntitiesView = () => {
   const openlyHostileEntities = findRoom(state)(state.roomName).entities
   .map((entityName) => findEntity(state)(entityName))
   .filter((entity) => entity.tags.some((t) => t === 'hostile'))
+  .filter((entity) => !isEntityDead(state)(entity.name))
   const alliedHostileEntities = findRoom(state)(state.roomName).entities
   .map((entityName) => findEntity(state)(entityName))
   .filter((entity) => entity.tags.some((t) => t.match(new RegExp(`^ally:${entity.name}$`))))
+  .filter((entity) => !isEntityDead(state)(entity.name))
   const hostileEntities = [...openlyHostileEntities, ...alliedHostileEntities]
   const startFight = () => {
     const uid = smallUid()

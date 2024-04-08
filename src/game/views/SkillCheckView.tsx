@@ -25,7 +25,7 @@ export const SkillCheckPreView = () => {
   const { name, characteristic, skill, tn } = sc2
   const characteristicValue = subject.characteristics[characteristic]
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
-  const skillValue = subject.skills[skill]
+  const skillValue = subject.skills[skill] || -3
   const handleTry = () => {
     dispatch(skillCheck(name, subject.name, object.name, name, characteristic, skill, dice, tn))
     dispatch(removeTag(object.name, tag))

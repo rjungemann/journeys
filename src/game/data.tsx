@@ -141,7 +141,9 @@ export const ItemCheckSchema = z.object({
   message: z.string(),
   variant: ItemCheckVariantSchema,
   itemName: z.string(),
-  result: z.nullable(z.object({ isSuccess: z.boolean() }))
+  result: z.nullable(z.object({
+    isSuccess: z.boolean()
+  }))
 })
 
 export type ItemCheck = z.infer<typeof ItemCheckSchema>
@@ -168,7 +170,10 @@ export const BattleCheckSchema = z.object({
   message: z.string(),
   entityNames: z.string().array(),
   fieldName: z.nullable(z.string()),
-  result: z.nullable(z.object({ isSuccess: z.boolean() }))
+  result: z.nullable(z.object({
+    isSuccess: z.boolean(),
+    subjectName: z.string()
+  }))
 })
 
 export type BattleCheck = z.infer<typeof BattleCheckSchema>
@@ -213,7 +218,8 @@ export const FieldSchema = z.object({
   obstacles: z.array(ObstacleSchema),
   teammates: z.array(TeammateSchema),
   initiativePairs: z.array(z.tuple([z.number(), z.string()])),
-  initiativeIndex: z.number()
+  initiativeIndex: z.number(),
+  result: z.nullable(z.object({ isSuccess: z.boolean() }))
 })
 
 export type Field = z.infer<typeof FieldSchema>
@@ -222,9 +228,7 @@ export const GameSchema = z.object({
   ticks: z.number(),
   sceneName: z.string(),
   previousSceneName: z.string(),
-  editSceneName: z.string(),
   roomName: z.string(),
-  editRoomName: z.string(),
   characteristicLabels: z.record(z.string(), z.string()),
   skillLabels: z.record(z.string(), z.string()),
   rooms: RoomSchema.array(),

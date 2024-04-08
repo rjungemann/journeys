@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { addTag, changeScene, removeTag, itemCheck, partyCheck, battleCheck, createField, changeField } from "../actions"
 import { useGame } from "../context"
 import { BattleCheck } from "../data"
@@ -39,10 +40,6 @@ export const BattleCheckView = () => {
     dispatch(createField(fieldName, [state.party, bc.entityNames]))
     dispatch(changeField(fieldName))
     dispatch(changeScene('combat'))
-
-    // TODO: Handle post-battle battle-check stuff
-    // dispatch(addTag(entity.name, `battle-check:${bc.name}:done`))
-    // dispatch(changeScene('room'))
   }
 
   const split = tag.split(':')

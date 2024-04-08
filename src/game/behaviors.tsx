@@ -38,6 +38,7 @@ export const useActsDuringCombat = () => {
     const isLeftBusier = Math.abs(averageX - leftX) < Math.abs(averageX - rightX)
     
     // TODO: Move away from busy area and try to make a shot
+    // TODO: Make sure it's your turn
     console.log('isLeftBusier', entityName, isLeftBusier)
   }, [state.ticks])
 }
