@@ -23,6 +23,7 @@ export const useWanderingBehaviors = () => {
   }, [state.ticks])
 }
 
+// TODO: Figure out what to do with this
 export const useActsDuringCombat = () => {
   const { state } = useGame()
   useEffect(() => {

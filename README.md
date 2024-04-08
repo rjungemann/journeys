@@ -1,7 +1,5 @@
 ## TODO
 
-* Every check should have an object, and that object should include rooms and other non-entity types
-* Hook up "strings" to dialogues, choices, item/party/battle/skill checks
 * Edit functionality within normal functionality
   * Adding exits
   * Add new rooms by adding exits to non-existent rooms, like a wiki
@@ -21,7 +19,6 @@
 * Multiple `conditionTags`, with an optional `!` prefix for negation
 * Other tag behaviors for movement and other activity?
 * Combat
-* Markdown
 
 ### Rooms
 

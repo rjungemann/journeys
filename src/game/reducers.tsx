@@ -44,7 +44,6 @@ import {
   MovePartyRoomAction,
   PARTY_CHECK,
   PartyCheckAction,
-  REMOVE_LAST_SKILL_CHECK_EVENT,
   REMOVE_TAG,
   RESET_STATE,
   RemoveTagAction,
@@ -57,10 +56,8 @@ import {
 import {
   BARRIER_OBSTACLE,
   COVER_OBSTACLE,
-  Entity,
   Field,
   Game,
-  GameSchema,
   ITEM_CHECK_VARIANT_GIVE,
   ITEM_CHECK_VARIANT_TAKE,
   ITEM_CHECK_VARIANT_VERIFY,
@@ -233,7 +230,6 @@ export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
     tn,
   } = action
   const subject = findEntity(state)(subjectName)
-  const object = state.entities.filter((s) => s.name === objectName)[0]
   const roll = dice(d)
   const characteristicValue = subject.characteristics[characteristicName]!
   const skillValue = subject.skills[skillName] || -3.0

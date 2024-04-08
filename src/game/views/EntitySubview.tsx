@@ -261,7 +261,6 @@ export const EntityCharacteristics = ({
   entityName: string
 }) => {
   const { state } = useGame()
-  const { t } = useT()
   const entity = findEntity(state)(entityName)
   const characteristicNames = Object.keys(entity.characteristics || {})
   return characteristicNames.length > 0 ? (
@@ -285,7 +284,6 @@ export const EntityCharacteristics = ({
 
 export const EntitySkills = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
-  const { t } = useT()
   const entity = findEntity(state)(entityName)
   const skillNames = Object.keys(entity.skills || {})
   return skillNames.length > 0 ? (
