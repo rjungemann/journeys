@@ -7,8 +7,10 @@ import {
   changeSkillCheck,
 } from '../actions'
 import { useGame } from '../context'
+import { Description } from '../data'
 import { findEntity, findItem, tagExitsGlobally } from '../helpers'
 import { commaSeparateComponents } from '../utils'
+import { useT } from './T'
 
 export const EntityDescriptionView = ({
   entityName,
@@ -16,8 +18,9 @@ export const EntityDescriptionView = ({
   entityName: string
 }) => {
   const { state } = useGame()
+  const { t } = useT()
   const entity = findEntity(state)(entityName)
-  const descriptions = entity.tags.reduce((sum, tag) => {
+  const descriptions = entity.tags.reduce<Description[]>((sum, tag) => {
     const [_, name] = tag.match(/^description:(.*)$/) || []
     return !name
       ? sum
@@ -26,9 +29,9 @@ export const EntityDescriptionView = ({
   return descriptions.map((description) => {
     if (description.conditionTag) {
       const hasTag = tagExitsGlobally(state)(description.conditionTag)
-      return hasTag ? <p key={description.name}>{description.message}</p> : null
+      return hasTag ? <p key={description.name}>{t(description.stringKey)}</p> : null
     } else {
-      return <p key={description.name}>{description.message}</p>
+      return <p key={description.name}>{t(description.stringKey)}</p>
     }
   })
 }

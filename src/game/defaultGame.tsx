@@ -294,7 +294,7 @@ export const defaultGame: Game = {
       name: 'alard-1',
       conditionTag: null,
       topic: `what's on my mind`,
-      messages: ['One...', 'Two...', 'Three...'],
+      stringKeys: ['dialogues.alard-1.0', 'dialogues.alard-1.1', 'dialogues.alard-1.2'],
     },
   ],
   skillCheckName: null,
@@ -336,7 +336,7 @@ export const defaultGame: Game = {
       name: 'has-revolver-1',
       conditionTag: null,
       title: 'Do you have the gun?',
-      message: 'Looks like you have it.',
+      stringKey: 'itemChecks.has-revolver-1',
       variant: { type: ITEM_CHECK_VARIANT_VERIFY },
       itemName: 'revolver-5',
     },
@@ -351,15 +351,15 @@ export const defaultGame: Game = {
       name: 'birds-1',
       title: 'A quick question about birds',
       conditionTag: null,
-      message: 'Do you like birds?',
+      stringKey: 'choices.birds-1.question',
       options: [
         {
           name: 'birds-1:yes',
-          message: 'Yes',
+          stringKey: 'choice.birds-1.yes',
         },
         {
           name: 'birds-1:no',
-          message: 'No',
+          stringKey: 'choice.birds-1.no',
         },
       ],
     },
@@ -368,34 +368,72 @@ export const defaultGame: Game = {
     {
       name: 'birds-1:yes',
       conditionTag: 'birds-1:yes',
-      message: 'That is cool that you like birds.',
+      stringKey: 'descriptions.birds-1.yes',
     },
     {
       name: 'birds-1:no',
       conditionTag: 'birds-1:no',
-      message: 'How can you not like birds?',
+      stringKey: 'descriptions.birds-1.no',
     },
     {
       name: 'alard-1:success',
       conditionTag: 'skill-check:alard-1:success',
-      message: 'Alard seems grateful for the help.',
+      stringKey: 'descriptions.alard-1.success',
     },
     {
       name: 'alard-1:failure',
       conditionTag: 'skill-check:alard-1:failure',
-      message: 'Alard still seems upset about earlier.',
+      stringKey: 'descriptions.alard-1.failure',
     },
     {
       name: 'fix-1:success',
       conditionTag: 'skill-check:fix-1:success',
-      message: 'Everyone appreciates the terminal being fixed.',
+      stringKey: 'descriptions.fix-1.success',
     },
     {
       name: 'fix-1:failure',
       conditionTag: 'skill-check:fix-1:failure',
-      message: 'Nobody expected you to be able to fix the terminal.',
+      stringKey: 'descriptions.fix-1.failure',
     },
   ],
   fieldName: null,
   fields: [],
+  strings: {
+    en: {
+      sample: {
+        message: 'Hello, *<%= name %>*!'
+      },
+      choices: {
+        'birds-1': {
+          question: 'Do you like birds?',
+          yes: 'Yes',
+          no: 'No',
+        }
+      },
+      descriptions: {
+        'birds-1': {
+          yes: '',
+          no: '',
+        },
+        'alard-1': {
+          yes: '',
+          no: '',
+        },
+        'fix-1': {
+          yes: '',
+          no: '',
+        },
+      },
+      dialogues: {
+        'alard-1': {
+          '0': 'One...',
+          '1': 'Two...',
+          '2': 'Three...',
+        }
+      },
+      itemChecks: {
+        'has-revolver-1': 'Looks like you have it.'
+      }
+    }
+  }
 }

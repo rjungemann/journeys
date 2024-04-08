@@ -9,7 +9,7 @@ import { z } from 'zod'
 
 export const OptionSchema = z.object({
   name: z.string(),
-  message: z.string(),
+  stringKey: z.string(),
 })
 
 export type Option = z.infer<typeof OptionSchema>
@@ -18,7 +18,7 @@ export const ChoiceSchema = z.object({
   name: z.string(),
   title: z.string(),
   conditionTag: z.nullable(z.string()),
-  message: z.string(),
+  stringKey: z.string(),
   options: OptionSchema.array(),
 })
 
@@ -27,7 +27,7 @@ export type Choice = z.infer<typeof ChoiceSchema>
 export const DescriptionSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
-  message: z.string(),
+  stringKey: z.string(),
 })
 
 export type Description = z.infer<typeof DescriptionSchema>
@@ -36,7 +36,7 @@ export const DialogueSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
   topic: z.string(),
-  messages: z.string().array(),
+  stringKeys: z.string().array(),
 })
 
 export type Dialogue = z.infer<typeof DialogueSchema>
@@ -115,6 +115,7 @@ export const SkillCheckSchema = z.object({
   name: z.string(),
   title: z.string(),
   conditionTag: z.nullable(z.string()),
+  stringKey: z.string(), // TODO: Use this
   characteristic: z.string(),
   skill: z.string(),
   dice: z.string(),
@@ -142,7 +143,7 @@ export const ItemCheckSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
   title: z.string(),
-  message: z.string(),
+  stringKey: z.string(),
   variant: ItemCheckVariantSchema,
   itemName: z.string(),
   result: z.nullable(
@@ -161,7 +162,7 @@ export const PartyCheckSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
   title: z.string(),
-  message: z.string(),
+  stringKey: z.string(),
   variant: z.enum([PARTY_CHECK_VARIANT_PRESENT, PARTY_CHECK_VARIANT_ABSENT]),
   entityName: z.string(),
   result: z.nullable(z.object({ isSuccess: z.boolean() })),
@@ -173,7 +174,7 @@ export const BattleCheckSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
   title: z.string(),
-  message: z.string(),
+  stringKey: z.string(),
   entityNames: z.string().array(),
   fieldName: z.nullable(z.string()),
   result: z.nullable(
@@ -232,6 +233,10 @@ export const FieldSchema = z.object({
 
 export type Field = z.infer<typeof FieldSchema>
 
+export const TranslationStrings = z.record(z.string(), z.union([z.string(), z.lazy(() => TranslationStrings)]))
+
+export type TranslationStrings = z.infer<typeof TranslationStrings>
+
 export const GameSchema = z.object({
   ticks: z.number(),
   sceneName: z.string(),
@@ -259,6 +264,7 @@ export const GameSchema = z.object({
   descriptions: DescriptionSchema.array(),
   fieldName: z.nullable(z.string()),
   fields: FieldSchema.array(),
+  strings: TranslationStrings,
 })
 
 export type Game = z.infer<typeof GameSchema>

@@ -2,6 +2,7 @@ import { addTag, changeScene, removeTag } from '../actions'
 import { useGame } from '../context'
 import { findDialogue, findEntity, tagExitsGlobally } from '../helpers'
 import { matchTags } from '../utils'
+import { useT } from './T'
 
 export const NoDialogueView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
@@ -21,6 +22,7 @@ export const NoDialogueView = ({ entityName }: { entityName: string }) => {
 
 export const DialogueView = () => {
   const { state, dispatch } = useGame()
+  const { t } = useT()
   const entity = findEntity(state)(state.entityName)
   const tag = matchTags(entity.tags, /dialogue:([^:]+):(\d+)$/)[0]
   if (!tag) {
@@ -36,10 +38,10 @@ export const DialogueView = () => {
     }
   }
 
-  const message = dialogue.messages[index]!
+  const message = t(dialogue.stringKeys[index]!)
   const handleNext = () => {
     dispatch(removeTag(entity.name, tag))
-    if (index >= dialogue.messages.length - 1) {
+    if (index >= dialogue.stringKeys.length - 1) {
       dispatch(addTag(entity.name, `dialogue:${name}:done`))
       dispatch(changeScene('room'))
     } else {
