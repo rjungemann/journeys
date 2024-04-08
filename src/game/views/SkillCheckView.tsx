@@ -56,28 +56,28 @@ export const SkillCheckPostView = () => {
     return null
   }
   const object = findEntity(state)(state.entityName)
-  const { objectName, skillCheckName, characteristicName, skillName } = skillCheck.result
+  const { characteristic, skill, name, dice } = skillCheck
+  const { objectName } = skillCheck.result
   const { characteristicValue, skillValue, roll, total, tn, isSuccess } = skillCheck.result
-  if (object.tags.some((t) => t === `skill-check:${skillCheckName}:success`)) {
+  if (object.tags.some((t) => t === `skill-check:${name}:success`)) {
     return null
   }
-  if (object.tags.some((t) => t === `skill-check:${skillCheckName}:failure`)) {
+  if (object.tags.some((t) => t === `skill-check:${name}:failure`)) {
     return null
   }
   const handleNext = () => {
     // Add the success or failure tag to the object, such ass `skill-check:fix-1:success`
-    dispatch(addTag(objectName, `skill-check:${skillCheckName}:${isSuccess ? 'success' : 'failure'}`))
+    dispatch(addTag(objectName, `skill-check:${name}:${isSuccess ? 'success' : 'failure'}`))
     dispatch(changeScene('room'))
   }
-  const dice = '2d6'
   const characteristicBonus = Math.max(characteristicValue - 7.0, -2.0)
   return (
     <>
       <p className="skill-formula">
         <em>
-          <ruby>{characteristicBonus}<rp>(</rp><rt>{characteristicName} bonus</rt><rp>)</rp></ruby>
+          <ruby>{characteristicBonus}<rp>(</rp><rt>{name} bonus</rt><rp>)</rp></ruby>
           {skillValue < 0 ? ' - ' : ' + '}
-          <ruby>{Math.abs(skillValue)}<rp>(</rp><rt>{skillName}</rt><rp>)</rp></ruby>
+          <ruby>{Math.abs(skillValue)}<rp>(</rp><rt>{skill}</rt><rp>)</rp></ruby>
           {' + '}
           <ruby><span className="placeholder">{roll.rolls.map((n) => n.toString()).join(' + ')}</span><rp>(</rp><rt>{dice}</rt><rp>)</rp></ruby>
           {' ≔ '}

@@ -7,7 +7,7 @@ export const NoItemCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
   const entity = findEntity(state)(entityName)
   const handleLeave = () => {
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>
@@ -41,7 +41,7 @@ export const ItemCheckView = () => {
     const subject = findEntity(state)(state.partyRepresentativeName)
     dispatch(itemCheck(subject.name, ic.name))
     dispatch(addTag(entity.name, `item-check:${ic.name}:done`))
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>

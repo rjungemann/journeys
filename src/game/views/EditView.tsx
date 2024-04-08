@@ -1,6 +1,6 @@
 import { ChangeEvent, InputHTMLAttributes, useEffect, useState } from "react"
 import { useGame, useTheme } from "../context"
-import { changeEditRoom, changeEditScene, changePartyRepresentativeName, changeScene, changeTicks } from "../actions"
+import { changeEditRoom, changeEditScene, changePartyRepresentativeName, changeScene, changeTicks, createRoom } from "../actions"
 import { findRoom } from "../helpers"
 
 export const EditBasicView = () => {
@@ -55,6 +55,7 @@ type ExitInput = {
 }
 
 export const NewRoomView = () => {
+  const { state, dispatch } = useGame()
   const [name, setName] = useState<string>('') // TODO
   const [title, setTitle] = useState<string>('') // TODO
   const [exits, setExits] = useState<ExitInput[]>([]) // TODO
@@ -102,6 +103,23 @@ export const NewRoomView = () => {
     const tags = tagsString.split(',').map((s) => s.trim()).filter((s) => s.length !== 0)
     // TODO
     console.log('NewRoomView tags changed', tags)
+  }
+  const handleSubmit = () => {
+    const room = {
+      name,
+      title,
+      exits,
+      entities: entitiesString.split(/\s*,\s*/).filter((t) => t.length === 0),
+      tags: tagsString.split(/\s*,\s*/).filter((t) => t.length === 0)
+    }
+    dispatch(createRoom(room))
+    // TODO: Use single state object instead
+    // TODO: Zod
+    setName('')
+    setTitle('')
+    setExits([])
+    setEntitiesString('')
+    setTagsString('')
   }
   return (
     <>
@@ -152,6 +170,9 @@ export const NewRoomView = () => {
         }
         <button onClick={handleAddExit}>Add Exit</button>
       </div>
+      <p>
+        <button onClick={handleSubmit}>Create Room</button>
+      </p>
     </>
   )
 }

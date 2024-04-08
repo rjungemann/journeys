@@ -7,6 +7,15 @@ import { useEffect } from "react"
 
 export const DEFAULT_RADAR_OBJECT_COLOR = '#666666'
 
+const scale = (inLow: number, inHigh: number, outLow: number, outHigh: number, input: number) => {
+  const ratio = (input - inLow) / (inHigh - inLow)
+  return ratio * (outHigh - outLow) + outLow
+}
+
+const width = 400
+const height = 100
+const zoom = 1.25
+
 export const RadarObstacle = ({ obstacleName, i }: { obstacleName: string, i: number }) => {
   const { state } = useGame()
   const field = findField(state)(state.fieldName)
@@ -14,15 +23,15 @@ export const RadarObstacle = ({ obstacleName, i }: { obstacleName: string, i: nu
     return { ...tm, x: Math.random() < 0.5 ? tm.x - tm.movement : tm.x + tm.movement }
   })
   const midpointX = tms.reduce((sum, tm) => sum + tm.x, 0) / tms.length
-  const formulaX = (x) => 200 + x - midpointX
+  const formulaX = (x) => scale(0, width, -(width * (zoom - 1.0)), width + (width * (zoom - 1.0)), (width * 0.5) + x - midpointX)
 
   const obstacle = field.obstacles.filter((o) => o.name === obstacleName)[0]!
   const { type, name, x } = obstacle
   const label = type === BARRIER_OBSTACLE ? 'Barrier' : 'Cover'
   return (
     <g key={obstacle.name} className="obstacle">
-      <line key={name} x1={formulaX(x)} y1={0} x2={formulaX(x)} y2={100} opacity={0.5} />
-      <circle cx={formulaX(x)} cy={100 - 5} r={5} />
+      <line key={name} x1={formulaX(x)} y1={0} x2={formulaX(x)} y2={height} opacity={0.5} />
+      {/* <circle cx={formulaX(x)} cy={height - 5} r={5} /> */}
       <text x={formulaX(x) + 2} y={16 + 16 * i} fontSize={'0.35em'}>{label}</text>
     </g>
   )
@@ -36,7 +45,7 @@ export const RadarTeammate = ({ teammateName, i }: { teammateName: string, i: nu
     return { ...tm, x: Math.random() < 0.5 ? tm.x - tm.movement : tm.x + tm.movement }
   })
   const midpointX = tms.reduce((sum, tm) => sum + tm.x, 0) / tms.length
-  const formulaX = (x) => 200 + x - midpointX
+  const formulaX = (x) => scale(0, width, -(width * (zoom - 1.0)), width + (width * (zoom - 1.0)), (width * 0.5) + x - midpointX)
 
   const teammate = field.teammates.filter((o) => o.name === teammateName)[0]!
   const entity = findEntity(state)(teammate.name)
@@ -45,8 +54,8 @@ export const RadarTeammate = ({ teammateName, i }: { teammateName: string, i: nu
   const side = sides.filter((side) => side.team.some((t) => t === teammate.name))[0]!
   return (
     <g key={teammate.name}>
-      <line key={name} x1={formulaX(x)} y1={0} x2={formulaX(x)} y2={100} stroke={color} opacity={0.5} />
-      <circle cx={formulaX(x)} cy={100 - 5} r={5} fill={color} />
+      <line key={name} x1={formulaX(x)} y1={0} x2={formulaX(x)} y2={height} stroke={color} opacity={0.5} />
+      {/* <circle cx={formulaX(x)} cy={height - 5} r={5} fill={color} /> */}
       <text x={formulaX(x) + 2} y={16 + 16 * i} fontSize={'0.35em'} style={{ fill: color }}>{entity.title} ({side.title})</text>
     </g>
   )
@@ -62,8 +71,8 @@ export const RadarView = () => {
   const midpointX = tms.reduce((sum, tm) => sum + tm.x, 0) / tms.length
   return (
     <>
-      <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
-        <line className="center-line" x1={200} y1={0} x2={200} y2={100} />
+      <svg viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
+        <line className="center-line" x1={width / 2} y1={0} x2={width / 2} y2={height} />
         {obstacles.map((obstacle, i) => <RadarObstacle key={obstacle.name} obstacleName={obstacle.name} i={i} />)}
         {teammates.map((teammate, i) => <RadarTeammate key={teammate.name} teammateName={teammate.name} i={i} />)}
       </svg>

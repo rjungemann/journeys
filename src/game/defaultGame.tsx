@@ -3,7 +3,6 @@ import { randomColor } from "./utils";
 
 export const defaultGame: Game = {
   ticks: 0,
-  showInspector: false,
   sceneName: 'room',
   editSceneName: 'basic',
   previousSceneName: 'room',
@@ -324,7 +323,6 @@ export const defaultGame: Game = {
       messages: ['One...', 'Two...', 'Three...']
     }
   ],
-  log: [],
   skillCheckName: null,
   skillChecks: [
     {
@@ -333,6 +331,7 @@ export const defaultGame: Game = {
       title: 'Repair the broken terminal?',
       characteristic: 'intelligence',
       skill: 'mechanics',
+      dice: '2d6',
       tn: 8,
       result: null
     },
@@ -342,6 +341,7 @@ export const defaultGame: Game = {
       title: 'Do you think you could give me some guidance?',
       characteristic: 'education',
       skill: 'mechanics',
+      dice: '2d6',
       tn: 8,
       result: null
     },
@@ -351,6 +351,7 @@ export const defaultGame: Game = {
       title: 'Do you want to try again?',
       characteristic: 'education',
       skill: 'mechanics',
+      dice: '2d6',
       tn: 6,
       result: null
     }
@@ -369,6 +370,9 @@ export const defaultGame: Game = {
   partyCheckName: null,
   partyChecks: [
 
+  ],
+  battleCheckName: null,
+  battleChecks: [
   ],
   choiceName: null,
   choices: [

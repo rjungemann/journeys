@@ -227,16 +227,24 @@ svg .obstacle text
 
 .form-control.exits-control h3 {
   margin-top: 0;
-}
-
-.characteristics,
-.skills
-{
-  font-size: 0.8em;
-}
+} 
 
 .characteristics .label,
 .skills .label
 {
   font-weight: bold;
+}
+
+.entity-stats {
+  display: flex;
+  gap: 1.5em;
+  opacity: 0.5;
+  font-size: 0.6em;
+  background-color: var(--color-pre-background);
+  padding: 1em;
+}
+
+.entity-stats h4 {
+  margin-top: 0.5em;
+  margin-bottom: 0.75em;
 }

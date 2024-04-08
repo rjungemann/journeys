@@ -30,8 +30,6 @@ export const DescriptionSchema = z.object({
   message: z.string()
 })
 
-// TODO: Items
-// TODO: Rooms
 export type Description = z.infer<typeof DescriptionSchema>
 
 export const DialogueSchema = z.object({
@@ -85,7 +83,6 @@ export const EntitySchema = z.object({
 
 export type Entity = z.infer<typeof EntitySchema>
 
-// TODO: `type` field to differentiate kinds of items
 export const ItemSchema = z.object({
   name: z.string(),
   title: z.string(),
@@ -97,21 +94,11 @@ export const ItemSchema = z.object({
 
 export type Item = z.infer<typeof ItemSchema>
 
-export const LogItemSchema = z.object({
-  message: z.string()
-})
-
-export type LogItem = z.infer<typeof LogItemSchema>
-
 export const SkillCheckResultSchema = z.object({
   subjectName: z.string(),
-  objectName: z.nullable(z.string()),
-  skillCheckName: z.string(),
-  characteristicName: z.string(),
-  skillName: z.string(),
+  objectName: z.string(),
   characteristicValue: z.number(),
   skillValue: z.number(),
-  dice: z.string(),
   roll: z.object({
     rolls: z.number().array(),
     sum: z.number(),
@@ -126,10 +113,11 @@ export type SkillCheckResult = z.infer<typeof SkillCheckResultSchema>
 
 export const SkillCheckSchema = z.object({
   name: z.string(),
-  conditionTag: z.nullable(z.string()),
   title: z.string(),
+  conditionTag: z.nullable(z.string()),
   characteristic: z.string(),
   skill: z.string(),
+  dice: z.string(),
   tn: z.number(),
   result: z.nullable(SkillCheckResultSchema)
 })
@@ -152,7 +140,8 @@ export const ItemCheckSchema = z.object({
   title: z.string(),
   message: z.string(),
   variant: ItemCheckVariantSchema,
-  itemName: z.string()
+  itemName: z.string(),
+  result: z.nullable(z.object({ isSuccess: z.boolean() }))
 })
 
 export type ItemCheck = z.infer<typeof ItemCheckSchema>
@@ -160,22 +149,29 @@ export type ItemCheck = z.infer<typeof ItemCheckSchema>
 export const PARTY_CHECK_VARIANT_PRESENT = 'PARTY_CHECK_VARIANT_PRESENT'
 export const PARTY_CHECK_VARIANT_ABSENT = 'PARTY_CHECK_VARIANT_ABSENT'
 
-export const PartyCheckVariantSchema = z.object({
-  type: z.enum([PARTY_CHECK_VARIANT_PRESENT, PARTY_CHECK_VARIANT_ABSENT])
-})
-
-export type PartyCheckVariant = z.infer<typeof PartyCheckVariantSchema>
-
 export const PartyCheckSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
   title: z.string(),
   message: z.string(),
-  variant: PartyCheckVariantSchema,
-  itemName: z.string()
+  variant: z.enum([PARTY_CHECK_VARIANT_PRESENT, PARTY_CHECK_VARIANT_ABSENT]),
+  entityName: z.string(),
+  result: z.nullable(z.object({ isSuccess: z.boolean() }))
 })
 
 export type PartyCheck = z.infer<typeof PartyCheckSchema>
+
+export const BattleCheckSchema = z.object({
+  name: z.string(),
+  conditionTag: z.nullable(z.string()),
+  title: z.string(),
+  message: z.string(),
+  entityNames: z.string().array(),
+  fieldName: z.nullable(z.string()),
+  result: z.nullable(z.object({ isSuccess: z.boolean() }))
+})
+
+export type BattleCheck = z.infer<typeof BattleCheckSchema>
 
 export const TEAMMATE = 'TEAMMATE'
 export const COVER_OBSTACLE = 'COVER_OBSTACLE'
@@ -224,10 +220,9 @@ export type Field = z.infer<typeof FieldSchema>
 
 export const GameSchema = z.object({
   ticks: z.number(),
-  showInspector: z.boolean(),
   sceneName: z.string(),
-  editSceneName: z.string(),
   previousSceneName: z.string(),
+  editSceneName: z.string(),
   roomName: z.string(),
   editRoomName: z.string(),
   characteristicLabels: z.record(z.string(), z.string()),
@@ -239,13 +234,14 @@ export const GameSchema = z.object({
   entities: EntitySchema.array(),
   items: ItemSchema.array(),
   dialogues: DialogueSchema.array(),
-  log: LogItemSchema.array(),
   skillCheckName: z.nullable(z.string()),
   skillChecks: SkillCheckSchema.array(),
   itemCheckName: z.nullable(z.string()),
   itemChecks: ItemCheckSchema.array(),
   partyCheckName: z.nullable(z.string()),
   partyChecks: PartyCheckSchema.array(),
+  battleCheckName: z.nullable(z.string()),
+  battleChecks: BattleCheckSchema.array(),
   choiceName: z.nullable(z.string()),
   choices: ChoiceSchema.array(),
   descriptions: DescriptionSchema.array(),

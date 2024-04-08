@@ -7,7 +7,7 @@ export const NoDialogueView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
   const entity = findEntity(state)(entityName)
   const handleLeave = () => {
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>
@@ -40,8 +40,9 @@ export const DialogueView = () => {
   const handleNext = () => {
     dispatch(removeTag(entity.name, tag))
     if (index >= dialogue.messages.length - 1) {
+      console.log('dialogue done')
       dispatch(addTag(entity.name, `dialogue:${name}:done`))
-      dispatch(changeScene('entity'))
+      dispatch(changeScene('room'))
     } else {
       dispatch(addTag(entity.name, `dialogue:${name}:${index + 1}`))
     }

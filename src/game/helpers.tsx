@@ -1,7 +1,11 @@
-import { Choice, Description, Dialogue, Entity, Exit, Field, Game, ItemCheck, PartyCheck, Room, SkillCheck } from "./data"
+import { BattleCheck, Choice, Description, Dialogue, Entity, Exit, Field, Game, ItemCheck, PartyCheck, Room, SkillCheck } from "./data"
 
 export const findEntity = (state: Game) => (name: string): Entity => {
   return state.entities.filter((e) => e.name === name)[0]!
+}
+
+export const findItem = (state: Game) => (name: string): Item => {
+  return state.items.filter((e) => e.name === name)[0]!
 }
 
 export const findParty = (state: Game) => (): Entity[] => {
@@ -48,6 +52,10 @@ export const findItemCheck = (state: Game) => (name: string): ItemCheck => {
 
 export const findPartyCheck = (state: Game) => (name: string): PartyCheck => {
   return state.partyChecks.filter((pc) => pc.name === name)[0]!
+}
+
+export const findBattleCheck = (state: Game) => (name: string): BattleCheck => {
+  return state.battleChecks.filter((bc) => bc.name === name)[0]!
 }
 
 export const findField = (state: Game) => (name: string): Field => {

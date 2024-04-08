@@ -1,7 +1,7 @@
-import { ADD_TAG, Action, AddTagAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_EDIT_ROOM, CHANGE_EDIT_SCENE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_PARTY_REPRESENTATIVE_NAME, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CHANGE_TICKS, CREATE_FIELD, ChangeChoiceAction, ChangeDialogueAction, ChangeEditRoomAction, ChangeEditSceneAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangePartyRepresentativeNameAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ChangeTicksAction, CreateFieldAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
-import { BARRIER_OBSTACLE, COVER_OBSTACLE, Field, Game, GameSchema, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, TEAMMATE, Teammate } from "./data"
+import { ADD_TAG, Action, AddTagAction, BATTLE_CHECK, BattleCheckAction, CHANGE_CHOICE, CHANGE_DIALOGUE, CHANGE_EDIT_ROOM, CHANGE_EDIT_SCENE, CHANGE_ENTITY, CHANGE_FIELD, CHANGE_ITEM_CHECK, CHANGE_PARTY_REPRESENTATIVE_NAME, CHANGE_ROOM, CHANGE_SCENE, CHANGE_SKILL_CHECK, CHANGE_TICKS, CREATE_FIELD, CREATE_ROOM, ChangeChoiceAction, ChangeDialogueAction, ChangeEditRoomAction, ChangeEditSceneAction, ChangeEntityAction, ChangeFieldAction, ChangeItemCheckAction, ChangePartyRepresentativeNameAction, ChangeRoomAction, ChangeSceneAction, ChangeSkillCheckAction, ChangeTicksAction, CreateFieldAction, CreateRoomAction, FIELD_RANDOMLY_MOVE_ALL, FieldRandomlyMoveAllAction, INCREMENT_FIELD_INITIATIVE, ITEM_CHECK, IncrementFieldInitiativeAction, ItemCheckAction, MOVE_ENTITY_ROOM, MOVE_PARTY_ROOM, MoveEntityRoomAction, MovePartyRoomAction, PARTY_CHECK, PartyCheckAction, REMOVE_LAST_SKILL_CHECK_EVENT, REMOVE_TAG, RESET_STATE, RemoveTagAction, ResetStateAction, SHOW_INSPECTOR, SKILL_CHECK, ShowInspectorAction, SkillCheckAction } from "./actions"
+import { BARRIER_OBSTACLE, COVER_OBSTACLE, Field, Game, GameSchema, ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY, PARTY_CHECK_VARIANT_ABSENT, PARTY_CHECK_VARIANT_PRESENT, TEAMMATE, Teammate } from "./data"
 import { defaultGame } from "./defaultGame"
-import { addTag, findEntity, findField, moveEntity, moveParty, removeTag } from "./helpers"
+import { addTag, findBattleCheck, findEntity, findField, findPartyCheck, moveEntity, moveParty, removeTag } from "./helpers"
 import { dice } from "./utils"
 
 export const handleTicksReducer = (state: Game, action: Action) => {
@@ -122,7 +122,7 @@ export const removeTagReducer = (state: Game, action: RemoveTagAction) => {
 
 export const skillCheckReducer = (state: Game, action: SkillCheckAction) => {
   const { name, subjectName, objectName, skillCheckName, skillName, characteristicName, dice: d, tn } = action
-  const subject = state.entities.filter((s) => s.name === subjectName)[0]!
+  const subject = findEntity(state)(subjectName)
   const object = state.entities.filter((s) => s.name === objectName)[0]
   const roll = dice(d)
   const characteristicValue = subject.characteristics[characteristicName]!
@@ -156,30 +156,91 @@ export const itemCheckReducer = (state: Game, action: ItemCheckAction) => {
   const subject = state.entities.filter((s) => s.name === subjectName)[0]!
   const otherEntities = state.entities.filter((s) => s.name !== subjectName)
   const itemCheck = state.itemChecks.filter((ic) => ic.name === itemCheckName)[0]!
+  const otherItemChecks = state.itemChecks.filter((ic) => ic.name !== itemCheckName)
+  // ----
+  // Give
+  // ----
   if (itemCheck.variant.type === ITEM_CHECK_VARIANT_GIVE) {
     const updatedInventory = [...subject.inventory, itemCheck.itemName]
     const updatedSubject = { ...subject, inventory: updatedInventory }
-    return { ...state, entities: [...otherEntities, updatedSubject] }
+    const updatedItemCheck = { ...itemCheck, result: { isSuccess: true } }
+    return {
+      ...state,
+      entities: [...otherEntities, updatedSubject],
+      itemChecks: [...otherItemChecks, updatedItemCheck]
+    }
   }
+  // ----
+  // Take
+  // ----
   if (itemCheck.variant.type === ITEM_CHECK_VARIANT_TAKE) {
     const hasItem = subject.inventory.some((itemName) => itemName === itemCheck.itemName)
-    // TODO: Do something different than throw
     if (!hasItem) {
-      throw new Error(`Character does not have item ${itemCheck.itemName}`)
+      const updatedItemCheck = { ...itemCheck, result: { isSuccess: false } }
+      return {
+        ...state,
+        itemChecks: [...otherItemChecks, updatedItemCheck]
+      }
     }
     const updatedInventory = subject.inventory.filter((itemName) => itemName !== itemCheck.itemName)
     const updatedSubject = { ...subject, inventory: updatedInventory }
-    return { ...state, entities: [...otherEntities, updatedSubject] }
+    const updatedItemCheck = { ...itemCheck, result: { isSuccess: true } }
+    return {
+      ...state,
+      entities: [...otherEntities, updatedSubject],
+      itemChecks: [...otherItemChecks, updatedItemCheck]
+    }
   }
+  // ------
+  // Verify
+  // ------
   if (itemCheck.variant.type === ITEM_CHECK_VARIANT_VERIFY) {
     const hasItem = subject.inventory.some((itemName) => itemName === itemCheck.itemName)
-    // TODO: Do something different than throw
     if (!hasItem) {
-      throw new Error(`Character does not have item ${itemCheck.itemName}`)
+      const updatedItemCheck = { ...itemCheck, result: { isSuccess: false } }
+      return {
+        ...state,
+        itemChecks: [...otherItemChecks, updatedItemCheck]
+      }
     }
-    return state
+    const updatedItemCheck = { ...itemCheck, result: { isSuccess: true } }
+    return { ...state, itemChecks: [...otherItemChecks, updatedItemCheck] }
   }
   throw new Error(`Unrecognized item check variant for ${itemCheck.name}`)
+}
+
+const partyCheckReducer = (state: Game, action: PartyCheckAction) => {
+  const party = state.party
+  const partyCheck = findPartyCheck(state)(action.partyCheckName)
+  const otherPartyChecks = state.partyChecks.filter((pc) => pc.name !== action.partyCheckName)
+  const inParty = party.some((name) => name === partyCheck.entityName)
+  // ------
+  // Absent
+  // ------
+  if (partyCheck.variant === PARTY_CHECK_VARIANT_ABSENT) {
+    const updatedPartyCheck = { ...partyCheck, result: { isSuccess: !inParty } }
+    return { ...state, partyChecks: [...otherPartyChecks, updatedPartyCheck] }
+  }
+  // -------
+  // Present
+  // -------
+  if (partyCheck.variant === PARTY_CHECK_VARIANT_PRESENT) {
+    const updatedPartyCheck = { ...partyCheck, result: { isSuccess: inParty } }
+    return { ...state, partyChecks: [...otherPartyChecks, updatedPartyCheck] }
+  }
+  throw new Error(`Unrecognized party check variant for ${partyCheck.name}`)
+}
+
+// TODO: This just links the field to the battleCheck. After the battle, result etc. will still need to be set
+const battleCheckReducer = (state: Game, action: BattleCheckAction) => {
+  const battleCheck = findBattleCheck(state)(action.battleCheckName)
+  const updatedBattleCheck = { ...battleCheck, fieldName: action.fieldName }
+  const otherBattleChecks = state.battleChecks.filter((bc) => bc.name !== action.battleCheckName)
+  return { ...state, battleChecks: [...otherBattleChecks, updatedBattleCheck] }
+}
+
+const createRoomReducer = (state: Game, action: CreateRoomAction) => {
+  return { ...state, rooms: [...state.rooms, action.room] }
 }
 
 const createFieldReducer = (state: Game, action: CreateFieldAction) => {
@@ -303,6 +364,15 @@ export const gameReducer = (state: Game, action: Action) => {
   }
   if (type === ITEM_CHECK) {
     return itemCheckReducer(state, action)
+  }
+  if (type === PARTY_CHECK) {
+    return partyCheckReducer(state, action)
+  }
+  if (type === BATTLE_CHECK) {
+    return battleCheckReducer(state, action)
+  }
+  if (type === CREATE_ROOM) {
+    return createRoomReducer(state, action)
   }
   if (type === CREATE_FIELD) {
     return createFieldReducer(state, action)

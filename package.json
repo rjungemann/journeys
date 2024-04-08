@@ -9,7 +9,6 @@
     "cache:clear": "rm -rf .parcel-cache"
   },
   "dependencies": {
-    "parcel-transformer-markdown": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-responsive": "^10.0.0",
@@ -20,7 +19,6 @@
     "@mdx-js/react": "^1",
     "@parcel/resolver-glob": "^2.12.0",
     "@parcel/transformer-inline-string": "^2.12.0",
-    "@parcel/transformer-mdx": "2.12.0",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
     "parcel": "^2.12.0",

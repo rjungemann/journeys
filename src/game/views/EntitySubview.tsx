@@ -1,6 +1,6 @@
 import { changeChoice, changeDialogue, changeEntity, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
 import { useGame } from "../context"
-import { findEntity, tagExitsGlobally } from "../helpers"
+import { findEntity, findItem, tagExitsGlobally } from "../helpers"
 import { commaSeparateComponents } from "../utils"
 
 export const EntityDescriptionView = ({ entityName }: { entityName: string }) => {
@@ -135,6 +135,82 @@ export const EntityItemCheckListView = ({ entityName }: { entityName: string }) 
   )
 }
 
+export const EntityPartyCheckListView = ({ entityName }: { entityName: string }) => {
+  const { state, dispatch } = useGame()
+  const object = findEntity(state)(entityName)
+  const partyChecks = object.tags.reduce(
+    (sum, tag) => {
+      const [_, name] = tag.match(/^party-check:([^:]+)$/) || []
+      if (!name) {
+        return sum
+      }
+      const partyCheck = state.partyChecks.filter((c) => c.name === name)[0]!
+      if (partyCheck.conditionTag) {
+        const hasTag = tagExitsGlobally(state)(partyCheck.conditionTag)
+        return hasTag ? [...sum, partyCheck] : sum
+      } else {
+        return [...sum, partyCheck]
+      }
+    },
+    []
+  )
+  const handleNextFn = (name) => (event) => {
+    dispatch(changeEntity(entityName))
+    dispatch(changeItemCheck(name))
+    dispatch(changeScene('party-check'))
+  }
+  return (
+    <p>
+      {
+        commaSeparateComponents(
+          partyChecks.map((itemCheck) => (
+            <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+          )),
+          'or'
+        )
+      }
+    </p>
+  )
+}
+
+export const EntityBattleCheckListView = ({ entityName }: { entityName: string }) => {
+  const { state, dispatch } = useGame()
+  const object = findEntity(state)(entityName)
+  const battleChecks = object.tags.reduce(
+    (sum, tag) => {
+      const [_, name] = tag.match(/^battle-check:([^:]+)$/) || []
+      if (!name) {
+        return sum
+      }
+      const battleCheck = state.partyChecks.filter((c) => c.name === name)[0]!
+      if (battleCheck.conditionTag) {
+        const hasTag = tagExitsGlobally(state)(battleCheck.conditionTag)
+        return hasTag ? [...sum, battleCheck] : sum
+      } else {
+        return [...sum, battleCheck]
+      }
+    },
+    []
+  )
+  const handleNextFn = (name) => (event) => {
+    dispatch(changeEntity(entityName))
+    dispatch(changeItemCheck(name))
+    dispatch(changeScene('battle-check'))
+  }
+  return (
+    <p>
+      {
+        commaSeparateComponents(
+          battleChecks.map((itemCheck) => (
+            <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+          )),
+          'or'
+        )
+      }
+    </p>
+  )
+}
+
 export const EntitySkillCheckListView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
   const object = findEntity(state)(entityName)
@@ -173,6 +249,87 @@ export const EntitySkillCheckListView = ({ entityName }: { entityName: string })
   )
 }
 
+export const EntityCharacteristics = ({ entityName }: { entityName: string }) => {
+  const { state } = useGame()
+  const entity = findEntity(state)(entityName)
+  const characteristicData = Object.keys(entity.characteristics || {}).map((name) => {
+    const label = state.characteristicLabels[name]
+    const value = entity.characteristics[name]
+    const bonus = Math.max(value - 7, -2)
+    return { name, label, value, bonus }
+  })
+  return (
+    characteristicData.length > 0
+    ? (
+      <div>
+        <h4>Characteristics</h4>
+        {
+          characteristicData.map(({ name, label, value, bonus }) => (
+            <div key={name}>
+              <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>{label}</span>
+              {' '}
+              {value}
+              {' '}
+              {`(${bonus})`}
+            </div>
+          ))
+        }
+      </div>
+    )
+    : null
+  )
+}
+
+export const EntitySkills = ({ entityName }: { entityName: string }) => {
+  const { state } = useGame()
+  const entity = findEntity(state)(entityName)
+  const skillData = Object.keys(entity.skills || {}).map((name) => {
+    const label = state.skillLabels[name]
+    const value = entity.skills[name]
+    return { name, label, value }
+  })
+  return (
+    skillData.length > 0
+    ? (
+      <div>
+        <h4>Skills</h4>
+        {
+          skillData.map(({ name, label, value}) => (
+            <div key={name}>
+              <span style={{ fontWeight: 'bold', marginRight: '0.7em' }}>{label}</span>
+              {' '}
+              {value}
+            </div>
+          ))
+        }
+      </div>
+    )
+    : null
+  )
+}
+
+export const EntityInventory = ({ entityName }: { entityName: string }) => {
+  const { state } = useGame()
+  const entity = findEntity(state)(entityName)
+  const inventory = entity.inventory.map((name) => findItem(state)(name))
+  return (
+    inventory.length > 0
+    ? (
+      <div>
+        <h4>Inventory</h4>
+        {
+          inventory.map((item) => (
+            <div key={item.name}>
+              <span style={{ marginRight: '0.7em' }}>{item.title}</span>
+            </div>
+          ))
+        }
+      </div>
+    )
+    : null
+  )
+}
+
 export const EntityStats = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
   const entity = findEntity(state)(entityName)
@@ -191,39 +348,10 @@ export const EntityStats = ({ entityName }: { entityName: string }) => {
       {
         characteristicData.length > 0 || skillData.length > 0
         ? (
-          <div style={{ display: 'flex', gap: '1.5em', opacity: 0.5 }}>
-            {
-              characteristicData.length > 0
-              ? (
-                <table className="characteristics">
-                  <tbody>
-                    {characteristicData.map(({ name, label, value}) => (
-                      <tr key={name}>
-                        <td className="label">{label}</td>
-                        <td>{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )
-              : null
-            }
-            {
-              skillData.length > 0
-              ? (
-                <table className="skills">
-                  <tbody>
-                    {skillData.map(({ name, label, value}) => (
-                      <tr key={name}>
-                        <td className="label">{label}</td>
-                        <td>{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )
-              : null
-            }
+          <div className="entity-stats">
+            <EntityCharacteristics entityName={entityName} />
+            <EntitySkills entityName={entityName} />
+            <EntityInventory entityName={entityName} />
           </div>
         )
         : null
@@ -239,6 +367,8 @@ export const EntitySubview = ({ entityName }: { entityName: string }) => {
       <EntityChoiceListView entityName={entityName} />
       <EntityDialogueView entityName={entityName} />
       <EntityItemCheckListView entityName={entityName} />
+      <EntityPartyCheckListView entityName={entityName} />
+      <EntityBattleCheckListView entityName={entityName} />
       <EntitySkillCheckListView entityName={entityName} />
       <EntityStats entityName={entityName} />
     </>

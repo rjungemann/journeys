@@ -1,5 +1,8 @@
 ## TODO
 
+* `type` field to differentiate kinds of items
+* Item view
+* Item descriptions in item view, using tags
 * Party view
 * Change party representative in party view
 * Editor section
@@ -87,6 +90,11 @@ item-check:<name>:done
 
 party-check:<name>
 party-check:<name>:done
+
+# TODO
+battle-check:<name>
+battle-check:<name>:success
+battle-check:<name>:failure
 
 # Cause the entity to move from room to room periodically
 wandering

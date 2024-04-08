@@ -1,3 +1,5 @@
+import { Room } from "./data"
+
 export const RESET_STATE = 'RESET_STATE'
 export const SHOW_INSPECTOR = 'SHOW_INSPECTOR'
 export const CHANGE_TICKS = 'CHANGE_TICKS'
@@ -20,7 +22,9 @@ export const REMOVE_TAG = 'REMOVE_TAG'
 export const SKILL_CHECK = 'SKILL_CHECK'
 export const ITEM_CHECK = 'ITEM_CHECK'
 export const PARTY_CHECK = 'PARTY_CHECK'
+export const BATTLE_CHECK = 'BATTLE_CHECK'
 export const CREATE_FIELD = 'CREATE_FIELD'
+export const CREATE_ROOM = 'CREATE_ROOM'
 export const FIELD_RANDOMLY_MOVE_ALL = 'FIELD_RANDOMLY_MOVE_ALL'
 export const INCREMENT_FIELD_INITIATIVE = 'INCREMENT_FIELD_INITIATIVE'
 
@@ -154,6 +158,17 @@ export type PartyCheckAction = {
   partyCheckName: string
 }
 
+export type BattleCheckAction = {
+  type: 'BATTLE_CHECK'
+  battleCheckName: string
+  fieldName: string
+}
+
+export type CreateRoomAction = {
+  type: 'CREATE_ROOM'
+  room: Room
+}
+
 export type CreateFieldAction = {
   type: 'CREATE_FIELD'
   fieldName: string
@@ -194,6 +209,8 @@ export type Action =
   | SkillCheckAction
   | ItemCheckAction
   | PartyCheckAction
+  | BattleCheckAction
+  | CreateRoomAction
   | CreateFieldAction
   | FieldRandomlyMoveAllAction
   | IncrementFieldInitiativeAction
@@ -313,6 +330,17 @@ export const itemCheck = (subjectName: string, itemCheckName: string): ItemCheck
 export const partyCheck = (partyCheckName: string): PartyCheckAction => ({
   type: PARTY_CHECK,
   partyCheckName,
+})
+
+export const battleCheck = (battleCheckName: string, fieldName: string): BattleCheckAction => ({
+  type: BATTLE_CHECK,
+  battleCheckName,
+  fieldName
+})
+
+export const createRoom = (room: Room): CreateRoomAction => ({
+  type: CREATE_ROOM,
+  room,
 })
 
 export const createField = (fieldName: string, sides: string[][]): CreateFieldAction => ({

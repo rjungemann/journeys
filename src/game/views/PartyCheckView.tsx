@@ -7,7 +7,7 @@ export const NoPartyCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
   const entity = findEntity(state)(entityName)
   const handleLeave = () => {
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
   return (
     <>
@@ -32,7 +32,7 @@ export const PartyCheckView = () => {
     const pc = findPartyCheck(state)(state.partyCheckName)
     dispatch(partyCheck(pc.name))
     dispatch(addTag(entity.name, `party-check:${pc.name}:done`))
-    dispatch(changeScene('entity'))
+    dispatch(changeScene('room'))
   }
 
   const split = tag.split(':')
