@@ -1,5 +1,4 @@
 import ejs from 'ejs'
-import { marked } from 'marked'
 import { Game } from '../data'
 import { useGame } from '../context'
 
@@ -15,8 +14,7 @@ export const tFn =
     const obj = state.strings[lang]
     const string = locate(obj)(path)
     const ejsRender = ejs.render(string, locals)
-    const markdownRender = marked.parse(ejsRender)
-    return markdownRender
+    return ejsRender
   }
 
 export const T = ({
@@ -27,7 +25,7 @@ export const T = ({
   locals?: Record<string, any>
 }) => {
   const { state } = useGame()
-  return <span dangerouslySetInnerHTML={{ __html: tFn(state)(path, locals) }} />
+  return tFn(state)(path, locals)
 }
 
 export const useT = () => {

@@ -6,36 +6,18 @@ export const defaultGame: Game = {
   sceneName: 'room',
   previousSceneName: 'room',
   roomName: 'quarters-a',
-  characteristicLabels: {
-    strength: 'Strength',
-    dexterity: 'Dexterity',
-    endurance: 'Endurance',
-    intelligence: 'Intelligence',
-    education: 'Education',
-    socialStanding: 'Social Standing',
-    psionicStrength: 'Psionic Strength',
-  },
-  skillLabels: {
-    groundVehicle: 'Ground Vehicle',
-    gunCombat: 'Gun Combat',
-    mechanics: 'Mechanics',
-    slugPistol: 'Slug Pistol',
-    vehicle: 'Vehicle',
-  },
   rooms: [
     {
       name: 'quarters-a',
       title: 'Quarters A',
       exits: [{ name: 'north', title: 'north', to: 'hallway' }],
       entities: ['alard-tyney', 'terminal-1'],
-      tags: ['description:fix-1:success'],
     },
     {
       name: 'quarters-b',
       title: 'Quarters B',
       exits: [{ name: 'south', title: 'south', to: 'hallway' }],
       entities: ['beth-raschke', 'nikos-rosek'],
-      tags: ['description:fix-1:success'],
     },
     {
       name: 'hallway',
@@ -47,21 +29,18 @@ export const defaultGame: Game = {
         { name: 'west', title: 'west', to: 'galley' },
       ],
       entities: [],
-      tags: [],
     },
     {
       name: 'bridge',
       title: 'Bridge',
       exits: [{ name: 'west', title: 'west', to: 'hallway' }],
       entities: [],
-      tags: [],
     },
     {
       name: 'galley',
       title: 'Galley',
       exits: [{ name: 'east', title: 'east', to: 'hallway' }],
       entities: ['kynon-morgan'],
-      tags: [],
     },
   ],
   partyRepresentativeName: 'alard-tyney',
@@ -404,6 +383,22 @@ export const defaultGame: Game = {
   fields: [],
   strings: {
     en: {
+      characteristicLabels: {
+        strength: 'Strength',
+        dexterity: 'Dexterity',
+        endurance: 'Endurance',
+        intelligence: 'Intelligence',
+        education: 'Education',
+        socialStanding: 'Social Standing',
+        psionicStrength: 'Psionic Strength',
+      },
+      skillLabels: {
+        groundVehicle: 'Ground Vehicle',
+        gunCombat: 'Gun Combat',
+        mechanics: 'Mechanics',
+        slugPistol: 'Slug Pistol',
+        vehicle: 'Vehicle',
+      },
       sample: {
         message: 'Hello, *<%= name %>*!',
       },

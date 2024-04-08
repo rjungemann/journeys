@@ -13,7 +13,6 @@ import {
   findParty,
   findRoom,
   isEntityDead,
-  tagExitsGlobally,
 } from '../helpers'
 import {
   capitalize,
@@ -22,25 +21,6 @@ import {
   smallUid,
 } from '../utils'
 import { EntitySubview } from './EntitySubview'
-
-export const RoomDescriptionsView = () => {
-  const { state } = useGame()
-  const room = findRoom(state)(state.roomName)
-  const descriptions = room.tags.reduce((sum, tag) => {
-    const [_, name] = tag.match(/^description:(.*)$/) || []
-    return name
-      ? [...sum, ...state.descriptions.filter((d) => d.name === name)]
-      : sum
-  }, [])
-  return descriptions.map((description) => {
-    if (description.conditionTag) {
-      const hasTag = tagExitsGlobally(state)(description.conditionTag)
-      return hasTag ? <p key={description.name}>{description.message}</p> : null
-    } else {
-      return <p key={description.name}>{description.message}</p>
-    }
-  })
-}
 
 export const RoomExitsView = () => {
   const { state, dispatch } = useGame()
@@ -163,7 +143,6 @@ export const RoomView = () => {
   return (
     <>
       <h2>{room.title}</h2>
-      <RoomDescriptionsView />
       <RoomPartyEntitiesView />
       <RoomOtherEntitiesView />
       <RoomHostileEntitiesView />

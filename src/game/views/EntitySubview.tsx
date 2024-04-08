@@ -10,7 +10,7 @@ import { useGame } from '../context'
 import { Description } from '../data'
 import { findEntity, findItem, tagExitsGlobally } from '../helpers'
 import { commaSeparateComponents } from '../utils'
-import { useT } from './T'
+import { T, useT } from './T'
 
 export const EntityDescriptionView = ({
   entityName,
@@ -261,49 +261,47 @@ export const EntityCharacteristics = ({
   entityName: string
 }) => {
   const { state } = useGame()
+  const { t } = useT()
   const entity = findEntity(state)(entityName)
-  const characteristicData = Object.keys(entity.characteristics || {}).map(
-    (name) => {
-      const label = state.characteristicLabels[name]
-      const value = entity.characteristics[name]
-      const bonus = Math.max(value - 7, -2)
-      return { name, label, value, bonus }
-    },
-  )
-  return characteristicData.length > 0 ? (
+  const characteristicNames = Object.keys(entity.characteristics || {})
+  return characteristicNames.length > 0 ? (
     <div>
       <h4>Characteristics</h4>
-      {characteristicData.map(({ name, label, value, bonus }) => (
-        <div key={name}>
-          <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>
-            {label}
-          </span>{' '}
-          {value} {`(${bonus})`}
-        </div>
-      ))}
+      {characteristicNames.map((name) => {
+        const value = entity.characteristics[name]
+        const bonus = Math.max(value - 7, -2)
+        return (
+          <div key={name}>
+            <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>
+              <T path={`characteristicLabels.${name}`} />
+            </span>{' '}
+            {value} {`(${bonus})`}
+          </div>
+        )
+      })}
     </div>
   ) : null
 }
 
 export const EntitySkills = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
+  const { t } = useT()
   const entity = findEntity(state)(entityName)
-  const skillData = Object.keys(entity.skills || {}).map((name) => {
-    const label = state.skillLabels[name]
-    const value = entity.skills[name]
-    return { name, label, value }
-  })
-  return skillData.length > 0 ? (
+  const skillNames = Object.keys(entity.skills || {})
+  return skillNames.length > 0 ? (
     <div>
       <h4>Skills</h4>
-      {skillData.map(({ name, label, value }) => (
-        <div key={name}>
-          <span style={{ fontWeight: 'bold', marginRight: '0.7em' }}>
-            {label}
-          </span>{' '}
-          {value}
-        </div>
-      ))}
+      {skillNames.map((name) => {
+        const value = entity.skills[name]
+        return (
+          <div key={name}>
+            <span style={{ fontWeight: 'bold', marginRight: '0.7em' }}>
+              <T path={`skillLabels.${name}`} />
+            </span>{' '}
+            {value}
+          </div>
+        )
+      })}
     </div>
   ) : null
 }
@@ -327,21 +325,10 @@ export const EntityInventory = ({ entityName }: { entityName: string }) => {
 export const EntityStats = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
   const entity = findEntity(state)(entityName)
-  const characteristicData = Object.keys(entity.characteristics || {}).map(
-    (name) => {
-      const label = state.characteristicLabels[name]
-      const value = entity.characteristics[name]
-      return { name, label, value }
-    },
-  )
-  const skillData = Object.keys(entity.skills || {}).map((name) => {
-    const label = state.skillLabels[name]
-    const value = entity.skills[name]
-    return { name, label, value }
-  })
   return (
     <>
-      {characteristicData.length > 0 || skillData.length > 0 ? (
+      {Object.keys(entity.characteristics || {}).length > 0 ||
+      Object.keys(entity.skills || {}).length > 0 ? (
         <div className="entity-stats">
           <EntityCharacteristics entityName={entityName} />
           <EntitySkills entityName={entityName} />

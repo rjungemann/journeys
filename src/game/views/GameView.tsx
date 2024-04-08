@@ -9,6 +9,7 @@ import { useActsDuringCombat, useWanderingBehaviors } from '../behaviors'
 import { CombatView } from './CombatView'
 import { HeadView } from './HeadView'
 import { GameOverView } from './GameOverView'
+import { T } from './T'
 
 export const GameView = () => {
   const { state } = useGame()
@@ -19,6 +20,9 @@ export const GameView = () => {
   return (
     <div className={`theme-${theme}`}>
       <HeadView />
+      <p>
+        <T path="sample.message" locals={{ name: 'Alice' }} />
+      </p>
       {state.sceneName === 'dialogue' ? <DialogueView /> : null}
       {state.sceneName === 'choice' ? <ChoiceView /> : null}
       {state.sceneName === 'room' ? <RoomView /> : null}
