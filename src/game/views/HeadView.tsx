@@ -31,10 +31,14 @@ import { changeScene } from '../actions'
 
 export const Logo = () => {
   const { theme } = useTheme()
-  const [width, height] = [515/3, 80/3]
+  const [width, height] = [515 / 3, 80 / 3]
   return (
     <a>
-      <img src={theme === 'dark' ? logoDark : logoLight} width={width} height={height} />
+      <img
+        src={theme === 'dark' ? logoDark : logoLight}
+        width={width}
+        height={height}
+      />
     </a>
   )
 }
@@ -56,51 +60,55 @@ export const Nav = () => {
   return (
     <nav style={{ flexGrow: 0 }}>
       <a onClick={returnToGame} title="Return to Game">
-        {
-          theme === 'dark'
-          ? <img src={playLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={playDark} width={buttonWidth} height={buttonHeight} />
-        }
-      </a>
-      {' '}
+        {theme === 'dark' ? (
+          <img src={playLight} width={buttonWidth} height={buttonHeight} />
+        ) : (
+          <img src={playDark} width={buttonWidth} height={buttonHeight} />
+        )}
+      </a>{' '}
       <a onClick={toggleInspector} title="Show or hide debug info">
-        {
-          theme === 'dark'
-          ? <img src={codeLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={codeDark} width={buttonWidth} height={buttonHeight} />
-        }
-      </a>
-      {' '}
-      <a onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Toggle between dark mode and light mode">
-        {
-          theme === 'dark'
-          ? <img src={sunLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={sunDark} width={buttonWidth} height={buttonHeight} />
-        }
-      </a>
-      {' '}
-      <a onClick={() => resetStorage()} title="Reset all of the game state. Your progress will be lost!">
-        {
-          theme === 'dark'
-          ? <img src={bombLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={bombDark} width={buttonWidth} height={buttonHeight} />
-        }
-      </a>
-      {' '}
-      <a onClick={() => saveState()} title="Save the game state for restoring later.">
-        {
-          theme === 'dark'
-          ? <img src={recordLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={recordDark} width={buttonWidth} height={buttonHeight} />
-        }
-      </a>
-      {' '}
+        {theme === 'dark' ? (
+          <img src={codeLight} width={buttonWidth} height={buttonHeight} />
+        ) : (
+          <img src={codeDark} width={buttonWidth} height={buttonHeight} />
+        )}
+      </a>{' '}
+      <a
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        title="Toggle between dark mode and light mode"
+      >
+        {theme === 'dark' ? (
+          <img src={sunLight} width={buttonWidth} height={buttonHeight} />
+        ) : (
+          <img src={sunDark} width={buttonWidth} height={buttonHeight} />
+        )}
+      </a>{' '}
+      <a
+        onClick={() => resetStorage()}
+        title="Reset all of the game state. Your progress will be lost!"
+      >
+        {theme === 'dark' ? (
+          <img src={bombLight} width={buttonWidth} height={buttonHeight} />
+        ) : (
+          <img src={bombDark} width={buttonWidth} height={buttonHeight} />
+        )}
+      </a>{' '}
+      <a
+        onClick={() => saveState()}
+        title="Save the game state for restoring later."
+      >
+        {theme === 'dark' ? (
+          <img src={recordLight} width={buttonWidth} height={buttonHeight} />
+        ) : (
+          <img src={recordDark} width={buttonWidth} height={buttonHeight} />
+        )}
+      </a>{' '}
       <a onClick={() => restoreState()} title="Restore the saved game state.">
-        {
-          theme === 'dark'
-          ? <img src={rewindLight} width={buttonWidth} height={buttonHeight} />
-          : <img src={rewindDark} width={buttonWidth} height={buttonHeight} />
-        }
+        {theme === 'dark' ? (
+          <img src={rewindLight} width={buttonWidth} height={buttonHeight} />
+        ) : (
+          <img src={rewindDark} width={buttonWidth} height={buttonHeight} />
+        )}
       </a>
     </nav>
   )

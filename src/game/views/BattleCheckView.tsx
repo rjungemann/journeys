@@ -1,9 +1,23 @@
-import { useEffect, useState } from "react"
-import { addTag, changeScene, removeTag, itemCheck, partyCheck, battleCheck, createField, changeField } from "../actions"
-import { useGame } from "../context"
-import { BattleCheck } from "../data"
-import { findBattleCheck, findEntity, findPartyCheck, tagExitsGlobally } from "../helpers"
-import { matchTags, smallUid } from "../utils"
+import { useEffect, useState } from 'react'
+import {
+  addTag,
+  changeScene,
+  removeTag,
+  itemCheck,
+  partyCheck,
+  battleCheck,
+  createField,
+  changeField,
+} from '../actions'
+import { useGame } from '../context'
+import { BattleCheck } from '../data'
+import {
+  findBattleCheck,
+  findEntity,
+  findPartyCheck,
+  tagExitsGlobally,
+} from '../helpers'
+import { matchTags, smallUid } from '../utils'
 
 export const NoBattleCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()

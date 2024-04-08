@@ -1,7 +1,13 @@
-import { addTag, changeScene, removeTag, itemCheck, partyCheck } from "../actions"
-import { useGame } from "../context"
-import { findEntity, findPartyCheck, tagExitsGlobally } from "../helpers"
-import { matchTags } from "../utils"
+import {
+  addTag,
+  changeScene,
+  removeTag,
+  itemCheck,
+  partyCheck,
+} from '../actions'
+import { useGame } from '../context'
+import { findEntity, findPartyCheck, tagExitsGlobally } from '../helpers'
+import { matchTags } from '../utils'
 
 export const NoPartyCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()

@@ -1,8 +1,16 @@
-import { Dispatch, ReactNode, createContext, useContext, useEffect, useReducer, useState } from "react"
-import { Game } from "./data"
-import { Action, changeState, resetState } from "./actions"
-import { gameReducer } from "./reducers"
-import { defaultGame } from "./defaultGame"
+import {
+  Dispatch,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
+import { Game } from './data'
+import { Action, changeState, resetState } from './actions'
+import { gameReducer } from './reducers'
+import { defaultGame } from './defaultGame'
 
 // -----------
 // GameContext
@@ -39,7 +47,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem(SAVED_STATE_KEY, JSON.stringify(state))
   }
   const restoreState = () => {
-    const savedState = JSON.parse(localStorage.getItem(SAVED_STATE_KEY) || 'null')
+    const savedState = JSON.parse(
+      localStorage.getItem(SAVED_STATE_KEY) || 'null',
+    )
     if (savedState) {
       dispatch(changeState(savedState))
     }
@@ -48,14 +58,24 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem(SAVED_STATE_KEY)
   }
   return (
-    <GameContext.Provider value={{ state, dispatch, resetStorage, saveState, restoreState, clearState }}>
+    <GameContext.Provider
+      value={{
+        state,
+        dispatch,
+        resetStorage,
+        saveState,
+        restoreState,
+        clearState,
+      }}
+    >
       {children}
     </GameContext.Provider>
   )
 }
 
 export const useGame = (): GameContext => {
-  const { state, dispatch, resetStorage, saveState, restoreState, clearState } = useContext(GameContext)!
+  const { state, dispatch, resetStorage, saveState, restoreState, clearState } =
+    useContext(GameContext)!
   return { state, dispatch, resetStorage, saveState, restoreState, clearState }
 }
 
@@ -64,7 +84,7 @@ export const useGame = (): GameContext => {
 // ------------
 
 type ThemeContext = {
-  theme: string,
+  theme: string
   setTheme: (theme: string) => void
 }
 

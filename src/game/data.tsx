@@ -9,7 +9,7 @@ import { z } from 'zod'
 
 export const OptionSchema = z.object({
   name: z.string(),
-  message: z.string()
+  message: z.string(),
 })
 
 export type Option = z.infer<typeof OptionSchema>
@@ -19,7 +19,7 @@ export const ChoiceSchema = z.object({
   title: z.string(),
   conditionTag: z.nullable(z.string()),
   message: z.string(),
-  options: OptionSchema.array()
+  options: OptionSchema.array(),
 })
 
 export type Choice = z.infer<typeof ChoiceSchema>
@@ -27,7 +27,7 @@ export type Choice = z.infer<typeof ChoiceSchema>
 export const DescriptionSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
-  message: z.string()
+  message: z.string(),
 })
 
 export type Description = z.infer<typeof DescriptionSchema>
@@ -36,7 +36,7 @@ export const DialogueSchema = z.object({
   name: z.string(),
   conditionTag: z.nullable(z.string()),
   topic: z.string(),
-  messages: z.string().array()
+  messages: z.string().array(),
 })
 
 export type Dialogue = z.infer<typeof DialogueSchema>
@@ -44,7 +44,7 @@ export type Dialogue = z.infer<typeof DialogueSchema>
 export const ExitSchema = z.object({
   name: z.string(),
   title: z.string(),
-  to: z.string()
+  to: z.string(),
 })
 
 export type Exit = z.infer<typeof ExitSchema>
@@ -54,7 +54,7 @@ const RoomSchema = z.object({
   title: z.string(),
   exits: ExitSchema.array(),
   entities: z.string().array(),
-  tags: z.string().array()
+  tags: z.string().array(),
 })
 
 export type Room = z.infer<typeof RoomSchema>
@@ -66,7 +66,7 @@ export const CharacteristicsSchema = z.object({
   intelligence: z.number(),
   education: z.number(),
   socialStanding: z.number(),
-  psionicStrength: z.number()
+  psionicStrength: z.number(),
 })
 
 export type Characteristics = z.infer<typeof CharacteristicsSchema>
@@ -78,7 +78,7 @@ export const EntitySchema = z.object({
   characteristics: z.optional(CharacteristicsSchema),
   skills: z.optional(z.record(z.string(), z.number())),
   tags: z.string().array(),
-  inventory: z.string().array()
+  inventory: z.string().array(),
 })
 
 export type Entity = z.infer<typeof EntitySchema>
@@ -89,7 +89,7 @@ export const ItemSchema = z.object({
   rounds: z.nullable(z.number()),
   tags: z.string().array(),
   damage: z.string(),
-  isEquipped: z.boolean()
+  isEquipped: z.boolean(),
 })
 
 export type Item = z.infer<typeof ItemSchema>
@@ -102,11 +102,11 @@ export const SkillCheckResultSchema = z.object({
   roll: z.object({
     rolls: z.number().array(),
     sum: z.number(),
-    sides: z.number()
+    sides: z.number(),
   }),
   total: z.number(),
   tn: z.number(),
-  isSuccess: z.boolean()
+  isSuccess: z.boolean(),
 })
 
 export type SkillCheckResult = z.infer<typeof SkillCheckResultSchema>
@@ -119,7 +119,7 @@ export const SkillCheckSchema = z.object({
   skill: z.string(),
   dice: z.string(),
   tn: z.number(),
-  result: z.nullable(SkillCheckResultSchema)
+  result: z.nullable(SkillCheckResultSchema),
 })
 
 export type SkillCheck = z.infer<typeof SkillCheckSchema>
@@ -129,7 +129,11 @@ export const ITEM_CHECK_VARIANT_TAKE = 'ITEM_CHECK_VARIANT_TAKE'
 export const ITEM_CHECK_VARIANT_VERIFY = 'ITEM_CHECK_VARIANT_VERIFY'
 
 export const ItemCheckVariantSchema = z.object({
-  type: z.enum([ITEM_CHECK_VARIANT_GIVE, ITEM_CHECK_VARIANT_TAKE, ITEM_CHECK_VARIANT_VERIFY])
+  type: z.enum([
+    ITEM_CHECK_VARIANT_GIVE,
+    ITEM_CHECK_VARIANT_TAKE,
+    ITEM_CHECK_VARIANT_VERIFY,
+  ]),
 })
 
 export type ItemCheckVariant = z.infer<typeof ItemCheckVariantSchema>
@@ -141,9 +145,11 @@ export const ItemCheckSchema = z.object({
   message: z.string(),
   variant: ItemCheckVariantSchema,
   itemName: z.string(),
-  result: z.nullable(z.object({
-    isSuccess: z.boolean()
-  }))
+  result: z.nullable(
+    z.object({
+      isSuccess: z.boolean(),
+    }),
+  ),
 })
 
 export type ItemCheck = z.infer<typeof ItemCheckSchema>
@@ -158,7 +164,7 @@ export const PartyCheckSchema = z.object({
   message: z.string(),
   variant: z.enum([PARTY_CHECK_VARIANT_PRESENT, PARTY_CHECK_VARIANT_ABSENT]),
   entityName: z.string(),
-  result: z.nullable(z.object({ isSuccess: z.boolean() }))
+  result: z.nullable(z.object({ isSuccess: z.boolean() })),
 })
 
 export type PartyCheck = z.infer<typeof PartyCheckSchema>
@@ -170,10 +176,12 @@ export const BattleCheckSchema = z.object({
   message: z.string(),
   entityNames: z.string().array(),
   fieldName: z.nullable(z.string()),
-  result: z.nullable(z.object({
-    isSuccess: z.boolean(),
-    subjectName: z.string()
-  }))
+  result: z.nullable(
+    z.object({
+      isSuccess: z.boolean(),
+      subjectName: z.string(),
+    }),
+  ),
 })
 
 export type BattleCheck = z.infer<typeof BattleCheckSchema>
@@ -186,7 +194,7 @@ export const ObstacleSchema = z.object({
   name: z.string(),
   type: z.enum([COVER_OBSTACLE, BARRIER_OBSTACLE]),
   x: z.number(),
-  movement: z.number()
+  movement: z.number(),
 })
 
 export type Obstacle = z.infer<typeof ObstacleSchema>
@@ -195,7 +203,7 @@ export const TeammateSchema = z.object({
   name: z.string(),
   type: z.enum([TEAMMATE]),
   x: z.number(),
-  movement: z.number()
+  movement: z.number(),
 })
 
 export type Teammate = z.infer<typeof TeammateSchema>
@@ -207,7 +215,7 @@ export type FieldEntity = z.infer<typeof FieldEntitySchema>
 export const SideSchema = z.object({
   name: z.string(),
   title: z.string(),
-  team: z.string().array()
+  team: z.string().array(),
 })
 
 export type Side = z.infer<typeof SideSchema>
@@ -219,7 +227,7 @@ export const FieldSchema = z.object({
   teammates: z.array(TeammateSchema),
   initiativePairs: z.array(z.tuple([z.number(), z.string()])),
   initiativeIndex: z.number(),
-  result: z.nullable(z.object({ isSuccess: z.boolean() }))
+  result: z.nullable(z.object({ isSuccess: z.boolean() })),
 })
 
 export type Field = z.infer<typeof FieldSchema>
@@ -250,7 +258,7 @@ export const GameSchema = z.object({
   choices: ChoiceSchema.array(),
   descriptions: DescriptionSchema.array(),
   fieldName: z.nullable(z.string()),
-  fields: FieldSchema.array()
+  fields: FieldSchema.array(),
 })
 
 export type Game = z.infer<typeof GameSchema>

@@ -1,7 +1,7 @@
-import { addTag, changeScene, removeTag, itemCheck } from "../actions"
-import { useGame } from "../context"
-import { findEntity, findItemCheck, tagExitsGlobally } from "../helpers"
-import { matchTags } from "../utils"
+import { addTag, changeScene, removeTag, itemCheck } from '../actions'
+import { useGame } from '../context'
+import { findEntity, findItemCheck, tagExitsGlobally } from '../helpers'
+import { matchTags } from '../utils'
 
 export const NoItemCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()

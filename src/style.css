@@ -1,7 +1,7 @@
 body {
-  --serif-font: "IBM Plex Serif";
-  --sans-serif-font: "IBM Plex Sans";
-  --mono-font: "IBM Plex Mono";
+  --serif-font: 'IBM Plex Serif';
+  --sans-serif-font: 'IBM Plex Sans';
+  --mono-font: 'IBM Plex Mono';
 
   --color-far-background: #57534e; /* stone-600 */
   --color-near-background: #f5f5f4; /* stone-100 */
@@ -11,7 +11,7 @@ body {
   --color-text: #1c1917; /* stone-900 */
   --color-button-text: #f5f5f4; /* stone-100 */
 }
-[data-theme="dark"] body {
+[data-theme='dark'] body {
   --color-far-background: #1c1917; /* stone-900 */
   --color-near-background: #292524; /* stone-800 */
   --color-pre-background: #44403c; /* stone-700 */
@@ -25,7 +25,8 @@ body {
 * {
   box-sizing: border-box;
 }
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -38,15 +39,24 @@ body {
   letter-spacing: -0.02rem;
   line-height: 1.5;
 }
-h1, h2, h3, h4, h5, h6, input, button {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+button {
   font-family: var(--sans-serif-font);
 }
-pre, code {
+pre,
+code {
   font-family: var(--mono-font);
   font-size: 0.6em;
 }
 
-strong, b {
+strong,
+b {
   font-weight: 600;
 }
 
@@ -57,8 +67,9 @@ body {
 input {
   font-size: 1.2em;
 }
-input[type=submit], button {
-  font-size: 1.0em;
+input[type='submit'],
+button {
+  font-size: 1em;
 }
 h1 {
   font-size: 2em;
@@ -66,7 +77,10 @@ h1 {
 h2 {
   font-size: 1.6em;
 }
-h3, h4, h5, h6 {
+h3,
+h4,
+h5,
+h6 {
   font-size: 1.2em;
 }
 
@@ -74,7 +88,8 @@ a {
   cursor: pointer;
 }
 
-input[type=text], input[type=number] {
+input[type='text'],
+input[type='number'] {
   padding: 0.5em;
   border: 1px solid var(--color-input-border);
 }
@@ -85,19 +100,25 @@ textarea {
   border: 1px solid var(--color-input-border);
 }
 
-label { 
+label {
   font-family: var(--sans-serif-font);
   font-weight: bold;
 }
 
-input[type=text], input[type=number], textarea {
-  opacity: 0.6
+input[type='text'],
+input[type='number'],
+textarea {
+  opacity: 0.6;
 }
-input[type=text]:hover, input[type=number]:hover, textarea:hover {
-  opacity: 0.8
+input[type='text']:hover,
+input[type='number']:hover,
+textarea:hover {
+  opacity: 0.8;
 }
-input[type=text]:active, input[type=number]:active, textarea:active {
-  opacity: 1.0
+input[type='text']:active,
+input[type='number']:active,
+textarea:active {
+  opacity: 1;
 }
 
 a {
@@ -110,7 +131,7 @@ a:hover {
   opacity: 0.8;
 }
 a:active {
-  opacity: 1.0;
+  opacity: 1;
 }
 
 button {
@@ -128,7 +149,7 @@ button:hover {
   opacity: 0.8;
 }
 button:active {
-  opacity: 1.0;
+  opacity: 1;
 }
 
 pre {
@@ -188,7 +209,7 @@ svg .center-line {
 }
 
 svg .obstacle {
-  opacity: 0.5
+  opacity: 0.5;
 }
 
 svg .obstacle line {
@@ -196,8 +217,7 @@ svg .obstacle line {
 }
 
 svg .obstacle circle,
-svg .obstacle text
-{
+svg .obstacle text {
   fill: var(--color-text);
 }
 
@@ -210,9 +230,8 @@ svg .obstacle text
   display: block;
 }
 
-.form-control input[type=text],
-.form-control input[type=number]
-{
+.form-control input[type='text'],
+.form-control input[type='number'] {
   margin-bottom: 0.5em;
 }
 
@@ -227,11 +246,10 @@ svg .obstacle text
 
 .form-control.exits-control h3 {
   margin-top: 0;
-} 
+}
 
 .characteristics .label,
-.skills .label
-{
+.skills .label {
   font-weight: bold;
 }
 

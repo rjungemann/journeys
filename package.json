@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "yarn parcel src/index.html",
     "build": "yarn parcel build src/index.html",
-    "cache:clear": "rm -rf .parcel-cache"
+    "cache:clear": "rm -rf .parcel-cache",
+    "prettier": "prettier src --write"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -22,6 +23,7 @@
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
     "parcel": "^2.12.0",
+    "prettier": "3.2.5",
     "process": "^0.11.10"
   }
 }

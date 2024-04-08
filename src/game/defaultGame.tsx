@@ -1,5 +1,5 @@
-import { Game, ITEM_CHECK_VARIANT_VERIFY } from "./data";
-import { randomColor } from "./utils";
+import { Game, ITEM_CHECK_VARIANT_VERIFY } from './data'
+import { randomColor } from './utils'
 
 export const defaultGame: Game = {
   ticks: 0,
@@ -13,7 +13,7 @@ export const defaultGame: Game = {
     intelligence: 'Intelligence',
     education: 'Education',
     socialStanding: 'Social Standing',
-    psionicStrength: 'Psionic Strength'
+    psionicStrength: 'Psionic Strength',
   },
   skillLabels: {
     groundVehicle: 'Ground Vehicle',
@@ -26,20 +26,16 @@ export const defaultGame: Game = {
     {
       name: 'quarters-a',
       title: 'Quarters A',
-      exits: [
-        { name: 'north', title: 'north', to: 'hallway' }
-      ],
+      exits: [{ name: 'north', title: 'north', to: 'hallway' }],
       entities: ['alard-tyney', 'terminal-1'],
-      tags: ['description:fix-1:success']
+      tags: ['description:fix-1:success'],
     },
     {
       name: 'quarters-b',
       title: 'Quarters B',
-      exits: [
-        { name: 'south', title: 'south', to: 'hallway' }
-      ],
+      exits: [{ name: 'south', title: 'south', to: 'hallway' }],
       entities: ['beth-raschke', 'nikos-rosek'],
-      tags: ['description:fix-1:success']
+      tags: ['description:fix-1:success'],
     },
     {
       name: 'hallway',
@@ -48,29 +44,25 @@ export const defaultGame: Game = {
         { name: 'north', title: 'north', to: 'quarters-b' },
         { name: 'south', title: 'south', to: 'quarters-a' },
         { name: 'east', title: 'east', to: 'bridge' },
-        { name: 'west', title: 'west', to: 'galley' }
+        { name: 'west', title: 'west', to: 'galley' },
       ],
       entities: [],
-      tags: []
+      tags: [],
     },
     {
       name: 'bridge',
       title: 'Bridge',
-      exits: [
-        { name: 'west', title: 'west', to: 'hallway' }
-      ],
+      exits: [{ name: 'west', title: 'west', to: 'hallway' }],
       entities: [],
-      tags: []
+      tags: [],
     },
     {
       name: 'galley',
       title: 'Galley',
-      exits: [
-        { name: 'east', title: 'east', to: 'hallway' }
-      ],
+      exits: [{ name: 'east', title: 'east', to: 'hallway' }],
       entities: ['kynon-morgan'],
-      tags: []
-    }
+      tags: [],
+    },
   ],
   partyRepresentativeName: 'alard-tyney',
   party: ['arlen-hyden', 'alice-hewitt'],
@@ -80,10 +72,7 @@ export const defaultGame: Game = {
       name: 'arlen-hyden',
       title: 'Arlen Hyden',
       color: randomColor(),
-      tags: [
-        'character',
-        'offensive'
-      ],
+      tags: ['character', 'offensive'],
       characteristics: {
         strength: 6,
         dexterity: 10,
@@ -91,25 +80,22 @@ export const defaultGame: Game = {
         intelligence: 8,
         education: 5,
         socialStanding: 7,
-        psionicStrength: 0
+        psionicStrength: 0,
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0
+        groundVehicle: 0,
       },
-      inventory: ['revolver-1']
+      inventory: ['revolver-1'],
     },
     {
       name: 'alice-hewitt',
       title: 'Alice Hewitt',
       color: randomColor(),
-      tags: [
-        'character',
-        'offensive'
-      ],
+      tags: ['character', 'offensive'],
       characteristics: {
         strength: 6,
         dexterity: 10,
@@ -117,27 +103,22 @@ export const defaultGame: Game = {
         intelligence: 8,
         education: 5,
         socialStanding: 7,
-        psionicStrength: 0
+        psionicStrength: 0,
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0
+        groundVehicle: 0,
       },
-      inventory: ['revolver-2']
+      inventory: ['revolver-2'],
     },
     {
       name: 'beth-raschke',
       title: 'Beth Raschke',
       color: randomColor(),
-      tags: [
-        'character',
-        'ally:nikos-rosek',
-        'hostile',
-        'offensive'
-      ],
+      tags: ['character', 'ally:nikos-rosek', 'hostile', 'offensive'],
       characteristics: {
         strength: 6,
         dexterity: 10,
@@ -145,27 +126,22 @@ export const defaultGame: Game = {
         intelligence: 8,
         education: 5,
         socialStanding: 7,
-        psionicStrength: 0
+        psionicStrength: 0,
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0
+        groundVehicle: 0,
       },
-      inventory: ['revolver-3']
+      inventory: ['revolver-3'],
     },
     {
       name: 'nikos-rosek',
       title: 'Nikos Rosek',
       color: randomColor(),
-      tags: [
-        'character',
-        'ally:beth-raschke',
-        'hostile',
-        'offensive'
-      ],
+      tags: ['character', 'ally:beth-raschke', 'hostile', 'offensive'],
       characteristics: {
         strength: 6,
         dexterity: 10,
@@ -173,16 +149,16 @@ export const defaultGame: Game = {
         intelligence: 8,
         education: 5,
         socialStanding: 7,
-        psionicStrength: 0
+        psionicStrength: 0,
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0
+        groundVehicle: 0,
       },
-      inventory: ['revolver-4']
+      inventory: ['revolver-4'],
     },
     {
       name: 'alard-tyney',
@@ -195,7 +171,7 @@ export const defaultGame: Game = {
         'skill-check:alard-2',
         'description:alard-1:success',
         'description:alard-1:failure',
-        'offensive'
+        'offensive',
       ],
       characteristics: {
         strength: 6,
@@ -204,16 +180,16 @@ export const defaultGame: Game = {
         intelligence: 8,
         education: 5,
         socialStanding: 7,
-        psionicStrength: 0
+        psionicStrength: 0,
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0
+        groundVehicle: 0,
       },
-      inventory: ['revolver-5']
+      inventory: ['revolver-5'],
     },
     {
       name: 'kynon-morgan',
@@ -223,7 +199,7 @@ export const defaultGame: Game = {
         'character',
         'wandering',
         'choice:birds-1',
-        'item-check:has-revolver-1'
+        'item-check:has-revolver-1',
       ],
       characteristics: {
         strength: 10,
@@ -232,16 +208,16 @@ export const defaultGame: Game = {
         intelligence: 7,
         education: 9,
         socialStanding: 8,
-        psionicStrength: 0
+        psionicStrength: 0,
       },
       skills: {
         mechanics: 0,
         gunCombat: 0,
         slugPistol: 1,
         vehicle: 0,
-        groundVehicle: 0
+        groundVehicle: 0,
       },
-      inventory: ['knife-1']
+      inventory: ['knife-1'],
     },
     {
       name: 'terminal-1',
@@ -251,9 +227,9 @@ export const defaultGame: Game = {
       tags: [
         'skill-check:fix-1',
         'description:fix-1:success',
-        'description:fix-1:failure'
-      ]
-    }
+        'description:fix-1:failure',
+      ],
+    },
   ],
   items: [
     {
@@ -310,16 +286,16 @@ export const defaultGame: Game = {
       rounds: null,
       tags: ['melee'],
       damage: '1d6',
-      isEquipped: true
-    }
+      isEquipped: true,
+    },
   ],
   dialogues: [
     {
       name: 'alard-1',
       conditionTag: null,
       topic: `what's on my mind`,
-      messages: ['One...', 'Two...', 'Three...']
-    }
+      messages: ['One...', 'Two...', 'Three...'],
+    },
   ],
   skillCheckName: null,
   skillChecks: [
@@ -331,7 +307,7 @@ export const defaultGame: Game = {
       skill: 'mechanics',
       dice: '2d6',
       tn: 8,
-      result: null
+      result: null,
     },
     {
       name: 'alard-1',
@@ -341,7 +317,7 @@ export const defaultGame: Game = {
       skill: 'mechanics',
       dice: '2d6',
       tn: 8,
-      result: null
+      result: null,
     },
     {
       name: 'alard-2',
@@ -351,8 +327,8 @@ export const defaultGame: Game = {
       skill: 'mechanics',
       dice: '2d6',
       tn: 6,
-      result: null
-    }
+      result: null,
+    },
   ],
   itemCheckName: null,
   itemChecks: [
@@ -362,16 +338,13 @@ export const defaultGame: Game = {
       title: 'Do you have the gun?',
       message: 'Looks like you have it.',
       variant: { type: ITEM_CHECK_VARIANT_VERIFY },
-      itemName: 'revolver-5'
-    }
+      itemName: 'revolver-5',
+    },
   ],
   partyCheckName: null,
-  partyChecks: [
-
-  ],
+  partyChecks: [],
   battleCheckName: null,
-  battleChecks: [
-  ],
+  battleChecks: [],
   choiceName: null,
   choices: [
     {
@@ -382,47 +355,47 @@ export const defaultGame: Game = {
       options: [
         {
           name: 'birds-1:yes',
-          message: 'Yes'
+          message: 'Yes',
         },
         {
           name: 'birds-1:no',
-          message: 'No'
-        }
-      ]
-    }
+          message: 'No',
+        },
+      ],
+    },
   ],
   descriptions: [
     {
       name: 'birds-1:yes',
       conditionTag: 'birds-1:yes',
-      message: 'That is cool that you like birds.'
+      message: 'That is cool that you like birds.',
     },
     {
       name: 'birds-1:no',
       conditionTag: 'birds-1:no',
-      message: 'How can you not like birds?'
+      message: 'How can you not like birds?',
     },
     {
       name: 'alard-1:success',
       conditionTag: 'skill-check:alard-1:success',
-      message: 'Alard seems grateful for the help.'
+      message: 'Alard seems grateful for the help.',
     },
     {
       name: 'alard-1:failure',
       conditionTag: 'skill-check:alard-1:failure',
-      message: 'Alard still seems upset about earlier.'
+      message: 'Alard still seems upset about earlier.',
     },
     {
       name: 'fix-1:success',
       conditionTag: 'skill-check:fix-1:success',
-      message: 'Everyone appreciates the terminal being fixed.'
+      message: 'Everyone appreciates the terminal being fixed.',
     },
     {
       name: 'fix-1:failure',
       conditionTag: 'skill-check:fix-1:failure',
-      message: 'Nobody expected you to be able to fix the terminal.'
-    }
+      message: 'Nobody expected you to be able to fix the terminal.',
+    },
   ],
   fieldName: null,
-  fields: []
+  fields: [],
 }

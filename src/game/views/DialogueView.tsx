@@ -1,7 +1,7 @@
-import { addTag, changeScene, removeTag } from "../actions"
-import { useGame } from "../context"
-import { findDialogue, findEntity, tagExitsGlobally } from "../helpers"
-import { matchTags } from "../utils"
+import { addTag, changeScene, removeTag } from '../actions'
+import { useGame } from '../context'
+import { findDialogue, findEntity, tagExitsGlobally } from '../helpers'
+import { matchTags } from '../utils'
 
 export const NoDialogueView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()

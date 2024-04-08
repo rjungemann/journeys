@@ -1,14 +1,14 @@
-import { DialogueView } from "./DialogueView"
-import { InspectorView } from "./InspectorView"
-import { RoomView } from "./RoomView"
-import { SkillCheckView } from "./SkillCheckView"
-import { useGame, useTheme } from "../context"
-import { ChoiceView } from "./ChoiceView"
-import { ItemCheckView } from "./ItemCheckView"
-import { useActsDuringCombat, useWanderingBehaviors } from "../behaviors"
-import { CombatView } from "./CombatView"
-import { HeadView } from "./HeadView"
-import { GameOverView } from "./GameOverView"
+import { DialogueView } from './DialogueView'
+import { InspectorView } from './InspectorView'
+import { RoomView } from './RoomView'
+import { SkillCheckView } from './SkillCheckView'
+import { useGame, useTheme } from '../context'
+import { ChoiceView } from './ChoiceView'
+import { ItemCheckView } from './ItemCheckView'
+import { useActsDuringCombat, useWanderingBehaviors } from '../behaviors'
+import { CombatView } from './CombatView'
+import { HeadView } from './HeadView'
+import { GameOverView } from './GameOverView'
 
 export const GameView = () => {
   const { state } = useGame()

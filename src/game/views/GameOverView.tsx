@@ -1,5 +1,5 @@
-import { resetState } from "../actions"
-import { useGame } from "../context"
+import { resetState } from '../actions'
+import { useGame } from '../context'
 
 export const GameOverView = () => {
   const { state, dispatch } = useGame()

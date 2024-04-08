@@ -1,11 +1,12 @@
-import { Game, Room } from "./data"
+import { Game, Room } from './data'
 
 export const RESET_STATE = 'RESET_STATE'
 export const CHANGE_STATE = 'CHANGE_STATE'
 export const SHOW_INSPECTOR = 'SHOW_INSPECTOR'
 export const CHANGE_TICKS = 'CHANGE_TICKS'
 export const CHANGE_SCENE = 'CHANGE_SCENE'
-export const CHANGE_PARTY_REPRESENTATIVE_NAME = 'CHANGE_PARTY_REPRESENTATIVE_NAME'
+export const CHANGE_PARTY_REPRESENTATIVE_NAME =
+  'CHANGE_PARTY_REPRESENTATIVE_NAME'
 export const CHANGE_ROOM = 'CHANGE_ROOM'
 export const CHANGE_ENTITY = 'CHANGE_ENTITY'
 export const CHANGE_DIALOGUE = 'CHANGE_DIALOGUE'
@@ -119,15 +120,15 @@ export type MovePartyRoomAction = {
 }
 
 export type RemoveTagAction = {
-  type: 'REMOVE_TAG',
-  entityName: string,
-  tag: string,
+  type: 'REMOVE_TAG'
+  entityName: string
+  tag: string
 }
 
 export type AddTagAction = {
-  type: 'ADD_TAG',
-  entityName: string,
-  tag: string,
+  type: 'ADD_TAG'
+  entityName: string
+  tag: string
 }
 
 export type SkillCheckAction = {
@@ -187,7 +188,7 @@ export type IncrementFieldInitiativeAction = {
 }
 
 export type Action =
-  ResetStateAction
+  | ResetStateAction
   | ChangeStateAction
   | ShowInspectorAction
   | ChangeTicksAction
@@ -240,7 +241,9 @@ export const changeScene = (sceneName: string): ChangeSceneAction => ({
   sceneName,
 })
 
-export const changePartyRepresentativeName = (partyRepresentativeName: string): ChangePartyRepresentativeNameAction => ({
+export const changePartyRepresentativeName = (
+  partyRepresentativeName: string,
+): ChangePartyRepresentativeNameAction => ({
   type: CHANGE_PARTY_REPRESENTATIVE_NAME,
   partyRepresentativeName,
 })
@@ -265,12 +268,16 @@ export const changeChoice = (choiceName: string): ChangeChoiceAction => ({
   choiceName,
 })
 
-export const changeItemCheck = (itemCheckName: string): ChangeItemCheckAction => ({
+export const changeItemCheck = (
+  itemCheckName: string,
+): ChangeItemCheckAction => ({
   type: CHANGE_ITEM_CHECK,
   itemCheckName,
 })
 
-export const changeSkillCheck = (skillCheckName: string): ChangeSkillCheckAction => ({
+export const changeSkillCheck = (
+  skillCheckName: string,
+): ChangeSkillCheckAction => ({
   type: CHANGE_SKILL_CHECK,
   skillCheckName,
 })
@@ -280,14 +287,21 @@ export const changeField = (fieldName: string): ChangeFieldAction => ({
   fieldName,
 })
 
-export const moveEntityRoom = (from: string, to: string, entityName: string): MoveEntityRoomAction => ({
+export const moveEntityRoom = (
+  from: string,
+  to: string,
+  entityName: string,
+): MoveEntityRoomAction => ({
   type: MOVE_ENTITY_ROOM,
   from,
   to,
   entityName,
 })
 
-export const movePartyRoom = (from: string, to: string): MovePartyRoomAction => ({
+export const movePartyRoom = (
+  from: string,
+  to: string,
+): MovePartyRoomAction => ({
   type: MOVE_PARTY_ROOM,
   from,
   to,
@@ -299,13 +313,25 @@ export const addTag = (entityName: string, tag: string): AddTagAction => ({
   tag,
 })
 
-export const removeTag = (entityName: string, tag: string): RemoveTagAction => ({
+export const removeTag = (
+  entityName: string,
+  tag: string,
+): RemoveTagAction => ({
   type: REMOVE_TAG,
   entityName,
   tag,
 })
 
-export const skillCheck = (name: string, subjectName: string, objectName: string, skillCheckName: string, characteristicName: string, skillName: string, dice: string, tn: number): SkillCheckAction => ({
+export const skillCheck = (
+  name: string,
+  subjectName: string,
+  objectName: string,
+  skillCheckName: string,
+  characteristicName: string,
+  skillName: string,
+  dice: string,
+  tn: number,
+): SkillCheckAction => ({
   type: SKILL_CHECK,
   name,
   subjectName,
@@ -317,7 +343,10 @@ export const skillCheck = (name: string, subjectName: string, objectName: string
   tn,
 })
 
-export const itemCheck = (subjectName: string, itemCheckName: string): ItemCheckAction => ({
+export const itemCheck = (
+  subjectName: string,
+  itemCheckName: string,
+): ItemCheckAction => ({
   type: ITEM_CHECK,
   subjectName,
   itemCheckName,
@@ -328,10 +357,13 @@ export const partyCheck = (partyCheckName: string): PartyCheckAction => ({
   partyCheckName,
 })
 
-export const battleCheck = (battleCheckName: string, fieldName: string): BattleCheckAction => ({
+export const battleCheck = (
+  battleCheckName: string,
+  fieldName: string,
+): BattleCheckAction => ({
   type: BATTLE_CHECK,
   battleCheckName,
-  fieldName
+  fieldName,
 })
 
 export const createRoom = (room: Room): CreateRoomAction => ({
@@ -339,24 +371,34 @@ export const createRoom = (room: Room): CreateRoomAction => ({
   room,
 })
 
-export const createField = (fieldName: string, sides: string[][]): CreateFieldAction => ({
+export const createField = (
+  fieldName: string,
+  sides: string[][],
+): CreateFieldAction => ({
   type: CREATE_FIELD,
   fieldName,
   sides,
 })
 
-export const fieldRandomlyMoveAll = (fieldName: string): FieldRandomlyMoveAllAction => ({
+export const fieldRandomlyMoveAll = (
+  fieldName: string,
+): FieldRandomlyMoveAllAction => ({
   type: FIELD_RANDOMLY_MOVE_ALL,
   fieldName,
 })
 
-export const fieldCombatComplete = (fieldName: string, isPartySuccess: boolean): FieldCombatCompleteAction => ({
+export const fieldCombatComplete = (
+  fieldName: string,
+  isPartySuccess: boolean,
+): FieldCombatCompleteAction => ({
   type: FIELD_COMBAT_COMPLETE,
   fieldName,
   isPartySuccess,
 })
 
-export const incrementFieldInitiative = (fieldName: string): IncrementFieldInitiativeAction => ({
+export const incrementFieldInitiative = (
+  fieldName: string,
+): IncrementFieldInitiativeAction => ({
   type: INCREMENT_FIELD_INITIATIVE,
   fieldName,
 })

@@ -1,83 +1,90 @@
-import { changeChoice, changeDialogue, changeEntity, changeItemCheck, changeScene, changeSkillCheck } from "../actions"
-import { useGame } from "../context"
-import { findEntity, findItem, tagExitsGlobally } from "../helpers"
-import { commaSeparateComponents } from "../utils"
+import {
+  changeChoice,
+  changeDialogue,
+  changeEntity,
+  changeItemCheck,
+  changeScene,
+  changeSkillCheck,
+} from '../actions'
+import { useGame } from '../context'
+import { findEntity, findItem, tagExitsGlobally } from '../helpers'
+import { commaSeparateComponents } from '../utils'
 
-export const EntityDescriptionView = ({ entityName }: { entityName: string }) => {
+export const EntityDescriptionView = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state } = useGame()
   const entity = findEntity(state)(entityName)
   const descriptions = entity.tags.reduce((sum, tag) => {
     const [_, name] = tag.match(/^description:(.*)$/) || []
-    return !name ? sum : [...sum, ...state.descriptions.filter((d) => d.name === name)]
+    return !name
+      ? sum
+      : [...sum, ...state.descriptions.filter((d) => d.name === name)]
   }, [])
-  return (
-    descriptions.map((description) => {
-      if (description.conditionTag) {
-        const hasTag = tagExitsGlobally(state)(description.conditionTag)
-        return hasTag ? <p key={description.name}>{description.message}</p> : null
-      } else {
-        return <p key={description.name}>{description.message}</p>
-      }
-    })
-  )
+  return descriptions.map((description) => {
+    if (description.conditionTag) {
+      const hasTag = tagExitsGlobally(state)(description.conditionTag)
+      return hasTag ? <p key={description.name}>{description.message}</p> : null
+    } else {
+      return <p key={description.name}>{description.message}</p>
+    }
+  })
 }
 
 export const EntityDialogueView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
   const entity = findEntity(state)(entityName)
-  const dialogueNames = entity.tags.reduce(
-    (sum, tag) => {
-      const match = tag.match(/^dialogue:([^:]+):(\d+)$/)
-      const name = match?.[1]
-      return name ? [...sum, name] : sum
-    },
-    []
+  const dialogueNames = entity.tags.reduce((sum, tag) => {
+    const match = tag.match(/^dialogue:([^:]+):(\d+)$/)
+    const name = match?.[1]
+    return name ? [...sum, name] : sum
+  }, [])
+  const dialogues = dialogueNames.map(
+    (name) => state.dialogues.filter((d) => d.name === name)[0]!,
   )
-  const dialogues = dialogueNames.map((name) => state.dialogues.filter((d) => d.name === name)[0]!)
   const handleNextFn = (dialogue) => (event) => {
     dispatch(changeEntity(entityName))
     dispatch(changeDialogue(dialogue.name))
     dispatch(changeScene('dialogue'))
   }
-  return (
-    dialogues.length > 0
-    ? (
-      <p>
-        Would you like to talk about
-        {' '}
-        {
-          commaSeparateComponents(
-            dialogues.map((dialogue) => (
-              <a key={dialogue.name} onClick={handleNextFn(dialogue)}>{dialogue.topic}</a>
-            )),
-            'or'
-          )
-        }?
-      </p>
-    )
-    : null
-  )
+  return dialogues.length > 0 ? (
+    <p>
+      Would you like to talk about{' '}
+      {commaSeparateComponents(
+        dialogues.map((dialogue) => (
+          <a key={dialogue.name} onClick={handleNextFn(dialogue)}>
+            {dialogue.topic}
+          </a>
+        )),
+        'or',
+      )}
+      ?
+    </p>
+  ) : null
 }
 
-export const EntityChoiceListView = ({ entityName }: { entityName: string }) => {
+export const EntityChoiceListView = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state, dispatch } = useGame()
   const object = findEntity(state)(entityName)
-  const choices = object.tags.reduce(
-    (sum, tag) => {
-      const [_, name] = tag.match(/^choice:([^:]+)$/) || []
-      if (!name) {
-        return sum
-      }
-      const choice = state.choices.filter((c) => c.name === name)[0]!
-      if (choice.conditionTag) {
-        const hasTag = tagExitsGlobally(state)(choice.conditionTag)
-        return hasTag ? [...sum, choice] : sum
-      } else {
-        return [...sum, choice]
-      }
-    },
-    []
-  )
+  const choices = object.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^choice:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const choice = state.choices.filter((c) => c.name === name)[0]!
+    if (choice.conditionTag) {
+      const hasTag = tagExitsGlobally(state)(choice.conditionTag)
+      return hasTag ? [...sum, choice] : sum
+    } else {
+      return [...sum, choice]
+    }
+  }, [])
   const handleNextFn = (name) => (event) => {
     dispatch(changeEntity(entityName))
     dispatch(changeChoice(name))
@@ -85,37 +92,36 @@ export const EntityChoiceListView = ({ entityName }: { entityName: string }) => 
   }
   return (
     <p>
-      {
-        commaSeparateComponents(
-          choices.map((choice) => {
-            return <a onClick={handleNextFn(choice.name)}>{choice.title}</a>
-          }),
-          'or'
-        )
-      }
+      {commaSeparateComponents(
+        choices.map((choice) => {
+          return <a onClick={handleNextFn(choice.name)}>{choice.title}</a>
+        }),
+        'or',
+      )}
     </p>
   )
 }
 
-export const EntityItemCheckListView = ({ entityName }: { entityName: string }) => {
+export const EntityItemCheckListView = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state, dispatch } = useGame()
   const object = findEntity(state)(entityName)
-  const itemChecks = object.tags.reduce(
-    (sum, tag) => {
-      const [_, name] = tag.match(/^item-check:([^:]+)$/) || []
-      if (!name) {
-        return sum
-      }
-      const itemCheck = state.itemChecks.filter((c) => c.name === name)[0]!
-      if (itemCheck.conditionTag) {
-        const hasTag = tagExitsGlobally(state)(itemCheck.conditionTag)
-        return hasTag ? [...sum, itemCheck] : sum
-      } else {
-        return [...sum, itemCheck]
-      }
-    },
-    []
-  )
+  const itemChecks = object.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^item-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const itemCheck = state.itemChecks.filter((c) => c.name === name)[0]!
+    if (itemCheck.conditionTag) {
+      const hasTag = tagExitsGlobally(state)(itemCheck.conditionTag)
+      return hasTag ? [...sum, itemCheck] : sum
+    } else {
+      return [...sum, itemCheck]
+    }
+  }, [])
   const handleNextFn = (name) => (event) => {
     dispatch(changeEntity(entityName))
     dispatch(changeItemCheck(name))
@@ -123,37 +129,36 @@ export const EntityItemCheckListView = ({ entityName }: { entityName: string }) 
   }
   return (
     <p>
-      {
-        commaSeparateComponents(
-          itemChecks.map((itemCheck) => (
-            <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
-          )),
-          'or'
-        )
-      }
+      {commaSeparateComponents(
+        itemChecks.map((itemCheck) => (
+          <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+        )),
+        'or',
+      )}
     </p>
   )
 }
 
-export const EntityPartyCheckListView = ({ entityName }: { entityName: string }) => {
+export const EntityPartyCheckListView = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state, dispatch } = useGame()
   const object = findEntity(state)(entityName)
-  const partyChecks = object.tags.reduce(
-    (sum, tag) => {
-      const [_, name] = tag.match(/^party-check:([^:]+)$/) || []
-      if (!name) {
-        return sum
-      }
-      const partyCheck = state.partyChecks.filter((c) => c.name === name)[0]!
-      if (partyCheck.conditionTag) {
-        const hasTag = tagExitsGlobally(state)(partyCheck.conditionTag)
-        return hasTag ? [...sum, partyCheck] : sum
-      } else {
-        return [...sum, partyCheck]
-      }
-    },
-    []
-  )
+  const partyChecks = object.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^party-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const partyCheck = state.partyChecks.filter((c) => c.name === name)[0]!
+    if (partyCheck.conditionTag) {
+      const hasTag = tagExitsGlobally(state)(partyCheck.conditionTag)
+      return hasTag ? [...sum, partyCheck] : sum
+    } else {
+      return [...sum, partyCheck]
+    }
+  }, [])
   const handleNextFn = (name) => (event) => {
     dispatch(changeEntity(entityName))
     dispatch(changeItemCheck(name))
@@ -161,37 +166,36 @@ export const EntityPartyCheckListView = ({ entityName }: { entityName: string })
   }
   return (
     <p>
-      {
-        commaSeparateComponents(
-          partyChecks.map((itemCheck) => (
-            <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
-          )),
-          'or'
-        )
-      }
+      {commaSeparateComponents(
+        partyChecks.map((itemCheck) => (
+          <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+        )),
+        'or',
+      )}
     </p>
   )
 }
 
-export const EntityBattleCheckListView = ({ entityName }: { entityName: string }) => {
+export const EntityBattleCheckListView = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state, dispatch } = useGame()
   const object = findEntity(state)(entityName)
-  const battleChecks = object.tags.reduce(
-    (sum, tag) => {
-      const [_, name] = tag.match(/^battle-check:([^:]+)$/) || []
-      if (!name) {
-        return sum
-      }
-      const battleCheck = state.partyChecks.filter((c) => c.name === name)[0]!
-      if (battleCheck.conditionTag) {
-        const hasTag = tagExitsGlobally(state)(battleCheck.conditionTag)
-        return hasTag ? [...sum, battleCheck] : sum
-      } else {
-        return [...sum, battleCheck]
-      }
-    },
-    []
-  )
+  const battleChecks = object.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^battle-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const battleCheck = state.partyChecks.filter((c) => c.name === name)[0]!
+    if (battleCheck.conditionTag) {
+      const hasTag = tagExitsGlobally(state)(battleCheck.conditionTag)
+      return hasTag ? [...sum, battleCheck] : sum
+    } else {
+      return [...sum, battleCheck]
+    }
+  }, [])
   const handleNextFn = (name) => (event) => {
     dispatch(changeEntity(entityName))
     dispatch(changeItemCheck(name))
@@ -199,37 +203,36 @@ export const EntityBattleCheckListView = ({ entityName }: { entityName: string }
   }
   return (
     <p>
-      {
-        commaSeparateComponents(
-          battleChecks.map((itemCheck) => (
-            <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
-          )),
-          'or'
-        )
-      }
+      {commaSeparateComponents(
+        battleChecks.map((itemCheck) => (
+          <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
+        )),
+        'or',
+      )}
     </p>
   )
 }
 
-export const EntitySkillCheckListView = ({ entityName }: { entityName: string }) => {
+export const EntitySkillCheckListView = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state, dispatch } = useGame()
   const object = findEntity(state)(entityName)
-  const data = object.tags.reduce(
-    (sum, tag) => {
-      const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
-      if (!name) {
-        return sum
-      }
-      const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
-      if (skillCheck.conditionTag) {
-        const hasTag = tagExitsGlobally(state)(skillCheck.conditionTag)
-        return hasTag ? [...sum, { name, title: skillCheck.title }] : sum
-      } else {
-        return [...sum, { name, title: skillCheck.title }]
-      }
-    },
-    []
-  )
+  const data = object.tags.reduce((sum, tag) => {
+    const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
+    if (skillCheck.conditionTag) {
+      const hasTag = tagExitsGlobally(state)(skillCheck.conditionTag)
+      return hasTag ? [...sum, { name, title: skillCheck.title }] : sum
+    } else {
+      return [...sum, { name, title: skillCheck.title }]
+    }
+  }, [])
   const handleNextFn = (name) => (event) => {
     dispatch(changeEntity(entityName))
     dispatch(changeSkillCheck(name))
@@ -237,47 +240,44 @@ export const EntitySkillCheckListView = ({ entityName }: { entityName: string })
   }
   return (
     <p>
-      {
-        commaSeparateComponents(
-          data.map(({ name, title }) => (
-            <a onClick={handleNextFn(name)}>{title}</a>
-          )),
-          'or'
-        )
-      }
+      {commaSeparateComponents(
+        data.map(({ name, title }) => (
+          <a onClick={handleNextFn(name)}>{title}</a>
+        )),
+        'or',
+      )}
     </p>
   )
 }
 
-export const EntityCharacteristics = ({ entityName }: { entityName: string }) => {
+export const EntityCharacteristics = ({
+  entityName,
+}: {
+  entityName: string
+}) => {
   const { state } = useGame()
   const entity = findEntity(state)(entityName)
-  const characteristicData = Object.keys(entity.characteristics || {}).map((name) => {
-    const label = state.characteristicLabels[name]
-    const value = entity.characteristics[name]
-    const bonus = Math.max(value - 7, -2)
-    return { name, label, value, bonus }
-  })
-  return (
-    characteristicData.length > 0
-    ? (
-      <div>
-        <h4>Characteristics</h4>
-        {
-          characteristicData.map(({ name, label, value, bonus }) => (
-            <div key={name}>
-              <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>{label}</span>
-              {' '}
-              {value}
-              {' '}
-              {`(${bonus})`}
-            </div>
-          ))
-        }
-      </div>
-    )
-    : null
+  const characteristicData = Object.keys(entity.characteristics || {}).map(
+    (name) => {
+      const label = state.characteristicLabels[name]
+      const value = entity.characteristics[name]
+      const bonus = Math.max(value - 7, -2)
+      return { name, label, value, bonus }
+    },
   )
+  return characteristicData.length > 0 ? (
+    <div>
+      <h4>Characteristics</h4>
+      {characteristicData.map(({ name, label, value, bonus }) => (
+        <div key={name}>
+          <span style={{ fontWeight: 'bold', marginRight: '0.5em' }}>
+            {label}
+          </span>{' '}
+          {value} {`(${bonus})`}
+        </div>
+      ))}
+    </div>
+  ) : null
 }
 
 export const EntitySkills = ({ entityName }: { entityName: string }) => {
@@ -288,56 +288,47 @@ export const EntitySkills = ({ entityName }: { entityName: string }) => {
     const value = entity.skills[name]
     return { name, label, value }
   })
-  return (
-    skillData.length > 0
-    ? (
-      <div>
-        <h4>Skills</h4>
-        {
-          skillData.map(({ name, label, value}) => (
-            <div key={name}>
-              <span style={{ fontWeight: 'bold', marginRight: '0.7em' }}>{label}</span>
-              {' '}
-              {value}
-            </div>
-          ))
-        }
-      </div>
-    )
-    : null
-  )
+  return skillData.length > 0 ? (
+    <div>
+      <h4>Skills</h4>
+      {skillData.map(({ name, label, value }) => (
+        <div key={name}>
+          <span style={{ fontWeight: 'bold', marginRight: '0.7em' }}>
+            {label}
+          </span>{' '}
+          {value}
+        </div>
+      ))}
+    </div>
+  ) : null
 }
 
 export const EntityInventory = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
   const entity = findEntity(state)(entityName)
   const inventory = entity.inventory.map((name) => findItem(state)(name))
-  return (
-    inventory.length > 0
-    ? (
-      <div>
-        <h4>Inventory</h4>
-        {
-          inventory.map((item) => (
-            <div key={item.name}>
-              <span style={{ marginRight: '0.7em' }}>{item.title}</span>
-            </div>
-          ))
-        }
-      </div>
-    )
-    : null
-  )
+  return inventory.length > 0 ? (
+    <div>
+      <h4>Inventory</h4>
+      {inventory.map((item) => (
+        <div key={item.name}>
+          <span style={{ marginRight: '0.7em' }}>{item.title}</span>
+        </div>
+      ))}
+    </div>
+  ) : null
 }
 
 export const EntityStats = ({ entityName }: { entityName: string }) => {
   const { state } = useGame()
   const entity = findEntity(state)(entityName)
-  const characteristicData = Object.keys(entity.characteristics || {}).map((name) => {
-    const label = state.characteristicLabels[name]
-    const value = entity.characteristics[name]
-    return { name, label, value }
-  })
+  const characteristicData = Object.keys(entity.characteristics || {}).map(
+    (name) => {
+      const label = state.characteristicLabels[name]
+      const value = entity.characteristics[name]
+      return { name, label, value }
+    },
+  )
   const skillData = Object.keys(entity.skills || {}).map((name) => {
     const label = state.skillLabels[name]
     const value = entity.skills[name]
@@ -345,17 +336,13 @@ export const EntityStats = ({ entityName }: { entityName: string }) => {
   })
   return (
     <>
-      {
-        characteristicData.length > 0 || skillData.length > 0
-        ? (
-          <div className="entity-stats">
-            <EntityCharacteristics entityName={entityName} />
-            <EntitySkills entityName={entityName} />
-            <EntityInventory entityName={entityName} />
-          </div>
-        )
-        : null
-      }
+      {characteristicData.length > 0 || skillData.length > 0 ? (
+        <div className="entity-stats">
+          <EntityCharacteristics entityName={entityName} />
+          <EntitySkills entityName={entityName} />
+          <EntityInventory entityName={entityName} />
+        </div>
+      ) : null}
     </>
   )
 }

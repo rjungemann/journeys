@@ -1,6 +1,8 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react'
 
-export const dice = (input: string): { rolls: number[], sum: number, sides: number } => {
+export const dice = (
+  input: string,
+): { rolls: number[]; sum: number; sides: number } => {
   const match = input.match(/^(\d+)\s*?d(\d+)([+-]\d+)?$/)
   const count = parseInt(match[1] || '0', 10)
   const sides = parseInt(match[2] || '0', 10)
@@ -24,14 +26,27 @@ export const commaSeparateStrings = (words: string[], word: string = 'and') => {
   return `${head.join(', ')}, ${word} ${last}`
 }
 
-export const commaSeparateComponents = (components: ReactNode[], word: string = 'and') => {
+export const commaSeparateComponents = (
+  components: ReactNode[],
+  word: string = 'and',
+) => {
   if (components.length < 2) return components[0]
-  if (components.length === 2) return <>{components[0]} and {components[1]}</>
+  if (components.length === 2)
+    return (
+      <>
+        {components[0]} and {components[1]}
+      </>
+    )
   const head = components.slice(0, -1)
   const last = components[components.length - 1]
   return (
     <>
-      {head.map((component, i) => <span key={i}>{component}{', '}</span>)}
+      {head.map((component, i) => (
+        <span key={i}>
+          {component}
+          {', '}
+        </span>
+      ))}
       {`${word} `}
       {last}
     </>
@@ -39,7 +54,10 @@ export const commaSeparateComponents = (components: ReactNode[], word: string = 
 }
 
 export const capitalize = (words: string) => {
-  return words.split(/\s+/).map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ')
+  return words
+    .split(/\s+/)
+    .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+    .join(' ')
 }
 
 export const matchTags = (tags: string[], regexp: RegExp): string[] => {

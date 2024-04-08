@@ -1,7 +1,7 @@
-import { addTag, changeScene, removeTag } from "../actions"
-import { useGame } from "../context"
-import { findChoice, findEntity, tagExitsGlobally } from "../helpers"
-import { matchTags } from "../utils"
+import { addTag, changeScene, removeTag } from '../actions'
+import { useGame } from '../context'
+import { findChoice, findEntity, tagExitsGlobally } from '../helpers'
+import { matchTags } from '../utils'
 
 export const NoChoiceView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
