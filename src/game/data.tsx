@@ -17,7 +17,7 @@ export type Option = z.infer<typeof OptionSchema>
 export const ChoiceSchema = z.object({
   name: z.string(),
   title: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   stringKey: z.string(),
   options: OptionSchema.array(),
 })
@@ -26,7 +26,7 @@ export type Choice = z.infer<typeof ChoiceSchema>
 
 export const DescriptionSchema = z.object({
   name: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   stringKey: z.string(),
 })
 
@@ -34,7 +34,7 @@ export type Description = z.infer<typeof DescriptionSchema>
 
 export const DialogueSchema = z.object({
   name: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   topic: z.string(),
   stringKeys: z.string().array(),
 })
@@ -113,7 +113,7 @@ export type SkillCheckResult = z.infer<typeof SkillCheckResultSchema>
 export const SkillCheckSchema = z.object({
   name: z.string(),
   title: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   stringKey: z.string(), // TODO: Use this
   characteristic: z.string(),
   skill: z.string(),
@@ -140,7 +140,7 @@ export type ItemCheckVariant = z.infer<typeof ItemCheckVariantSchema>
 
 export const ItemCheckSchema = z.object({
   name: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   title: z.string(),
   stringKey: z.string(),
   variant: ItemCheckVariantSchema,
@@ -159,7 +159,7 @@ export const PARTY_CHECK_VARIANT_ABSENT = 'PARTY_CHECK_VARIANT_ABSENT'
 
 export const PartyCheckSchema = z.object({
   name: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   title: z.string(),
   stringKey: z.string(),
   variant: z.enum([PARTY_CHECK_VARIANT_PRESENT, PARTY_CHECK_VARIANT_ABSENT]),
@@ -171,7 +171,7 @@ export type PartyCheck = z.infer<typeof PartyCheckSchema>
 
 export const BattleCheckSchema = z.object({
   name: z.string(),
-  conditionTag: z.nullable(z.string()),
+  conditionTag: z.string(),
   title: z.string(),
   stringKey: z.string(),
   entityNames: z.string().array(),

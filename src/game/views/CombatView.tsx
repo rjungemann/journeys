@@ -1,7 +1,6 @@
 import {
   BARRIER_OBSTACLE,
   COVER_OBSTACLE,
-  Field,
   FieldEntity,
   TEAMMATE,
 } from '../data'

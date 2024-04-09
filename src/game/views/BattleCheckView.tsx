@@ -1,10 +1,6 @@
-import { useEffect, useState } from 'react'
 import {
-  addTag,
   changeScene,
   removeTag,
-  itemCheck,
-  partyCheck,
   battleCheck,
   createField,
   changeField,
@@ -14,10 +10,10 @@ import { BattleCheck } from '../data'
 import {
   findBattleCheck,
   findEntity,
-  findPartyCheck,
-  tagExitsGlobally,
+  tagExistsGlobally,
 } from '../helpers'
 import { matchTags, smallUid } from '../utils'
+import { T } from './T'
 
 export const NoBattleCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
@@ -59,16 +55,14 @@ export const BattleCheckView = () => {
   const split = tag.split(':')
   const name = split[1]
   const bc = findBattleCheck(state)(name)
-  if (bc.conditionTag) {
-    const hasTag = tagExitsGlobally(state)(bc.conditionTag)
-    if (!hasTag) {
-      return <NoBattleCheckView entityName={entity.name} />
-    }
+  const hasTag = tagExistsGlobally(state)(bc.conditionTag)
+  if (!hasTag) {
+    return <NoBattleCheckView entityName={entity.name} />
   }
   return (
     <>
       <h2>Talking to {entity.title}</h2>
-      <p>{bc.message}</p>
+      <p><T path={bc.stringKey} /></p>
       <p>
         <a onClick={handleNext}>Continue</a>.
       </p>

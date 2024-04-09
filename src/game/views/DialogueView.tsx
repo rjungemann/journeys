@@ -1,6 +1,6 @@
 import { addTag, changeScene, removeTag } from '../actions'
 import { useGame } from '../context'
-import { findDialogue, findEntity, tagExitsGlobally } from '../helpers'
+import { findDialogue, findEntity, tagExistsGlobally } from '../helpers'
 import { matchTags } from '../utils'
 import { useT } from './T'
 
@@ -31,11 +31,9 @@ export const DialogueView = () => {
   const split = tag.split(':')
   const [name, index] = [split[1], parseInt(split[2], 10)]
   const dialogue = findDialogue(state)(name)
-  if (dialogue.conditionTag) {
-    const hasTag = tagExitsGlobally(state)(dialogue.conditionTag)
-    if (!hasTag) {
-      return <NoDialogueView entityName={state.entityName} />
-    }
+  const hasTag = tagExistsGlobally(state)(dialogue.conditionTag)
+  if (!hasTag) {
+    return <NoDialogueView entityName={state.entityName} />
   }
 
   const message = t(dialogue.stringKeys[index]!)

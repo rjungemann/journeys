@@ -1,7 +1,8 @@
 import { addTag, changeScene, removeTag, itemCheck } from '../actions'
 import { useGame } from '../context'
-import { findEntity, findItemCheck, tagExitsGlobally } from '../helpers'
+import { findEntity, findItemCheck, tagExistsGlobally } from '../helpers'
 import { matchTags } from '../utils'
+import { T } from './T'
 
 export const NoItemCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
@@ -29,11 +30,9 @@ export const ItemCheckView = () => {
   const split = tag.split(':')
   const name = split[1]
   const ic = findItemCheck(state)(name)
-  if (ic.conditionTag) {
-    const hasTag = tagExitsGlobally(state)(ic.conditionTag)
-    if (!hasTag) {
-      return <NoItemCheckView entityName={entity.name} />
-    }
+  const hasTag = tagExistsGlobally(state)(ic.conditionTag)
+  if (!hasTag) {
+    return <NoItemCheckView entityName={entity.name} />
   }
 
   const handleNext = () => {
@@ -46,7 +45,7 @@ export const ItemCheckView = () => {
   return (
     <>
       <h2>Talking to {entity.title}</h2>
-      <p>{ic.message}</p>
+      <p><T path={ic.stringKey} /></p>
       <p>
         <a onClick={handleNext}>Continue</a>.
       </p>

@@ -2,12 +2,12 @@ import {
   addTag,
   changeScene,
   removeTag,
-  itemCheck,
   partyCheck,
 } from '../actions'
 import { useGame } from '../context'
-import { findEntity, findPartyCheck, tagExitsGlobally } from '../helpers'
+import { findEntity, findPartyCheck, tagExistsGlobally } from '../helpers'
 import { matchTags } from '../utils'
+import { T } from './T'
 
 export const NoPartyCheckView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
@@ -44,16 +44,14 @@ export const PartyCheckView = () => {
   const split = tag.split(':')
   const name = split[1]
   const pc = findPartyCheck(state)(name)
-  if (pc.conditionTag) {
-    const hasTag = tagExitsGlobally(state)(pc.conditionTag)
-    if (!hasTag) {
-      return <NoPartyCheckView entityName={entity.name} />
-    }
+  const hasTag = tagExistsGlobally(state)(pc.conditionTag)
+  if (!hasTag) {
+    return <NoPartyCheckView entityName={entity.name} />
   }
   return (
     <>
       <h2>Talking to {entity.title}</h2>
-      <p>{pc.message}</p>
+      <p><T path={pc.stringKey} /></p>
       <p>
         <a onClick={handleNext}>Continue</a>.
       </p>

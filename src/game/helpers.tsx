@@ -160,7 +160,7 @@ export const removeTag =
     return { ...state, entities: updatedEntities }
   }
 
-export const tagExitsGlobally =
+export const tagExistsGlobally =
   (state: Game) =>
   (tag: string): boolean => {
     for (let entity of state.entities) {
@@ -189,4 +189,122 @@ export const isCombatOver = (state: Game) => (): boolean => {
     (side) => side.team.filter((n) => isEntityDead(state)(n)).length === 0,
   )
   return remainingTeams.length < 2
+}
+
+export const findOpenlyHostileEntities = (state: Game) => (roomName: string) => {
+  const openlyHostileEntities = findRoom(state)(roomName)
+    .entities.map((entityName) => findEntity(state)(entityName))
+    .filter((entity) => entity.tags.some((t) => t === 'hostile'))
+    .filter((entity) => !isEntityDead(state)(entity.name))
+  return openlyHostileEntities
+}
+
+export const findAlliedHostileEntities = (state: Game) => (roomName: string) => {
+  const alliedHostileEntities = findRoom(state)(roomName)
+    .entities.map((entityName) => findEntity(state)(entityName))
+    .filter((entity) =>
+      entity.tags.some((t) => t.match(new RegExp(`^ally:${entity.name}$`))),
+    )
+    .filter((entity) => !isEntityDead(state)(entity.name))
+  return alliedHostileEntities
+}
+
+export const findEntityDescriptions = (state: Game) => (entityName: string) => {
+  const entity = findEntity(state)(entityName)
+  const descriptions = entity.tags
+  .reduce<Description[]>((sum, tag) => {
+    const [_, name] = tag.match(/^description:(.*)$/) || []
+    const descriptions = state.descriptions.filter((d) => d.name === name)
+    return !name ? sum : [...sum, ...descriptions]
+  }, [])
+  .filter((description) => tagExistsGlobally(state)(description.conditionTag))
+  return descriptions
+}
+
+export const findEntitySkillChecks = (state: Game) => (entityName: string) => {
+  const object = findEntity(state)(entityName)
+  const skillChecks = object.tags
+  .reduce((sum, tag) => {
+    const [_, name] = tag.match(/^skill-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
+    return [...sum, skillCheck]
+  }, [])
+  .filter((skillCheck) => tagExistsGlobally(state)(skillCheck.conditionTag))
+  return skillChecks
+}
+
+export const findEntityBattleChecks = (state: Game) => (entityName: string) => {
+  const object = findEntity(state)(entityName)
+  const battleChecks = object.tags
+  .reduce((sum, tag) => {
+    const [_, name] = tag.match(/^battle-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const battleCheck = state.partyChecks.filter((c) => c.name === name)[0]!
+    return [...sum, battleCheck]
+  }, [])
+  .filter((battleCheck) => tagExistsGlobally(state)(battleCheck.conditionTag))
+  return battleChecks
+}
+
+export const findEntityPartyChecks = (state: Game) => (entityName: string) => {
+  const object = findEntity(state)(entityName)
+  const partyChecks = object.tags
+  .reduce((sum, tag) => {
+    const [_, name] = tag.match(/^party-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const partyCheck = state.partyChecks.filter((c) => c.name === name)[0]!
+    return [...sum, partyCheck]
+  }, [])
+  .filter((partyCheck) => tagExistsGlobally(state)(partyCheck.conditionTag))
+  return partyChecks
+}
+
+export const findEntityItemChecks = (state: Game) => (entityName: string) => {
+  const object = findEntity(state)(entityName)
+  const itemChecks = object.tags
+  .reduce((sum, tag) => {
+    const [_, name] = tag.match(/^item-check:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const itemCheck = state.itemChecks.filter((c) => c.name === name)[0]!
+    return [...sum, itemCheck]
+  }, [])
+  .filter((itemCheck) => tagExistsGlobally(state)(itemCheck.conditionTag))
+  return itemChecks
+}
+
+export const findEntityChoices = (state: Game) => (entityName: string) => {
+  const object = findEntity(state)(entityName)
+  const choices = object.tags
+  .reduce((sum, tag) => {
+    const [_, name] = tag.match(/^choice:([^:]+)$/) || []
+    if (!name) {
+      return sum
+    }
+    const choice = state.choices.filter((c) => c.name === name)[0]!
+    return [...sum, choice]
+  }, [])
+  .filter((choice) => tagExistsGlobally(state)(choice.conditionTag))
+  return choices
+}
+
+export const findEntityDialogues = (state: Game) => (entityName: string) => {
+  const entity = findEntity(state)(entityName)
+  const dialogueNames = entity.tags.reduce((sum, tag) => {
+    const match = tag.match(/^dialogue:([^:]+):(\d+)$/)
+    const name = match?.[1]
+    return name ? [...sum, name] : sum
+  }, [])
+  const dialogues = dialogueNames.map(
+    (name) => state.dialogues.filter((d) => d.name === name)[0]!,
+  )
+  return dialogues
 }

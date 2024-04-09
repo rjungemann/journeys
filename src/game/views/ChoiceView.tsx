@@ -1,8 +1,8 @@
 import { addTag, changeScene, removeTag } from '../actions'
 import { useGame } from '../context'
-import { findChoice, findEntity, tagExitsGlobally } from '../helpers'
+import { findChoice, findEntity, tagExistsGlobally } from '../helpers'
 import { matchTags } from '../utils'
-import { tFn, useT } from './T'
+import { useT } from './T'
 
 export const NoChoiceView = ({ entityName }: { entityName: string }) => {
   const { state, dispatch } = useGame()
@@ -31,11 +31,9 @@ export const ChoiceView = () => {
   const split = tag.split(':')
   const name = split[1]
   const choice = findChoice(state)(name)
-  if (choice.conditionTag) {
-    const hasTag = tagExitsGlobally(state)(choice.conditionTag)
-    if (!hasTag) {
-      return <NoChoiceView entityName={entity.name} />
-    }
+  const hasTag = tagExistsGlobally(state)(choice.conditionTag)
+  if (!hasTag) {
+    return <NoChoiceView entityName={entity.name} />
   }
 
   const handleNextFn = (option) => () => {
