@@ -31,8 +31,7 @@ export const ChoiceView = () => {
   const split = tag.split(':')
   const name = split[1]
   const choice = findChoice(state)(name)
-  const hasTag = tagExistsGlobally(state)(choice.conditionTag)
-  if (!hasTag) {
+  if (choice.conditionTag && !tagExistsGlobally(state)(choice.conditionTag)) {
     return <NoChoiceView entityName={entity.name} />
   }
 

@@ -31,8 +31,7 @@ export const DialogueView = () => {
   const split = tag.split(':')
   const [name, index] = [split[1], parseInt(split[2], 10)]
   const dialogue = findDialogue(state)(name)
-  const hasTag = tagExistsGlobally(state)(dialogue.conditionTag)
-  if (!hasTag) {
+  if (dialogue.conditionTag && !tagExistsGlobally(state)(dialogue.conditionTag)) {
     return <NoDialogueView entityName={state.entityName} />
   }
 

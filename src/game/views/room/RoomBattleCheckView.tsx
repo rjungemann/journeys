@@ -1,7 +1,6 @@
 import { changeEntity, changeItemCheck, changeScene } from "../../actions"
 import { useGame } from "../../context"
 import { findEntityBattleChecks, findRoom } from "../../helpers"
-import { commaSeparateComponents } from "../../utils"
 
 export const EntityBattleCheckListView = ({
   entityName,
@@ -15,23 +14,16 @@ export const EntityBattleCheckListView = ({
     dispatch(changeItemCheck(name))
     dispatch(changeScene('battle-check'))
   }
-  return (
-    <p>
-      {commaSeparateComponents(
-        battleChecks.map((itemCheck) => (
-          <a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a>
-        )),
-        'or',
-      )}
-    </p>
-  )
+  return battleChecks.map((itemCheck) => (
+    <p key={itemCheck.name}><a onClick={handleNextFn(itemCheck.name)}>{itemCheck.title}</a></p>
+  ))
 }
 
 export const RoomBattleCheckView = () => {
-  const { state, dispatch } = useGame()
+  const { state } = useGame()
   const room = findRoom(state)(state.roomName)
-  const isShown = room.entities.some((entityName) => findEntityBattleChecks(state)(entityName).length > 0)
-  if (!isShown) {
+  const entities = room.entities.reduce((sum, entityName) => [...sum, ...findEntityBattleChecks(state)(entityName)], [])
+  if (entities.length === 0) {
     return false
   }
   return (

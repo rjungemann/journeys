@@ -14,28 +14,20 @@ export const EntityDialogueView = ({ entityName }: { entityName: string }) => {
   if (dialogues.length === 0) {
     return false
   }
-  return (
-    <>
-      <p>
-        Would you like to talk about{' '}
-        {commaSeparateComponents(
-          dialogues.map((dialogue) => (
-            <a key={dialogue.name} onClick={handleNextFn(dialogue)}>
-              {dialogue.topic}
-            </a>
-          )),
-          'or',
-        )}
-      </p>
-    </>
-  )
+  return dialogues.map((dialogue) => (
+    <p key={dialogue.name}>
+      <a onClick={handleNextFn(dialogue)}>
+        {dialogue.topic}
+      </a>
+    </p>
+  ))
 }
 
 export const RoomDialoguesView = () => {
   const { state } = useGame()
   const room = findRoom(state)(state.roomName)
-  const isShown = room.entities.some((entityName) => findEntityDialogues(state)(entityName).length > 0)
-  if (!isShown) {
+  const entities = room.entities.reduce((sum, entityName) => [...sum, findEntityDialogues(state)(entityName)], [])
+  if (entities.length === 0) {
     return false
   }
   return (

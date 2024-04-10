@@ -274,9 +274,9 @@ export const defaultGame: Game = {
       conditionTag: null,
       topic: `Alard wonders if you'd like to know what's on his mind.`,
       stringKeys: [
-        'dialogues.alard-1.0',
-        'dialogues.alard-1.1',
-        'dialogues.alard-1.2',
+        'dialogue.alard-1.0',
+        'dialogue.alard-1.1',
+        'dialogue.alard-1.2',
       ],
     },
   ],
@@ -319,7 +319,7 @@ export const defaultGame: Game = {
       name: 'has-revolver-1',
       conditionTag: null,
       title: 'Kynon asks, do you have the gun?',
-      stringKey: 'itemChecks.has-revolver-1',
+      stringKey: 'item-check.has-revolver-1',
       variant: { type: ITEM_CHECK_VARIANT_VERIFY },
       itemName: 'revolver-5',
     },
@@ -334,7 +334,7 @@ export const defaultGame: Game = {
       name: 'birds-1',
       title: 'Kynon has a quick question about birds',
       conditionTag: null,
-      stringKey: 'choices.birds-1.question',
+      stringKey: 'choice.birds-1.question',
       options: [
         {
           name: 'birds-1:yes',
@@ -351,32 +351,32 @@ export const defaultGame: Game = {
     {
       name: 'birds-1:yes',
       conditionTag: 'birds-1:yes',
-      stringKey: 'descriptions.birds-1.yes',
+      stringKey: 'description.birds-1.yes',
     },
     {
       name: 'birds-1:no',
       conditionTag: 'birds-1:no',
-      stringKey: 'descriptions.birds-1.no',
+      stringKey: 'description.birds-1.no',
     },
     {
       name: 'alard-1:success',
       conditionTag: 'skill-check:alard-1:success',
-      stringKey: 'descriptions.alard-1.success',
+      stringKey: 'description.alard-1.success',
     },
     {
       name: 'alard-1:failure',
       conditionTag: 'skill-check:alard-1:failure',
-      stringKey: 'descriptions.alard-1.failure',
+      stringKey: 'description.alard-1.failure',
     },
     {
       name: 'fix-1:success',
       conditionTag: 'skill-check:fix-1:success',
-      stringKey: 'descriptions.fix-1.success',
+      stringKey: 'description.fix-1.success',
     },
     {
       name: 'fix-1:failure',
       conditionTag: 'skill-check:fix-1:failure',
-      stringKey: 'descriptions.fix-1.failure',
+      stringKey: 'description.fix-1.failure',
     },
   ],
   fieldName: null,
@@ -399,39 +399,36 @@ export const defaultGame: Game = {
         slugPistol: 'Slug Pistol',
         vehicle: 'Vehicle',
       },
-      sample: {
-        message: 'Hello, *<%= name %>*!',
-      },
-      choices: {
+      'choice': {
         'birds-1': {
-          question: 'Do you like birds?',
-          yes: 'Yes',
-          no: 'No',
+          'question': 'Do you like birds?',
+          'yes': 'Yes',
+          'no': 'No',
         },
       },
-      descriptions: {
+      'description': {
         'birds-1': {
-          yes: '',
-          no: '',
+          'yes': '',
+          'no': '',
         },
         'alard-1': {
-          yes: '',
-          no: '',
+          'yes': '',
+          'no': '',
         },
         'fix-1': {
-          yes: '',
-          no: '',
+          'yes': '',
+          'no': '',
         },
       },
-      dialogues: {
+      'dialogue': {
         'alard-1': {
           '0': 'One...',
           '1': 'Two...',
           '2': 'Three...',
         },
       },
-      itemChecks: {
-        'has-revolver-1': 'Looks like you have it.',
+      'item-check': {
+        'has-revolver-1': 'Kynon says, "Looks like you have the gun after all."',
       },
     },
   },

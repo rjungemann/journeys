@@ -1,7 +1,6 @@
 import { changeEntity, changeScene, changeSkillCheck } from "../../actions"
 import { useGame } from "../../context"
 import { findEntitySkillChecks, findRoom } from "../../helpers"
-import { commaSeparateComponents } from "../../utils"
 
 export const EntitySkillCheckListView = ({
   entityName,
@@ -18,23 +17,16 @@ export const EntitySkillCheckListView = ({
     dispatch(changeSkillCheck(name))
     dispatch(changeScene('skill-check'))
   }
-  return (
-    <p>
-      {commaSeparateComponents(
-        skillChecks.map(({ name, title }) => (
-          <a key={name} onClick={handleNextFn(name)}>{title}</a>
-        )),
-        'or',
-      )}
-    </p>
-  )
+  return skillChecks.map(({ name, title }) => (
+    <p key={name}><a onClick={handleNextFn(name)}>{title}</a></p>
+  ))
 }
 
 export const RoomSkillCheckView = () => {
   const { state } = useGame()
   const room = findRoom(state)(state.roomName)
-  const isShown = room.entities.some((entityName) => findEntitySkillChecks(state)(entityName).length > 0)
-  if (!isShown) {
+  const entities = room.entities.reduce((sum, entityName) => [...sum, findEntitySkillChecks(state)(entityName)], [])
+  if (entities.length === 0) {
     return false
   }
   return (

@@ -1,7 +1,6 @@
 import { changeChoice, changeEntity, changeScene } from "../../actions"
 import { useGame } from "../../context"
-import { findEntity, findEntityChoices, findRoom } from "../../helpers"
-import { commaSeparateComponents } from "../../utils"
+import { findEntityChoices, findRoom } from "../../helpers"
 
 export const EntityChoiceListView = ({
   entityName,
@@ -18,25 +17,16 @@ export const EntityChoiceListView = ({
   if (choices.length === 0) {
     return false
   }
-  return (
-    <>
-      <p>
-        {commaSeparateComponents(
-          choices.map((choice) => {
-            return <a key={choice.name} onClick={handleNextFn(choice.name)}>{choice.title}</a>
-          }),
-          'or',
-        )}
-      </p>
-    </>
-  )
+  return choices.map((choice) => (
+    <p key={choice.name}><a onClick={handleNextFn(choice.name)}>{choice.title}</a></p>
+  ))
 }
 
 export const RoomChoiceView = () => {
   const { state } = useGame()
   const room = findRoom(state)(state.roomName)
-  const isShown = room.entities.some((entityName) => findEntityChoices(state)(entityName).length > 0)
-  if (!isShown) {
+  const entities = room.entities.reduce((sum, entityName) => [...sum, findEntityChoices(state)(entityName)], [])
+  if (entities.length === 0) {
     return false
   }
   return (

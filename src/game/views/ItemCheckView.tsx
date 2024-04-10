@@ -30,8 +30,7 @@ export const ItemCheckView = () => {
   const split = tag.split(':')
   const name = split[1]
   const ic = findItemCheck(state)(name)
-  const hasTag = tagExistsGlobally(state)(ic.conditionTag)
-  if (!hasTag) {
+  if (ic.conditionTag && !tagExistsGlobally(state)(ic.conditionTag)) {
     return <NoItemCheckView entityName={entity.name} />
   }
 

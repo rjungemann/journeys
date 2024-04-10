@@ -55,8 +55,7 @@ export const BattleCheckView = () => {
   const split = tag.split(':')
   const name = split[1]
   const bc = findBattleCheck(state)(name)
-  const hasTag = tagExistsGlobally(state)(bc.conditionTag)
-  if (!hasTag) {
+  if (bc.conditionTag && !tagExistsGlobally(state)(bc.conditionTag)) {
     return <NoBattleCheckView entityName={entity.name} />
   }
   return (

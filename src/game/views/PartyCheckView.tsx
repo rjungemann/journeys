@@ -44,8 +44,7 @@ export const PartyCheckView = () => {
   const split = tag.split(':')
   const name = split[1]
   const pc = findPartyCheck(state)(name)
-  const hasTag = tagExistsGlobally(state)(pc.conditionTag)
-  if (!hasTag) {
+  if (pc.conditionTag && !tagExistsGlobally(state)(pc.conditionTag)) {
     return <NoPartyCheckView entityName={entity.name} />
   }
   return (

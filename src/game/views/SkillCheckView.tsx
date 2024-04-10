@@ -1,13 +1,29 @@
 import { addTag, changeScene, removeTag, skillCheck } from '../actions'
 import { useGame } from '../context'
-import { SkillCheck } from '../data'
-import { findEntity, findSkillCheck } from '../helpers'
+import { findEntity, findSkillCheck, tagExistsGlobally } from '../helpers'
+import { matchTags } from '../utils'
+
+export const NoSkillCheckView = ({ entityName }: { entityName: string }) => {
+  const { state, dispatch } = useGame()
+  const entity = findEntity(state)(entityName)
+  const handleLeave = () => {
+    dispatch(changeScene('room'))
+  }
+  return (
+    <>
+      <h2>Talking to {entity.title}</h2>
+      <p>
+        <a onClick={handleLeave}>Leave</a>.
+      </p>
+    </>
+  )
+}
 
 export const SkillCheckPreView = () => {
   const { state, dispatch } = useGame()
   const sc = findSkillCheck(state)(state.skillCheckName)
   if (!sc || sc.result) {
-    return null
+    return false
   }
   const object = findEntity(state)(state.entityName)
   const subject = findEntity(state)(state.partyRepresentativeName)
@@ -86,7 +102,7 @@ export const SkillCheckPostView = () => {
   const { state, dispatch } = useGame()
   const skillCheck = findSkillCheck(state)(state.skillCheckName)
   if (!skillCheck || !skillCheck.result) {
-    return null
+    return false
   }
   const object = findEntity(state)(state.entityName)
   const { characteristic, skill, name, dice } = skillCheck
@@ -94,10 +110,10 @@ export const SkillCheckPostView = () => {
   const { characteristicValue, skillValue, roll, total, tn, isSuccess } =
     skillCheck.result
   if (object.tags.some((t) => t === `skill-check:${name}:success`)) {
-    return null
+    return false
   }
   if (object.tags.some((t) => t === `skill-check:${name}:failure`)) {
-    return null
+    return false
   }
   const handleNext = () => {
     // Add the success or failure tag to the object, such ass `skill-check:fix-1:success`
@@ -165,18 +181,26 @@ export const SkillCheckPostView = () => {
 
 export const SkillCheckView = () => {
   const { state, dispatch } = useGame()
-  const skillCheck = state.skillChecks.filter(
-    (sc) => sc.name === state.skillCheckName,
-  )[0]
-  if (!skillCheck) {
-    return null
+  const entity = findEntity(state)(state.entityName)
+  const tag = matchTags(entity.tags, /skill-check:([^:]+)$/)[0]
+  if (!tag) {
+    return <NoSkillCheckView entityName={state.entityName} />
   }
-  const handleLeave = (event) => {
+
+  const handleLeave = () => {
     dispatch(changeScene('room'))
   }
+
+  const split = tag.split(':')
+  const name = split[1]
+  const sc = findSkillCheck(state)(name)
+  if (sc.conditionTag && !tagExistsGlobally(state)(sc.conditionTag)) {
+    return <NoSkillCheckView entityName={state.entityName} />
+  }
+
   return (
     <>
-      <h2>{skillCheck.title}</h2>
+      <h2>{sc.title}</h2>
       <SkillCheckPreView />
       <SkillCheckPostView />
       <p>
