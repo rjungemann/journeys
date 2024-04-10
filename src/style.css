@@ -6,7 +6,7 @@ body {
   --color-far-background: #57534e; /* stone-600 */
   --color-near-background: #f5f5f4; /* stone-100 */
   --color-pre-background: #d6d3d1; /* stone-300 */
-  --color-link: #65a30d; /* lime-600 */
+  --color-link: #4d7c0f; /* lime-700 */
   --color-input-border: #57534e; /* stone-600 */
   --color-text: #1c1917; /* stone-900 */
   --color-button-text: #f5f5f4; /* stone-100 */
@@ -205,7 +205,7 @@ main {
 }
 
 svg {
-  background-color: var(--color-pre-background);
+  border: 1px solid var(--color-input-border);
 }
 
 svg .center-line {

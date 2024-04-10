@@ -65,11 +65,8 @@ export const RadarObstacle = ({
         x2={formulaX(x)}
         y2={height}
         opacity={0.5}
+        strokeWidth={BARRIER_OBSTACLE ? 4 : 2}
       />
-      {/* <circle cx={formulaX(x)} cy={height - 5} r={5} /> */}
-      <text x={formulaX(x) + 2} y={16 + 16 * i} fontSize={'0.35em'}>
-        {label}
-      </text>
     </g>
   )
 }
@@ -82,6 +79,12 @@ export const RadarTeammate = ({
   i: number
 }) => {
   const { state } = useGame()
+
+  const isDead = isEntityDead(state)(teammateName)
+  if (isDead) {
+    return false
+  }
+
   const field = findField(state)(state.fieldName)
   const midpointX =
     field.teammates.reduce((sum, tm) => sum + tm.x, 0) / field.teammates.length
@@ -110,13 +113,12 @@ export const RadarTeammate = ({
         x2={formulaX(x)}
         y2={height}
         stroke={color}
-        opacity={0.5}
       />
-      {/* <circle cx={formulaX(x)} cy={height - 5} r={5} fill={color} /> */}
       <text
         x={formulaX(x) + 2}
         y={16 + 16 * i}
-        fontSize={'0.35em'}
+        fontSize={'0.4em'}
+        fontWeight={'400'}
         style={{ fill: color }}
       >
         {entity.title} ({side.title})
@@ -130,34 +132,25 @@ export const RadarView = () => {
   const field = findField(state)(state.fieldName)
   const { teammates, obstacles } = field
   return (
-    <>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <line
-          className="center-line"
-          x1={width / 2}
-          y1={0}
-          x2={width / 2}
-          y2={height}
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {obstacles.map((obstacle, i) => (
+        <RadarObstacle
+          key={obstacle.name}
+          obstacleName={obstacle.name}
+          i={i}
         />
-        {obstacles.map((obstacle, i) => (
-          <RadarObstacle
-            key={obstacle.name}
-            obstacleName={obstacle.name}
-            i={i}
-          />
-        ))}
-        {teammates.map((teammate, i) => (
-          <RadarTeammate
-            key={teammate.name}
-            teammateName={teammate.name}
-            i={i}
-          />
-        ))}
-      </svg>
-    </>
+      ))}
+      {teammates.map((teammate, i) => (
+        <RadarTeammate
+          key={teammate.name}
+          teammateName={teammate.name}
+          i={i}
+        />
+      ))}
+    </svg>
   )
 }
 
@@ -192,13 +185,17 @@ export const FieldEntityListView = () => {
         }
         if (fieldEntity.type === TEAMMATE) {
           const entity = findEntity(state)(fieldEntity.name)
+          const isDead = isEntityDead(state)(fieldEntity.name)
+          if (isDead) {
+            return false
+          }
           const side = field.sides.filter((s) =>
             s.team.some((en) => en === entity.name),
           )[0]!
           return (
             <span key={fieldEntity.name} style={{ color: entity.color }}>
-              {capitalize(entity.title)} @ {fieldEntity.x.toFixed(0)}m (
-              {side.title}){i < ordered.length - 1 ? <br /> : null}
+              {side.title} – {capitalize(entity.title)} @ {fieldEntity.x.toFixed(0)}m
+              {i < ordered.length - 1 ? <br /> : null}
             </span>
           )
         }
@@ -221,7 +218,7 @@ export const FieldInitiativeListView = () => {
   )
   return (
     <>
-      <h3>Initiative</h3>
+      <h3>Turn Order</h3>
       <p>{isInParty ? 'Your Turn.' : 'Their Turn.'}</p>
       {field.initiativePairs
         .sort((a, b) => a[0] - b[0])

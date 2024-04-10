@@ -17,7 +17,7 @@ export const NoPartyCheckView = ({ entityName }: { entityName: string }) => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>
         <a onClick={handleLeave}>Leave</a>.
       </p>
@@ -49,7 +49,7 @@ export const PartyCheckView = () => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p><T path={pc.stringKey} /></p>
       <p>
         <a onClick={handleNext}>Continue</a>.

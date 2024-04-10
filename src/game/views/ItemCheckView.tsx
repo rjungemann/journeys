@@ -12,7 +12,7 @@ export const NoItemCheckView = ({ entityName }: { entityName: string }) => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>
         <a onClick={handleLeave}>Leave</a>.
       </p>
@@ -43,7 +43,7 @@ export const ItemCheckView = () => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p><T path={ic.stringKey} /></p>
       <p>
         <a onClick={handleNext}>Continue</a>.

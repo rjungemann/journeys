@@ -186,7 +186,7 @@ export const isEntityDead =
 export const isCombatOver = (state: Game) => (): boolean => {
   const field = findField(state)(state.fieldName)
   const remainingTeams = field.sides.filter(
-    (side) => side.team.filter((n) => isEntityDead(state)(n)).length === 0,
+    (side) => side.team.filter((n) => isEntityDead(state)(n)).length < side.team.length,
   )
   return remainingTeams.length < 2
 }

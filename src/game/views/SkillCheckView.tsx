@@ -11,7 +11,7 @@ export const NoSkillCheckView = ({ entityName }: { entityName: string }) => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>
         <a onClick={handleLeave}>Leave</a>.
       </p>

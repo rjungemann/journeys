@@ -12,7 +12,7 @@ export const NoChoiceView = ({ entityName }: { entityName: string }) => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>
         <a onClick={handleLeave}>Leave</a>.
       </p>
@@ -42,7 +42,7 @@ export const ChoiceView = () => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>{t(choice.stringKey)}</p>
       <p>
         {choice.options.map((option, i) => {

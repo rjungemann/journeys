@@ -12,7 +12,7 @@ export const NoDialogueView = ({ entityName }: { entityName: string }) => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>
         <a onClick={handleLeave}>Leave</a>.
       </p>
@@ -47,7 +47,7 @@ export const DialogueView = () => {
   }
   return (
     <>
-      <h2>Talking to {entity.title}</h2>
+      <h2>Interacting with {entity.title}</h2>
       <p>{message}</p>
       <p>
         <a onClick={handleNext}>Next</a>.

@@ -1,5 +1,6 @@
 ## TODO
 
+* Bug: Thinks combat is over when only one party member is dead
 * Edit functionality within normal functionality
   * Adding exits
   * Add new rooms by adding exits to non-existent rooms, like a wiki
