@@ -272,7 +272,7 @@ export const defaultGame: Game = {
     {
       name: 'alard-1',
       conditionTag: null,
-      topic: `what's on my mind`,
+      topic: `Alard wonders if you'd like to know what's on his mind.`,
       stringKeys: [
         'dialogues.alard-1.0',
         'dialogues.alard-1.1',
@@ -295,7 +295,7 @@ export const defaultGame: Game = {
     {
       name: 'alard-1',
       conditionTag: 'dialogue:alard-1:done',
-      title: 'Do you think you could give me some guidance?',
+      title: 'Alard wonders if you could give him some guidance.',
       characteristic: 'education',
       skill: 'mechanics',
       dice: '2d6',
@@ -305,7 +305,7 @@ export const defaultGame: Game = {
     {
       name: 'alard-2',
       conditionTag: 'skill-check:alard-1:failure',
-      title: 'Do you want to try again?',
+      title: 'Alard still wants to figure his issue out. Do you want to try again?',
       characteristic: 'education',
       skill: 'mechanics',
       dice: '2d6',
@@ -318,7 +318,7 @@ export const defaultGame: Game = {
     {
       name: 'has-revolver-1',
       conditionTag: null,
-      title: 'Do you have the gun?',
+      title: 'Kynon asks, do you have the gun?',
       stringKey: 'itemChecks.has-revolver-1',
       variant: { type: ITEM_CHECK_VARIANT_VERIFY },
       itemName: 'revolver-5',
@@ -332,7 +332,7 @@ export const defaultGame: Game = {
   choices: [
     {
       name: 'birds-1',
-      title: 'A quick question about birds',
+      title: 'Kynon has a quick question about birds',
       conditionTag: null,
       stringKey: 'choices.birds-1.question',
       options: [

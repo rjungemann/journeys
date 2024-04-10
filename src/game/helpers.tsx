@@ -217,7 +217,7 @@ export const findEntityDescriptions = (state: Game) => (entityName: string) => {
     const descriptions = state.descriptions.filter((d) => d.name === name)
     return !name ? sum : [...sum, ...descriptions]
   }, [])
-  .filter((description) => tagExistsGlobally(state)(description.conditionTag))
+  .filter((description) => !description.conditionTag || tagExistsGlobally(state)(description.conditionTag))
   return descriptions
 }
 
@@ -232,7 +232,7 @@ export const findEntitySkillChecks = (state: Game) => (entityName: string) => {
     const skillCheck = state.skillChecks.filter((sc) => sc.name === name)[0]!
     return [...sum, skillCheck]
   }, [])
-  .filter((skillCheck) => tagExistsGlobally(state)(skillCheck.conditionTag))
+  .filter((skillCheck) => !skillCheck.conditionTag || tagExistsGlobally(state)(skillCheck.conditionTag))
   return skillChecks
 }
 
@@ -247,7 +247,7 @@ export const findEntityBattleChecks = (state: Game) => (entityName: string) => {
     const battleCheck = state.partyChecks.filter((c) => c.name === name)[0]!
     return [...sum, battleCheck]
   }, [])
-  .filter((battleCheck) => tagExistsGlobally(state)(battleCheck.conditionTag))
+  .filter((battleCheck) => !battleCheck.conditionTag || tagExistsGlobally(state)(battleCheck.conditionTag))
   return battleChecks
 }
 
@@ -262,7 +262,7 @@ export const findEntityPartyChecks = (state: Game) => (entityName: string) => {
     const partyCheck = state.partyChecks.filter((c) => c.name === name)[0]!
     return [...sum, partyCheck]
   }, [])
-  .filter((partyCheck) => tagExistsGlobally(state)(partyCheck.conditionTag))
+  .filter((partyCheck) => !partyCheck.conditionTag || tagExistsGlobally(state)(partyCheck.conditionTag))
   return partyChecks
 }
 
@@ -277,7 +277,7 @@ export const findEntityItemChecks = (state: Game) => (entityName: string) => {
     const itemCheck = state.itemChecks.filter((c) => c.name === name)[0]!
     return [...sum, itemCheck]
   }, [])
-  .filter((itemCheck) => tagExistsGlobally(state)(itemCheck.conditionTag))
+  .filter((itemCheck) => !itemCheck.conditionTag || tagExistsGlobally(state)(itemCheck.conditionTag))
   return itemChecks
 }
 
@@ -292,7 +292,7 @@ export const findEntityChoices = (state: Game) => (entityName: string) => {
     const choice = state.choices.filter((c) => c.name === name)[0]!
     return [...sum, choice]
   }, [])
-  .filter((choice) => tagExistsGlobally(state)(choice.conditionTag))
+  .filter((choice) => !choice.conditionTag || tagExistsGlobally(state)(choice.conditionTag))
   return choices
 }
 

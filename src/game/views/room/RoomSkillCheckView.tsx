@@ -39,7 +39,6 @@ export const RoomSkillCheckView = () => {
   }
   return (
     <>
-      <h3>Skill Checks</h3>
       {room.entities.map((entityName) => <EntitySkillCheckListView key={entityName} entityName={entityName} />)}
     </>
   )

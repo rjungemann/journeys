@@ -39,7 +39,6 @@ export const RoomItemCheckView = () => {
   }
   return (
     <>
-      <h3>Item Checks</h3>
       {room.entities.map((entityName) => <EntityItemCheckListView key={entityName} entityName={entityName} />)}
     </>
   )

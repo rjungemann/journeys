@@ -18,17 +18,22 @@ export const RoomView = () => {
   return (
     <>
       <h2>{room.title}</h2>
+
+      <RoomPartyEntitiesView />
+      <RoomOtherEntitiesView />
+      <RoomHostileEntitiesView />
+
       <RoomDescriptionsView />
+
+      <RoomExitsView />
+
       <RoomDialoguesView />
       <RoomChoiceView />
+
       <RoomSkillCheckView />
       <RoomItemCheckView />
       <RoomPartyCheckView />
       <RoomBattleCheckView />
-      <RoomPartyEntitiesView />
-      <RoomOtherEntitiesView />
-      <RoomHostileEntitiesView />
-      <RoomExitsView />
     </>
   )
 }

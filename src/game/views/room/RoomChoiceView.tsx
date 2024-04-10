@@ -18,10 +18,8 @@ export const EntityChoiceListView = ({
   if (choices.length === 0) {
     return false
   }
-  const entity = findEntity(state)(entityName)
   return (
     <>
-      <h4>{entity.title}</h4>
       <p>
         {commaSeparateComponents(
           choices.map((choice) => {
@@ -43,7 +41,6 @@ export const RoomChoiceView = () => {
   }
   return (
     <>
-      <h3>Choices</h3>
       {room.entities.map((entityName) => <EntityChoiceListView key={entityName} entityName={entityName} />)}
     </>
   )

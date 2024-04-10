@@ -17,7 +17,6 @@ export const RoomExitsView = () => {
   }
   return (
     <>
-      <h3>Exits</h3>
       <p>
         There {room.exits.length === 1 ? 'is an exit' : 'are exits'}{' '}
         {commaSeparateComponents(

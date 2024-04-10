@@ -36,7 +36,6 @@ export const RoomBattleCheckView = () => {
   }
   return (
     <>
-      <h3>Battle Checks</h3>
       {room.entities.map((entityName) => <EntityBattleCheckListView key={entityName} entityName={entityName} />)}
     </>
   )

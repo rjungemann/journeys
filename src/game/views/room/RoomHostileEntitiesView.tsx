@@ -24,7 +24,6 @@ export const RoomHostileEntitiesView = () => {
   }
   return (
     <>
-      <h3>Potential Hostiles</h3>
       <p>
         <a onClick={startFight}>Start fight</a> with{' '}
         {commaSeparateStrings(hostileEntities.map((e) => e.title))}?

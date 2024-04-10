@@ -7,7 +7,6 @@ export const RoomPartyEntitiesView = () => {
   const party = findParty(state)()
   return (
     <>
-      <h3>The Party</h3>
       <p>
         From the party,{' '}
         {commaSeparateStrings(party.map((entity) => entity.title))}{' '}

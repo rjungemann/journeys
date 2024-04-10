@@ -8,11 +8,9 @@ export const EntityDescriptionView = ({
   entityName: string
 }) => {
   const { state } = useGame()
-  const entity = findEntity(state)(entityName)
   const descriptions = findEntityDescriptions(state)(entityName)
   return (
     <>
-      <h4>{entity.title}</h4>
       {
         descriptions
         .map((description) => {
@@ -34,7 +32,6 @@ export const RoomDescriptionsView = () => {
   }
   return (
     <>
-      <h3>Descriptions</h3>
       {room.entities.map((entityName) => <EntityDescriptionView key={entityName} entityName={entityName} />)}
     </>
   )
